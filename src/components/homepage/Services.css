@@ -1,0 +1,125 @@
+.my-services {
+  padding: 2rem 0 3rem;
+  margin-top: -2rem;
+  /* Remove background property */
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;  /* Reduced from 2rem */
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1rem;  /* Added padding */
+  align-items: start; /* Align items to the top */
+}
+
+.service-card {
+  position: relative;
+  padding: 1.5rem;  /* Reduced from 2rem */
+  border-radius: 16px;
+  background: var(--surface-2);
+  backdrop-filter: var(--backdrop-blur);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+  height: auto; /* Remove fixed height */
+  min-height: 220px;  /* Reduced from 250px */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.service-card::before {
+  display: none;
+}
+
+.service-card:hover {
+  background: var(--surface-3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-lg);
+}
+
+.service-icon-wrapper {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 2rem;
+}
+
+.service-icon-wrapper::before {
+  display: none;
+}
+
+.service-icon {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 1.5rem;
+  background: var(--surface-1);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent);
+}
+
+.service-card:hover .service-icon {
+  color: #93c5fd;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(147, 51, 234, 0.3));
+}
+
+.service-content {
+  display: grid;
+  grid-template-rows: auto auto 1fr; /* Icon, title, description */
+  gap: 1rem;
+  height: auto; /* Remove fixed height */
+}
+
+.service-content h3 {
+  color: var(--text-primary);
+  margin: 0; /* Remove margin to help with alignment */
+}
+
+.service-content p {
+  color: var(--text-secondary);
+  flex-grow: 1;  /* Allow description to fill space */
+  margin: 0; /* Remove margin to help with alignment */
+  line-height: 1.6;
+}
+
+
+.floating-particles {
+  display: none;
+}
+
+.particle {
+  display: none;
+}
+
+.title-accent {
+  position: relative;
+  display: inline-block;
+  color: var(--text-primary);  /* Regular color instead of gradient */
+}
+
+.title-accent::after {
+  display: none;  /* Remove underline completely */
+}
+
+@media (max-width: 768px) {
+  .service-card {
+    padding: 2rem;
+  }
+  
+  .service-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+  }
+}
+
+@media (min-width: 768px) {
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);  /* Force 2 columns on larger screens */
+  }
+}

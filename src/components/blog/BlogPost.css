@@ -1,0 +1,118 @@
+.blog-post-section {
+  padding: 6rem 0;
+  min-height: calc(100vh - 56px);
+}
+
+.blog-post-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.blog-post-header h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--text-primary-dark);
+  margin-bottom: 0.5rem;
+}
+
+.blog-post-header time {
+  color: var(--text-secondary-dark);
+  font-family: var(--ff-mono);
+  font-size: 0.9rem;
+}
+
+.blog-post-content {
+  max-width: 720px;
+  margin: 0 auto;
+  background: var(--surface-1-dark);
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.blog-post-content h2 {
+  color: var(--text-primary-dark);
+  font-size: 1.75rem;
+  margin: 2rem 0 1rem;
+}
+
+.blog-post-content h3 {
+  color: var(--text-primary-dark);
+  font-size: 1.25rem;
+  margin: 1.5rem 0 1rem;
+}
+
+.blog-post-content p {
+  color: var(--text-secondary-dark);
+  margin-bottom: 1.25rem;
+  line-height: 1.7;
+}
+
+.blog-post-content code {
+  font-family: var(--ff-mono);
+  background: var(--surface-2-dark);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+.back-button {
+  margin-top: 3rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--surface-1-dark);
+  color: var(--text-primary-dark);
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background var(--transition-quick);
+}
+
+.back-button:hover {
+  background: var(--surface-2-dark);
+}
+
+@media (prefers-color-scheme: light) {
+  .blog-post-header h1 {
+    color: var(--text-primary);
+  }
+  
+  .blog-post-header time {
+    color: var(--text-secondary);
+  }
+  
+  .blog-post-content {
+    background: var(--surface-1);
+  }
+  
+  .blog-post-content h2,
+  .blog-post-content h3 {
+    color: var(--text-primary);
+  }
+  
+  .blog-post-content p {
+    color: var(--text-secondary);
+  }
+  
+  .blog-post-content code {
+    background: var(--surface-2);
+  }
+  
+  .back-button {
+    background: var(--surface-1);
+    color: var(--text-primary);
+  }
+  
+  .back-button:hover {
+    background: var(--surface-2);
+  }
+}
+
+@media (max-width: 768px) {
+  .blog-post-header h1 {
+    font-size: 2rem;
+  }
+  
+  .blog-post-content {
+    padding: 1.5rem;
+  }
+}

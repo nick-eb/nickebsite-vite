@@ -1,0 +1,149 @@
+.blog-section {
+  padding: 6rem 0;
+  min-height: calc(100vh - 56px);
+  /* Remove background property */
+}
+
+.blog-container {
+  position: relative;
+  z-index: 1;
+}
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.blog-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  height: 100%;
+}
+
+.blog-card {
+  background: var(--surface-1-dark);
+  border-radius: 12px;
+  overflow: hidden;
+  padding: 1.5rem;
+  transition: transform var(--transition-quick);
+}
+
+.blog-card:hover {
+  transform: translateY(-2px);
+}
+
+.blog-card a {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  height: 100%;
+}
+
+.blog-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-primary-dark);
+  margin-bottom: 0.5rem;
+}
+
+.blog-date {
+  font-size: 0.875rem;
+  color: var(--text-secondary-dark);
+  font-family: var(--ff-mono);
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.blog-excerpt {
+  color: var(--text-secondary-dark);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.read-more {
+  color: var(--accent-light);
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--text-primary-dark);
+  text-align: center;
+}
+
+.section-title-bar {
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, #60a5fa, #8b5cf6);
+  margin: 1rem auto 2rem;
+  border-radius: 2px;
+}
+
+.blog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.back-button {
+  padding: 0.75rem 1.5rem;
+  background: var(--surface-1);
+  color: var(--text-primary);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all var(--transition-quick);
+}
+
+.back-button:hover {
+  background: var(--surface-2);
+  transform: translateX(-2px);
+}
+
+@media (max-width: 768px) {
+  .blog-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .blog-title {
+    font-size: 1.25rem;
+  }
+  
+  .section-title {
+    font-size: 2.5rem;
+  }
+
+  .blog-header {
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .blog-card {
+    background: var(--surface-1);
+  }
+  
+  .blog-title {
+    color: var(--text-primary);
+  }
+  
+  .blog-date, .blog-excerpt {
+    color: var(--text-secondary);
+  }
+  
+  .read-more {
+    color: var(--accent);
+  }
+  
+  .section-title {
+    color: var(--text-primary);
+  }
+}

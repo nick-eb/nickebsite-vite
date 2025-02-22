@@ -1,0 +1,50 @@
+{
+  "name": "nickebsite-vite",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@tailwindcss/vite": "^4.0.8",
+    "@types/node": "^22.13.5",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-router-dom": "^7.2.0",
+    "tailwindcss": "^4.0.8"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.19.0",
+    "@fortawesome/free-brands-svg-icons": "^6.7.2",
+    "@fortawesome/free-solid-svg-icons": "^6.7.2",
+    "@fortawesome/react-fontawesome": "^0.2.2",
+    "@mdx-js/react": "^3.1.0",
+    "@mdx-js/rollup": "^3.1.0",
+    "@types/mdx": "^2.0.13",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "@vitejs/plugin-react": "^4.3.4",
+    "eslint": "^9.19.0",
+    "eslint-plugin-react-hooks": "^5.0.0",
+    "eslint-plugin-react-refresh": "^0.4.18",
+    "framer-motion": "^12.4.7",
+    "globals": "^15.14.0",
+    "gray-matter": "^4.0.3",
+    "marked": "^15.0.7",
+    "octokit": "^4.1.2",
+    "react-type-animation": "^3.2.0",
+    "remark": "^14.0.2",
+    "remark-extract-frontmatter": "^3.2.0",
+    "remark-frontmatter": "^4.0.1",
+    "remark-html": "^15.0.2",
+    "typescript": "~5.7.2",
+    "typescript-eslint": "^8.22.0",
+    "vite": "^6.1.0",
+    "vite-plugin-markdown": "^2.2.0",
+    "yaml": "^2.2.2"
+  }
+}

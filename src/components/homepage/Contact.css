@@ -1,0 +1,122 @@
+.contact-section {
+  min-height: 30vh;  /* Reduced from 60vh */
+  padding: 2rem 0;  /* Reduced from 4rem */
+  display: flex;
+  align-items: center;
+}
+
+.section-title {
+  font-size: 2rem;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.contact-card {
+  background: var(--surface-1-dark);
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.contact-card:hover {
+  background: var(--surface-2-dark);
+  box-shadow: var(--shadow-lg);
+}
+
+.contact-content {
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;  /* Reduced gap */
+}
+
+.contact-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;  /* Reduced from 1.5rem */
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.contact-email {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  font-size: 1rem;
+  padding: 1rem;
+  background: var(--surface-2-dark);
+  border-radius: 8px;
+}
+
+.contact-email a {
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color var(--transition-quick);
+}
+
+.contact-email a:hover {
+  color: var(--accent);
+}
+
+.email-icon {
+  color: var(--accent);
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: 1rem;  /* Reduced from 1.1rem */
+  transition: all var(--transition-quick);
+  padding: 0.5rem 0.75rem;
+  background: var(--surface-2-dark);
+  border-radius: 8px;
+}
+
+social-link:hover {
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .contact-section {
+    padding: 1.5rem 1rem;  /* Reduced from 3rem 1rem */
+  }
+
+  .section-title {
+    font-size: 2rem;  /* Reduced from 2.5rem */
+  }
+
+  .contact-card {
+    margin: 0 1rem;
+    padding: 1.5rem;
+  }
+
+  .social-links {
+    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;  /* Reduced from 1rem */
+  }
+
+  .social-link {
+    justify-content: center;
+  }
+}
