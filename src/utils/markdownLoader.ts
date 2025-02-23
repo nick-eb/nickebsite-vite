@@ -8,17 +8,17 @@ export interface BlogPost {
   content: string;
 }
 
-// Import all blog posts using Vite's import.meta.glob
-const blogPosts = import.meta.glob('/src/blogs/*.md', {
+// Fix the typing for import.meta.glob
+const blogPosts: Record<string, string> = import.meta.glob('/src/blogs/*.md', {
   eager: true,
   as: 'raw',
-});
+}) as Record<string, string>;
 
 export async function loadBlogPosts(): Promise<BlogPost[]> {
   const posts: BlogPost[] = [];
 
   for (const path in blogPosts) {
-    const content = blogPosts[path] as string;
+    const content = blogPosts[path];
     const slug = path.split('/').pop()?.replace('.md', '') || '';
     
     // Extract front matter
@@ -51,8 +51,8 @@ export async function loadBlogPost(slug: string): Promise<BlogPost | null> {
     
     if (!post) return null;
     
-    // Parse markdown content
-    post.content = marked(post.content);
+    // Fix: await the marked function
+    post.content = await marked(post.content);
     return post;
   } catch (error) {
     console.error('Error loading blog post:', error);

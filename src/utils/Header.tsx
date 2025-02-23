@@ -18,10 +18,6 @@ const Header = () => {
     }
   };
 
-  const goToBlog = () => {
-    navigate('/blog');
-  };
-
   const navItems = [
     { id: 'intro', label: 'Home' },
     { id: 'projects', label: 'Projects' },

@@ -31,7 +31,7 @@ const Portfolio = () => {
         </p>
         
         <div className="portfolio-grid">
-          {portfolioItems.map((item, i) => (
+          {portfolioItems.map((item) => (
             <a
               key={item.title}
               href={item.href}

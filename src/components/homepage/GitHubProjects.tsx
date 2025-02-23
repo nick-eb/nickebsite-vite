@@ -21,10 +21,8 @@ const PROJECT_DATA: Record<string, { customImage: string; customDescription: str
   }
 };
 
-// Initialize Octokit with auth
-const octokit = new Octokit({
-  auth: import.meta.env.VITE_GITHUB_TOKEN
-});
+// Initialize Octokit without token
+const octokit = new Octokit();
 
 // TypeScript interfaces
 interface RepositoryResponse {

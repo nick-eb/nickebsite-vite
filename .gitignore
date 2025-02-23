@@ -65,3 +65,10 @@ pids
 Thumbs.db
 ehthumbs.db
 Desktop.ini
+
+# Environment variables
+.env*
+!.env.example
+
+# Build output
+dist/

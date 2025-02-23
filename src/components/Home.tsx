@@ -1,8 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import Intro from './homepage/Intro';
-import Services from './homepage/Services';
-import Portfolio from './homepage/Portfolio';
 import BlogPreview from './homepage/BlogPreview';
 import Contact from './homepage/Contact';
 import GitHubProjects from './homepage/GitHubProjects';
