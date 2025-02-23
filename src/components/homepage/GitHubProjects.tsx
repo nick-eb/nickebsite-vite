@@ -12,11 +12,11 @@ const FEATURED_REPOS = [
 // Custom project data
 const PROJECT_DATA: Record<string, { customImage: string; customDescription: string }> = {
   'hadobedo/FunkiniOS': {
-    customImage: '/src/assets/img/funkiniOS.png',
+    customImage: import.meta.env.BASE_URL + 'assets/img/funkiniOS.png',
     customDescription: 'A port of Friday Night Funkin\' to iOS with various optimizations for wider device compatibility. Built using Haxe and Xcode.'
   },
   'hadobedo/Myrient-Downloader-GUI': {
-    customImage: '/src/assets/img/myrientgui.png',
+    customImage: import.meta.env.BASE_URL + 'assets/img/myrientgui.png',
     customDescription: 'A GUI application built with Python and PyQT for downloading ROMs and ISOs from the Myrient Archive.'
   }
 };
@@ -155,7 +155,7 @@ const GitHubProjects = () => {
                 src={PROJECT_DATA[`hadobedo/${repo.name}`]?.customImage || repo.openGraphImageUrl} 
                 alt={`${repo.name} preview`}
                 onError={(e) => {
-                  e.currentTarget.src = '/src/assets/img/github-placeholder.png';
+                  e.currentTarget.src = import.meta.env.BASE_URL + 'assets/img/github-placeholder.png';
                 }}
               />
             </div>
