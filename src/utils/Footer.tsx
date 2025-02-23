@@ -3,6 +3,7 @@ import './Footer.css';
 const Footer = () => {
   const socialLinks = [
     { href: 'https://github.com/hadobedo/', icon: 'github', label: 'GitHub Profile' },
+    { href: 'https://www.linkedin.com/in/nicholas-bonello-642a73333/', icon: 'linkedin', label: 'LinkedIn Profile' },
     { href: 'https://twitter.com/NicksWorkslol/', icon: 'twitter', label: 'Twitter Profile' },
     { href: 'https://instagram.com/nick__eb', icon: 'instagram', label: 'Instagram Profile' }
   ];

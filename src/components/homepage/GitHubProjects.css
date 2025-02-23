@@ -1,10 +1,10 @@
 .github-projects {
-  padding: 2rem;  /* Simplified padding */
+  padding: 1.5rem 0;  /* Reduced from 3rem */
   max-width: 1200px;
   margin: 0 auto;
-  width: 95%;  /* Changed from 100% to give some breathing room */
+  width: 100%;
   position: relative;
-  overflow: hidden;  /* Add this to contain everything */
+  overflow: hidden;
 }
 
 .projects-grid {
@@ -16,7 +16,7 @@
 
 .project-card {
   background: var(--surface-1-dark);
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
   text-decoration: none;
   color: inherit;
@@ -24,20 +24,28 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  margin: 0.5rem;  /* Add margin to the card itself */
+  max-width: none;
+  margin: 0.5rem;
+  min-height: 240px;  /* Reduced from 280px */
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: transform 0.2s ease;
 }
 
 .project-image {
-  aspect-ratio: 16/9;
+  height: 160px;  /* Increased from 140px to show full images */
+  position: relative;
   overflow: hidden;
   border-bottom: 1px solid var(--surface-2-dark);
+  margin-bottom: -0.5rem; /* Pull content up slightly */
 }
 
 .project-image img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
+  object-fit: cover;  /* Changed from cover to contain */
+  background: var(--surface-2-dark);  /* Add background for contained images */
 }
 
 .project-card:hover {
@@ -46,36 +54,47 @@
   box-shadow: var(--shadow-md);
 }
 
+/* Remove the hover zoom effect */
 .project-card:hover .project-image img {
-  transform: scale(1.05);
+  transform: none;
 }
 
 .project-content {
-  padding: 1.25rem;
-  flex-grow: 1;
+  padding: 0.75rem;  /* Reduced from 1rem */
+  flex: 1;
   display: flex;
   flex-direction: column;
+  gap: 0.25rem;  /* Reduced from 0.5rem */
 }
 
 .project-content h3 {
   color: var(--text-primary);
-  font-size: 1.25rem;
+  font-size: 1.1rem;  /* Reduced from 1.25rem */
+  font-weight: 600;   /* Make it slightly bolder */
   margin-bottom: 0.5rem;
+  line-height: 1.3;
 }
 
 .project-content p {
   color: var(--text-secondary);
-  font-size: 0.95rem;
-  margin-bottom: 1rem;
-  flex-grow: 1;
+  font-size: 0.95rem;  /* Slightly smaller */
+  margin-bottom: 0.75rem;  /* Reduced from 1rem */
+  flex: 1;
+  display: block;
+  -webkit-line-clamp: unset;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: unset;
+  line-height: 1.4;  /* Reduced from default */
 }
 
 .project-meta {
+  margin-top: auto;
   display: flex;
+  align-items: center;
   gap: 1rem;
   font-size: 0.875rem;
   color: var(--text-secondary);
-  align-items: center;
 }
 
 .language {
@@ -91,6 +110,134 @@
   background-color: var(--lang-color);
 }
 
+.projects-slider {
+  margin: 0;
+  padding: 0 1rem;
+  position: relative;
+  touch-action: pan-y pinch-zoom;
+  overflow: visible;  /* Allow overflow for partial cards */
+}
+
+.projects-slider::after {
+  display: none;
+}
+
+.projects-slider:not(.at-start):not(.at-end)::after {
+  opacity: 1;
+}
+
+.projects-slider.at-end::after {
+  opacity: 0;
+}
+
+.slider-item {
+  padding: 1rem;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+  height: inherit !important;
+}
+
+.slick-list {
+  overflow: visible !important;  /* Force visible overflow */
+  margin: 0;
+  padding-right: 1rem;  /* Add space for partial card */
+}
+
+.slick-track {
+  margin-left: 0;
+  margin-right: 0;
+  display: flex !important;
+}
+
+.slick-prev,
+.slick-next {
+  display: none !important;
+}
+
+.slick-prev:hover,
+.slick-next:hover {
+  background: var(--surface-3-dark);
+}
+
+.slick-prev {
+  left: 0;
+}
+
+.slick-next {
+  right: 0;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  font-size: 24px;
+  opacity: 0.8;
+}
+
+.slick-dots {
+  bottom: -1rem;  /* Reduced from -2rem */
+  padding: 0.25rem 0;  /* Reduced from 0.5rem */
+  position: relative;
+  margin-top: 0.5rem;  /* Reduced from 1rem */
+}
+
+.slick-dots li button:before {
+  font-size: 10px;  /* Slightly larger dots */
+  color: var(--text-secondary);
+  opacity: 0.4;
+}
+
+.slick-dots li.slick-active button:before {
+  color: var(--accent);
+  opacity: 1;
+}
+
+.demo-link {
+  padding: 0 0.75rem 0.75rem;  /* Reduced from 1.25rem */
+}
+
+.slider-container {
+  position: relative;
+  margin: 0 -1.5rem;
+  padding: 0 1.5rem;
+  overflow: visible;  /* Allow overflow for partial cards */
+}
+
+.slider-container::before,
+.slider-container::after {
+  display: none;
+}
+
+.slider-container:not(.at-start)::before {
+  opacity: 1;
+}
+
+.slider-container:not(.at-end)::after {
+  opacity: 1;
+}
+
+.section-title {
+  font-size: 2rem;  /* Reduced from default */
+  margin-bottom: 0.75rem;  /* Add some space below title */
+  text-align: center;
+}
+
+.section-subtitle {
+  font-size: 1.1rem;  /* Add subtitle style */
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 1024px) {
+  .projects-slider {
+    padding: 0 1.5rem;
+  }
+  
+  .slider-item {
+    padding: 0.5rem;
+  }
+}
+
 @media (max-width: 768px) {
   .projects-grid {
     grid-template-columns: repeat(2, 1fr);
@@ -98,7 +245,7 @@
   }
 
   .github-projects {
-    padding: 2rem;  /* Reduced but still maintain space */
+    padding: 2rem 0;
   }
 
   .project-content h3 {
@@ -110,76 +257,114 @@
   }
 
   .slick-prev {
-    left: -1.5rem;
+    left: 5px;
   }
 
   .slick-next {
-    right: -1.5rem;
+    right: 5px;
+  }
+
+  .projects-slider {
+    padding: 0 0.75rem;
+  }
+
+  .projects-slider::after {
+    width: 60px;
+  }
+  
+  .slider-item {
+    padding: 0.5rem;
+  }
+
+  .project-card {
+    border-radius: 12px;
+    margin: 0.25rem 0.125rem;
+  }
+
+  .project-image {
+    height: 160px;
+  }
+
+  .project-content {
+    padding: 1.25rem;
+  }
+
+  .demo-link {
+    padding: 0 1rem 1rem;
+  }
+
+  .slider-container {
+    margin: 0 -1rem;
+    padding: 0 1rem;
+  }
+
+  .slider-container::before,
+  .slider-container::after {
+    width: 60px;
+    background: linear-gradient(
+      90deg,
+      var(--surface-0-dark) 0%,
+      rgba(24, 24, 27, 0.8) 40%,
+      transparent 100%
+    );
+  }
+
+  .slider-container::after {
+    background: linear-gradient(
+      -90deg,
+      var(--surface-0-dark) 0%,
+      rgba(24, 24, 27, 0.8) 40%,
+      transparent 100%
+    );
+  }
+
+  .slick-dots {
+    bottom: -0.5rem;  /* Reduced from -1rem */
+    margin-top: 0.25rem;  /* Reduced from 0.5rem */
+  }
+
+  .slick-dots li button:before {
+    color: var(--text-secondary);
+  }
+
+  .slick-dots li.slick-active button:before {
+    color: var(--accent);
+  }
+
+  .slick-prev,
+  .slick-next {
+    display: none !important;
+  }
+
+  .slick-list {
+    padding-right: 0.5rem;  /* Adjust spacing for mobile */
+  }
+
+  .section-title {
+    font-size: 1.75rem;  /* Slightly smaller on mobile */
+  }
+
+  .section-subtitle {
+    font-size: 1rem;
   }
 }
 
-/* Only go to single column at very narrow widths */
-@media (max-width: 400px) {
-  .projects-grid {
-    grid-template-columns: 1fr;
+@media (max-width: 640px) {
+  .slider-container {
+    margin: 0 -0.5rem;
   }
-}
 
-.demo-link {
-  display: inline-block;
-  margin-top: 1rem;
-  color: var(--accent);
-  text-decoration: none;
-  font-size: 0.95rem;
-}
+  .projects-slider {
+    padding: 0 0.5rem;
+  }
 
-.loading, .error {
-  text-align: center;
-  padding: 2rem;
-  color: var(--text-secondary);
-}
-
-.projects-slider {
-  margin: 0 1rem;  /* Add horizontal margin */
-}
-
-.slider-item {
-  padding: 0.5rem;
-}
-
-.slick-list {
-  overflow: hidden;  /* Force hidden */
-  margin: 0;
-}
-
-.slick-track {
-  margin-left: 0;  /* Reset default slick margins */
-  margin-right: 0;
-}
-
-.slick-prev, .slick-next {
-  z-index: 1;
-  width: 40px;  /* Increased from default */
-  height: 40px;  /* Increased from default */
-}
-
-.slick-prev:before, .slick-next:before {
-  font-size: 40px;  /* Increased from default 20px */
-  opacity: 0.8;
-}
-
-.slick-prev:hover:before, .slick-next:hover:before {
-  opacity: 1;
-}
-
-.slick-dots {
-  bottom: -2.5rem;  /* Move dots down a bit */
-}
-
-.slick-dots li button:before {
-  color: var(--text-secondary);
-}
-
-.slick-dots li.slick-active button:before {
-  color: var(--accent);
+  .slick-arrow {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .slider-container::before,
+  .slider-container::after {
+    width: 60px;
+  }
 }

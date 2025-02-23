@@ -103,6 +103,8 @@
   align-items: center;
   padding: 0 0.75rem;   /* Add horizontal padding */
   white-space: nowrap;  /* Prevent text wrapping */
+  opacity: 1;
+  transition: opacity 0.2s ease;
 }
 
 .nav-button::after {
@@ -127,14 +129,33 @@
   transform: scaleX(1);
 }
 
-/* Remove the .blog-button styles */
-
-.blog-nav-button {
-  color: var(--accent) !important;  /* Make it stand out */
+.nav-button.active {
+  color: var(--accent);
 }
 
-.blog-nav-button:hover {
-  opacity: 0.9;
+.nav-button.active::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+/* Remove ALL blog-nav-button specific styles */
+/* Let it just use nav-button styles */
+
+/* Only keep this for dimming other items when on blog */
+.all-posts-item ~ li .nav-button,
+body[data-route="/blog"] .nav-button:not(.blog-nav-button) {
+  opacity: 0.5;
+}
+
+/* Reset link styles completely */
+.nav-links a.nav-button {
+  text-decoration: none;
+  font: inherit;
+  font-size: 0.95rem;  /* Match other nav items */
+  height: 100%;
+  display: flex;
+  align-items: center;
+  padding: 0 0.75rem;
 }
 
 @media (prefers-color-scheme: light) {

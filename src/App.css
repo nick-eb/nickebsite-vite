@@ -218,6 +218,31 @@ body {
   width: 100%;
 }
 
+.home-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+@media (max-width: 768px) {
+  .home-container {
+    padding: 0;
+    overflow-x: hidden;
+  }
+  
+  main {
+    width: 100%;
+  }
+}
+
 /* Add Dark Reader specific overrides */
 [data-darkreader-mode] * {
   border-color: color-mix(in srgb, var(--background) 80%, white) !important;
@@ -226,4 +251,28 @@ body {
 [data-darkreader-mode] .glass {
   background: color-mix(in srgb, var(--background) 95%, white) !important;
   backdrop-filter: blur(10px);
+}
+
+/* Add new utility classes for section centering */
+.content-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.section-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .content-wrapper {
+    width: 100%;
+    padding: 0;
+  }
 }

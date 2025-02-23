@@ -1,10 +1,31 @@
 .blog-section {
   padding: 6rem 0;
   min-height: calc(100vh - 56px);
-  /* Remove background property */
+  position: relative;
+  overflow: visible;  /* Changed from hidden to allow gradient to extend */
+  background: radial-gradient(
+    circle at top right,
+    var(--gradient-1),
+    transparent 50%
+  ),
+  radial-gradient(
+    circle at bottom left,
+    var(--gradient-2),
+    transparent 50%
+  );
+  display: flex;
+  justify-content: center;  /* Center the content container */
+  width: 100%;
 }
 
 .blog-container {
+  position: relative;
+  z-index: 1;
+  backdrop-filter: var(--backdrop-blur);
+}
+
+.content-container {
+  width: min(90%, 1100px);  /* Use min() for responsive width with max limit */
   position: relative;
   z-index: 1;
 }
@@ -24,15 +45,19 @@
 }
 
 .blog-card {
-  background: var(--surface-1-dark);
+  background: var(--surface-1);
+  border: 1px solid var(--surface-2);
+  backdrop-filter: var(--backdrop-blur);
   border-radius: 12px;
   overflow: hidden;
   padding: 1.5rem;
-  transition: transform var(--transition-quick);
+  transition: all var(--transition-quick);
 }
 
 .blog-card:hover {
   transform: translateY(-2px);
+  border-color: var(--surface-3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .blog-card a {
@@ -70,25 +95,25 @@
 }
 
 .section-title {
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: 600;
-  color: var(--text-primary-dark);
+  color: var(--text-primary);
   text-align: center;
+  margin-bottom: 0.5rem;
+  position: relative;
 }
 
 .section-title-bar {
   width: 60px;
   height: 4px;
-  background: linear-gradient(90deg, #60a5fa, #8b5cf6);
-  margin: 1rem auto 2rem;
+  background: var(--accent);
+  margin: 0.5rem auto 1rem;
   border-radius: 2px;
 }
 
 .blog-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
+  text-align: center;
 }
 
 .back-button {
@@ -99,6 +124,10 @@
   border-radius: 8px;
   cursor: pointer;
   transition: all var(--transition-quick);
+  margin-top: 2rem;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .back-button:hover {

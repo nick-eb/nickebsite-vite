@@ -1,6 +1,6 @@
 ---
 title: The First FNF iOS Port
-date: 2023-12-20
+date: 2025-02-21
 excerpt: My journey porting and optimizing Friday Night Funkin' for iOS devices
 ---
 

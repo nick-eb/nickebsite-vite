@@ -9,22 +9,54 @@ import './GitHubProjects.css';
 const GitHubProjects = () => {
   const [projects, setProjects] = useState<Repository[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isStart, setIsStart] = useState(true);
+  const [isEnd, setIsEnd] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   const sliderSettings = {
     dots: true,
-    infinite: false,  // Disable infinite loop
+    infinite: false,
     speed: 500,
     slidesToShow: 3,
-    slidesToScroll: 1,  // Change to 1 for smoother navigation
+    slidesToScroll: 1,
+    swipeToSlide: true,  // Enable smooth touch sliding
+    touchThreshold: 10,  // Make touch more responsive
+    useCSS: true,       // Enable CSS transitions
     responsive: [
+      {
+        breakpoint: 1024,
+        settings: {
+          slidesToShow: 2.2,  // Show partial third card
+          slidesToScroll: 1
+        }
+      },
       {
         breakpoint: 768,
         settings: {
-          slidesToShow: 2,
+          slidesToShow: 2,    // Show two full cards on tablet
           slidesToScroll: 1
         }
+      },
+      {
+        breakpoint: 640,
+        settings: {
+          slidesToShow: 1.2,  // Show partial second card on mobile
+          slidesToScroll: 1,
+          arrows: true,
+          dots: true
+        }
       }
-    ]
+    ],
+    beforeChange: (current: number, next: number) => {
+      setCurrentSlide(next);
+      setIsStart(next === 0);
+    },
+    afterChange: (current: number) => {
+      const totalSlides = projects.length;
+      const slidesToShow = window.innerWidth <= 640 ? 1.2 : window.innerWidth <= 1024 ? 2.2 : 3;
+      setIsEnd(current >= totalSlides - slidesToShow);
+      setCurrentSlide(current);
+    }
   };
 
   useEffect(() => {
@@ -45,14 +77,16 @@ const GitHubProjects = () => {
 
   return (
     <section className="github-projects">
-      <h2 className="section-title">My Coding Projects</h2>
-      <Slider {...sliderSettings} className="projects-slider">
-        {projects.map((project) => (
-          <div key={project.name} className="slider-item">
-            <ProjectCard project={project} />
-          </div>
-        ))}
-      </Slider>
+      <h2 className="section-title">Coding Projects</h2>
+      <div className={`slider-container ${isStart ? 'at-start' : ''} ${isEnd ? 'at-end' : ''} ${!isStart && !isEnd ? 'in-middle' : ''}`}>
+        <Slider {...sliderSettings} className="projects-slider">
+          {projects.map((project) => (
+            <div key={project.name} className="slider-item">
+              <ProjectCard project={project} />
+            </div>
+          ))}
+        </Slider>
+      </div>
     </section>
   );
 };
