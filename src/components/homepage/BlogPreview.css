@@ -1,5 +1,5 @@
 .blog-preview-section {
-  padding: 2rem 0;  /* Reduced from 4rem */
+  padding: 2rem 0 1rem;  /* Reduced bottom padding from 2rem to 1rem */
 }
 
 .blog-preview-header {
@@ -29,11 +29,13 @@
   background: var(--surface-1-dark);
   border-radius: 12px;
   overflow: hidden;
-  transition: transform var(--transition-quick);
+  transition: all var(--transition-quick);  /* Match GitHub cards transition */
 }
 
 .blog-preview-card:hover {
   transform: translateY(-2px);
+  background: var(--surface-2-dark);
+  box-shadow: var(--shadow-md);  /* Match GitHub cards shadow */
 }
 
 .blog-preview-link {
@@ -65,7 +67,8 @@
 
 @media (max-width: 768px) {
   .blog-preview-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);  /* Change to 2 columns */
+    gap: 0.5rem;  /* Reduce gap on mobile */
   }
   
   .view-all {
@@ -75,5 +78,19 @@
 
   .blog-preview-section {
     padding: 1.5rem 1rem;  /* Reduced from 3rem 1rem */
+  }
+
+  .blog-preview-title {
+    font-size: 1.1rem;  /* Slightly smaller title */
+  }
+
+  .blog-preview-excerpt {
+    font-size: 0.9rem;  /* Slightly smaller text */
+  }
+}
+
+@media (max-width: 480px) {
+  .blog-preview-grid {
+    grid-template-columns: 1fr;  /* Single column only on very small screens */
   }
 }

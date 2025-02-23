@@ -1,14 +1,15 @@
 .github-projects {
   padding: 2rem 0;
+  max-width: 1100px;  /* Match blog preview width */
+  margin: 0 auto;     /* Center the section */
+  width: 90%;         /* Add width constraint */
 }
 
 .projects-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.5rem;
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 1rem;
+  padding: 0;
 }
 
 .project-card {
@@ -89,7 +90,26 @@
 
 @media (max-width: 768px) {
   .projects-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);  /* Change to 2 columns */
+    gap: 0.5rem;  /* Reduce gap on mobile */
+  }
+
+  .github-projects {
+    padding: 1.5rem 1rem;
+  }
+
+  .project-content h3 {
+    font-size: 1.1rem;  /* Slightly smaller title */
+  }
+
+  .project-content p {
+    font-size: 0.9rem;  /* Slightly smaller text */
+  }
+}
+
+@media (max-width: 480px) {
+  .projects-grid {
+    grid-template-columns: 1fr;  /* Single column only on very small screens */
   }
 }
 

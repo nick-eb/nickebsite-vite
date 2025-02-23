@@ -1,52 +1,69 @@
 import { motion } from 'framer-motion';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
-import { faGithub, faInstagram, faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { faGithub, faInstagram, faTwitter, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import './Contact.css';
 
 const Contact = () => {
   const socialLinks = [
-    { href: 'https://github.com/hadobedo/', icon: faGithub, label: 'GitHub' },
-    { href: 'https://twitter.com/NicksWorkslol/', icon: faTwitter, label: 'Twitter' },
-    { href: 'https://instagram.com/nick__eb', icon: faInstagram, label: 'Instagram' }
+    { 
+      href: 'https://github.com/hadobedo/', 
+      icon: faGithub, 
+      label: 'GitHub'
+    },
+    { 
+      href: 'https://www.linkedin.com/in/nicholas-bonello-642a73333/', 
+      icon: faLinkedin, 
+      label: 'LinkedIn'
+    },
+    { 
+      href: 'https://twitter.com/NicksWorkslol/', 
+      icon: faTwitter, 
+      label: 'Twitter'
+    },
+    { 
+      href: 'https://instagram.com/nick__eb', 
+      icon: faInstagram, 
+      label: 'Instagram'
+    }
   ];
 
   return (
-    <section className="contact-section">
+    <section id="contact" className="contact-section">
       <div className="content-container">
-        <motion.h2 
-          className="section-title"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          Contact Me
-        </motion.h2>
-
         <motion.div 
-          className="contact-grid"
+          className="contact-content"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
         >
-          <div className="contact-email">
-            <FontAwesomeIcon icon={faEnvelope} />
-            <a href="mailto:nicholas.e.bonello@gmail.com">
-              nicholas.e.bonello@gmail.com
-            </a>
-          </div>
-
-          <div className="social-links">
-            {socialLinks.map(({ href, icon, label }) => (
-              <a
-                key={href}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="social-link"
+          <h2 className="section-title">Contact Me</h2>
+          
+          <div className="contact-card">
+            <div className="contact-info">
+              <FontAwesomeIcon icon={faEnvelope} className="email-icon" />
+              <a 
+                href="mailto:nicholas.e.bonello@gmail.com"
+                className="email-link"
               >
-                <FontAwesomeIcon icon={icon} />
-                <span>{label}</span>
+                nicholas.e.bonello@gmail.com
               </a>
-            ))}
+            </div>
+
+            <div className="social-links">
+              {socialLinks.map(({ href, icon, label }) => (
+                <a
+                  key={href}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="social-link"
+                >
+                  <FontAwesomeIcon icon={icon} />
+                  <span>{label}</span>
+                </a>
+              ))}
+            </div>
           </div>
         </motion.div>
       </div>

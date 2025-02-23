@@ -50,9 +50,8 @@ const Intro = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.8 }}  // Reduced from 1.4
           >
-            I'm a developer and computer science student passionate about
-            computers and using them to make life easier and more accessible 
-            for all.
+            I'm a computer science student at York University who is passionate about
+            using computers to make life easier and more accessible for all.
           </motion.p>
 
           <motion.div 

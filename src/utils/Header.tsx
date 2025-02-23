@@ -21,7 +21,7 @@ const Header = () => {
   const navItems = [
     { id: 'intro', label: 'Home' },
     { id: 'projects', label: 'Projects' },
-    { id: 'blog', label: 'Blog' },
+    { id: 'blog', label: 'Posts' },  // Shortened from 'Recent Posts'
     { id: 'contact', label: 'Contact' }
   ];
 
@@ -39,8 +39,8 @@ const Header = () => {
               </button>
             </li>
           ))}
-          <li>
-            <Link to="/blog" className="nav-button blog-nav-button">Blog</Link>
+          <li className="all-posts-item">
+            <Link to="/blog" className="nav-button blog-nav-button">All Posts</Link>
           </li>
         </ul>
       </nav>

@@ -30,10 +30,11 @@
 .nav-links {
   height: 100%;
   display: flex;
-  gap: 2rem;
+  gap: 1rem;  /* Reduced from 2rem for better spacing */
   align-items: center;
   margin: 0;
   padding: 0;
+  flex-wrap: nowrap;  /* Prevent wrapping */
 }
 
 .nav-links li {
@@ -100,7 +101,8 @@
   height: 100%;
   display: flex;
   align-items: center;
-  padding: 0 0.5rem;
+  padding: 0 0.75rem;   /* Add horizontal padding */
+  white-space: nowrap;  /* Prevent text wrapping */
 }
 
 .nav-button::after {
@@ -151,7 +153,23 @@
 }
 
 @media (max-width: 768px) {
-  .blog-nav-button {
-    display: none;  /* Hide on mobile since we already have Blog in nav */
+  .nav-links {
+    gap: 0.5rem;  /* Further reduce gap on mobile */
+    padding: 0 0.5rem;  /* Add some padding */
   }
+
+  .nav-button {
+    padding: 0 0.5rem;  /* Reduce padding on mobile */
+    font-size: 0.9rem;  /* Slightly smaller font */
+  }
+
+  /* Remove this rule that was hiding the button */
+  /*.blog-nav-button {
+    display: none;
+  }*/
+}
+
+/* Add styles for all-posts item */
+.all-posts-item {
+  margin-left: auto;  /* Push to the right */
 }
