@@ -4,7 +4,7 @@ import mdx from '@mdx-js/rollup';
 import { resolve } from 'path';
 
 export default defineConfig({
-  base: '/nickebsite-vite/',  // Keep this
+  base: '/',  // Change from '/nickebsite-vite/' to '/'
   plugins: [
     react(),
     mdx()
@@ -23,7 +23,9 @@ export default defineConfig({
     open: true
   },
   build: {
+    assetsDir: 'assets',
     outDir: 'dist',
-    sourcemap: true
+    sourcemap: true,
+    emptyOutDir: true
   }
 });

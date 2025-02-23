@@ -15,17 +15,18 @@
   --error: #dc2626;
   
   /* Colors - Dark mode */
-  --surface-0-dark: #121212;  /* Material Dark background */
-  --surface-1-dark: #1E1E1E;  /* Material Dark surface */
-  --surface-2-dark: #242424;  /* Material Dark elevated surface */
-  --surface-3-dark: #2C2C2C;  /* Material Dark higher elevation */
+  --surface-0-dark: var(--background);  /* Dark Reader friendly */
+  --surface-1-dark: var(--surface-1);  /* Dark Reader friendly */
+  --surface-2-dark: var(--surface-2);  /* Dark Reader friendly */
+  --surface-3-dark: var(--surface-3);  /* Dark Reader friendly */
   --text-primary-dark: #f8fafc;
   --text-secondary-dark: #cbd5e1;
   
   /* Elevation */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.1);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --shadow-color: color-mix(in srgb, var(--background) 70%, black);  /* Dark Reader friendly */
+  --shadow-sm: 0 1px 2px var(--shadow-color);
+  --shadow-md: 0 4px 6px var(--shadow-color);
+  --shadow-lg: 0 10px 15px var(--shadow-color);
   
   /* Animation - Reduced */
   --transition-quick: 0.2s ease;
@@ -215,4 +216,14 @@ body {
   background: var(--surface-0-dark);
   min-height: 100vh;
   width: 100%;
+}
+
+/* Add Dark Reader specific overrides */
+[data-darkreader-mode] * {
+  border-color: color-mix(in srgb, var(--background) 80%, white) !important;
+}
+
+[data-darkreader-mode] .glass {
+  background: color-mix(in srgb, var(--background) 95%, white) !important;
+  backdrop-filter: blur(10px);
 }

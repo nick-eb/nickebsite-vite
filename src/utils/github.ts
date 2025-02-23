@@ -3,7 +3,7 @@ import { Octokit } from 'octokit';
 const octokit = new Octokit();
 
 const CACHE_KEY = 'github-repos-cache';
-const CACHE_DURATION = 1000 * 60 * 60; // 1 hour
+const CACHE_DURATION = 1000 * 60 * 60 * 4; // 4 hours in milliseconds
 
 export interface Repository {
   name: string;
@@ -14,18 +14,21 @@ export interface Repository {
   languageColor: string | null;
   homepage: string | null;
   openGraphImageUrl: string;
-  social_preview_url?: string;
-  default_branch: string;
+  social_preview_url: string;  // Add this field
 }
 
 export async function getRepository(owner: string, repo: string): Promise<Repository | null> {
+  const cacheKey = `${CACHE_KEY}-${owner}-${repo}`;
+  
   // Check cache first
-  const cached = localStorage.getItem(`${CACHE_KEY}-${owner}-${repo}`);
+  const cached = localStorage.getItem(cacheKey);
   if (cached) {
     const { data, timestamp } = JSON.parse(cached);
     if (Date.now() - timestamp < CACHE_DURATION) {
+      console.log(`Using cached data for ${owner}/${repo}`);
       return data;
     }
+    console.log(`Cache expired for ${owner}/${repo}, fetching fresh data`);
   }
 
   try {
@@ -35,10 +38,7 @@ export async function getRepository(owner: string, repo: string): Promise<Reposi
     ]);
 
     const primaryLanguage = Object.keys(languagesData.data)[0];
-    
-    // Try to get social preview image
     const socialPreviewUrl = `https://opengraph.githubassets.com/${Date.now()}/${owner}/${repo}`;
-    const fallbackImageUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${repoData.data.default_branch}/.github/social-preview.png`;
 
     const repositoryData: Repository = {
       name: repoData.data.name,
@@ -48,13 +48,12 @@ export async function getRepository(owner: string, repo: string): Promise<Reposi
       language: primaryLanguage || null,
       languageColor: getLanguageColor(primaryLanguage),
       homepage: repoData.data.homepage,
-      openGraphImageUrl: repoData.data.open_graph_image_url,
-      social_preview_url: socialPreviewUrl,
-      default_branch: repoData.data.default_branch
+      openGraphImageUrl: socialPreviewUrl,
+      social_preview_url: socialPreviewUrl
     };
 
-    // Store in cache
-    localStorage.setItem(`${CACHE_KEY}-${owner}-${repo}`, JSON.stringify({
+    // Store in cache with timestamp
+    localStorage.setItem(cacheKey, JSON.stringify({
       data: repositoryData,
       timestamp: Date.now()
     }));
@@ -62,6 +61,14 @@ export async function getRepository(owner: string, repo: string): Promise<Reposi
     return repositoryData;
   } catch (error) {
     console.error(`Failed to fetch repository ${owner}/${repo}:`, error);
+    
+    // Try to use expired cache data on error
+    const expired = localStorage.getItem(cacheKey);
+    if (expired) {
+      console.log(`Using expired cache for ${owner}/${repo} due to fetch error`);
+      return JSON.parse(expired).data;
+    }
+    
     return null;
   }
 }

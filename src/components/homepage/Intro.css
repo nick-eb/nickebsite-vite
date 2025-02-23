@@ -5,6 +5,7 @@
   padding: 2.5rem 0.5rem 2rem;  /* Reduced from 5rem 0.5rem 4rem */
   /* Remove background property as it will be handled by the container */
   padding-bottom: 2rem;  /* Add bottom padding */
+  padding-top: 4rem;  /* Add padding for fixed header */
 }
 
 .intro-content {
@@ -144,6 +145,25 @@
   .intro {
     min-height: max(45vh, 300px);  /* Further reduced */
     padding: 2rem 1rem 1.5rem;  /* Reduced from 4rem 1rem 3rem */
+    padding-top: 5rem;  /* Increase top padding on mobile */
+    min-height: auto;   /* Allow content to determine height */
+  }
+
+  .intro-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;         /* Increase gap between elements */
+    text-align: center;
+  }
+
+  .intro-text {
+    padding-right: 0;
+    order: 1;          /* Move text below logo */
+  }
+
+  .intro-logo {
+    justify-content: center;
+    order: 0;          /* Move logo to top */
+    margin-top: 1rem;  /* Add some space at the top */
   }
 
   .intro-bio {

@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, Link } from 'react-router-dom';
 import './Header.css';
 
 const Header = () => {
@@ -40,12 +40,7 @@ const Header = () => {
             </li>
           ))}
           <li>
-            <button 
-              onClick={() => navigate('/blog')}
-              className="nav-button blog-nav-button"
-            >
-              All Blog Posts
-            </button>
+            <Link to="/blog" className="nav-button blog-nav-button">Blog</Link>
           </li>
         </ul>
       </nav>

@@ -55,7 +55,7 @@ const ProjectCard = ({ project }: { project: Repository }) => {
             if (img.src !== project.openGraphImageUrl) {
               img.src = project.openGraphImageUrl;
             } else {
-              img.src = '/nickebsite-vite/assets/img/github-placeholder.png';
+              img.src = '/assets/img/github-placeholder.png';  // Update path
             }
           }}
         />
