@@ -4,7 +4,7 @@ import mdx from '@mdx-js/rollup';
 import { resolve } from 'path';
 
 export default defineConfig({
-  base: '/',
+  base: '/nickebsite-vite/',  // Keep this
   plugins: [
     react(),
     mdx()

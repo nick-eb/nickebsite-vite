@@ -62,7 +62,7 @@ const Intro = () => {
             transition={{ duration: 0.5, delay: 1 }}
           >
             <a 
-              href={import.meta.env.BASE_URL + 'assets/Nicholas Bonello Resume.pdf'} 
+              href="/nickebsite-vite/assets/Nicholas Bonello Resume.pdf"
               className="intro-button"
               download
             >
@@ -83,7 +83,7 @@ const Intro = () => {
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <img src={import.meta.env.BASE_URL + 'assets/img/logo.png'} alt="Nick B Logo" />
+          <img src="/nickebsite-vite/assets/img/logo.png" alt="Nick B Logo" />
         </motion.div>
       </div>
     </section>
