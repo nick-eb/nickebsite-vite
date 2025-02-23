@@ -1,12 +1,14 @@
 .github-projects {
-  padding: 2rem 0;
-  max-width: 1100px;  /* Match blog preview width */
-  margin: 0 auto;     /* Center the section */
-  width: 90%;         /* Add width constraint */
+  padding: 2rem;  /* Simplified padding */
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 95%;  /* Changed from 100% to give some breathing room */
+  position: relative;
+  overflow: hidden;  /* Add this to contain everything */
 }
 
 .projects-grid {
-  display: grid;
+  display: block;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.5rem;
   padding: 0;
@@ -22,6 +24,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  margin: 0.5rem;  /* Add margin to the card itself */
 }
 
 .project-image {
@@ -90,26 +93,35 @@
 
 @media (max-width: 768px) {
   .projects-grid {
-    grid-template-columns: repeat(2, 1fr);  /* Change to 2 columns */
-    gap: 0.5rem;  /* Reduce gap on mobile */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
   }
 
   .github-projects {
-    padding: 1.5rem 1rem;
+    padding: 2rem;  /* Reduced but still maintain space */
   }
 
   .project-content h3 {
-    font-size: 1.1rem;  /* Slightly smaller title */
+    font-size: 1rem;
   }
 
   .project-content p {
-    font-size: 0.9rem;  /* Slightly smaller text */
+    font-size: 0.9rem;
+  }
+
+  .slick-prev {
+    left: -1.5rem;
+  }
+
+  .slick-next {
+    right: -1.5rem;
   }
 }
 
-@media (max-width: 480px) {
+/* Only go to single column at very narrow widths */
+@media (max-width: 400px) {
   .projects-grid {
-    grid-template-columns: 1fr;  /* Single column only on very small screens */
+    grid-template-columns: 1fr;
   }
 }
 
@@ -125,4 +137,49 @@
   text-align: center;
   padding: 2rem;
   color: var(--text-secondary);
+}
+
+.projects-slider {
+  margin: 0 1rem;  /* Add horizontal margin */
+}
+
+.slider-item {
+  padding: 0.5rem;
+}
+
+.slick-list {
+  overflow: hidden;  /* Force hidden */
+  margin: 0;
+}
+
+.slick-track {
+  margin-left: 0;  /* Reset default slick margins */
+  margin-right: 0;
+}
+
+.slick-prev, .slick-next {
+  z-index: 1;
+  width: 40px;  /* Increased from default */
+  height: 40px;  /* Increased from default */
+}
+
+.slick-prev:before, .slick-next:before {
+  font-size: 40px;  /* Increased from default 20px */
+  opacity: 0.8;
+}
+
+.slick-prev:hover:before, .slick-next:hover:before {
+  opacity: 1;
+}
+
+.slick-dots {
+  bottom: -2.5rem;  /* Move dots down a bit */
+}
+
+.slick-dots li button:before {
+  color: var(--text-secondary);
+}
+
+.slick-dots li.slick-active button:before {
+  color: var(--accent);
 }

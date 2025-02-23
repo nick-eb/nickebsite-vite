@@ -1,11 +1,31 @@
 import { useState, useEffect } from 'react';
+import Slider from "react-slick";
 import { Repository, getRepository } from '../../utils/github';
 import { PROJECTS } from '../../utils/projects';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 import './GitHubProjects.css';
 
 const GitHubProjects = () => {
   const [projects, setProjects] = useState<Repository[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const sliderSettings = {
+    dots: true,
+    infinite: false,  // Disable infinite loop
+    speed: 500,
+    slidesToShow: 3,
+    slidesToScroll: 1,  // Change to 1 for smoother navigation
+    responsive: [
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 2,
+          slidesToScroll: 1
+        }
+      }
+    ]
+  };
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -26,11 +46,13 @@ const GitHubProjects = () => {
   return (
     <section className="github-projects">
       <h2 className="section-title">My Coding Projects</h2>
-      <div className="projects-grid">
+      <Slider {...sliderSettings} className="projects-slider">
         {projects.map((project) => (
-          <ProjectCard key={project.name} project={project} />
+          <div key={project.name} className="slider-item">
+            <ProjectCard project={project} />
+          </div>
         ))}
-      </div>
+      </Slider>
     </section>
   );
 };

@@ -105,8 +105,8 @@
 
 .social-links {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
+  grid-template-columns: repeat(2, 1fr);  /* Always 2 columns */
+  gap: 0.75rem;
   padding: 0;
 }
 
@@ -152,13 +152,14 @@
   }
 
   .social-links {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr);  /* Force 2 columns */
     padding: 0;
+    gap: 0.75rem;
   }
 
   .social-link {
     padding: 0.75rem;  /* Slightly reduce padding */
-    font-size: 1.1rem;  /* Increased from 0.9rem */
+    font-size: 0.9rem;  /* Increased from 0.9rem */
   }
 
   .social-link svg {
@@ -170,9 +171,4 @@
   }
 }
 
-/* Only switch to single column at very small screens */
-@media (max-width: 480px) {
-  .social-links {
-    grid-template-columns: 1fr;
-  }
-}
+/* Remove or comment out any media queries that change grid-template-columns to 1fr */
