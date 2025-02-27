@@ -49,7 +49,7 @@ const BlogPreview = () => {
         }
       }
     ],
-    beforeChange: (oldIndex: number, newIndex: number) => {
+    beforeChange: (_oldIndex: number, newIndex: number) => {
       setIsStart(newIndex === 0);
     },
     afterChange: (current: number) => {

@@ -11,7 +11,6 @@ const GitHubProjects = () => {
   const [loading, setLoading] = useState(true);
   const [isStart, setIsStart] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
-  const [currentSlide, setCurrentSlide] = useState(0);
 
   const sliderSettings = {
     dots: true,
@@ -47,15 +46,13 @@ const GitHubProjects = () => {
         }
       }
     ],
-    beforeChange: (current: number, next: number) => {
-      setCurrentSlide(next);
+    beforeChange: (_current: number, next: number) => {
       setIsStart(next === 0);
     },
     afterChange: (current: number) => {
       const totalSlides = projects.length;
       const slidesToShow = window.innerWidth <= 640 ? 1.2 : window.innerWidth <= 1024 ? 2.2 : 3;
       setIsEnd(current >= totalSlides - slidesToShow);
-      setCurrentSlide(current);
     }
   };
 

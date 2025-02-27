@@ -65,7 +65,7 @@ const Blog = () => {
               <p className="text-center text-gray-400">No blog posts found.</p>
             ) : (
               <div className="blog-grid">
-                {posts.map((post, i) => (
+                {posts.map(post => (
                   <article 
                     key={post.slug}
                     className="blog-card"
