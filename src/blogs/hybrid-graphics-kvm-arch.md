@@ -2,7 +2,7 @@
 title: Power management and gaming VMs with NVIDIA hybrid laptop dGPUs
 date: 2025-02-27
 excerpt: How I achieved power management and graphics-accelerated VMs using libvirt and QEMU on my NVIDIA hybrid graphics laptop.
-thumbnail: /public/assets/img/hybrid-kvm-redmibook.png
+thumbnail: /assets/img/hybrid-kvm-redmibook.png
 ---
 
 <em>This is my hybrid graphics laptop. There are many like it, but this one is mine.</em>
