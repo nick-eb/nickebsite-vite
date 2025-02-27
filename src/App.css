@@ -268,6 +268,15 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 0rem 0;  /* Reduced from 4rem */
+}
+
+.section-container:first-child {
+  padding-top: 1.5rem;  /* Reduced from 6rem */
+}
+
+.section-container:last-child {
+  padding-bottom: 1rem;  /* Reduced from 2rem */
 }
 
 @media (max-width: 768px) {

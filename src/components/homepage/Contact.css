@@ -1,11 +1,11 @@
 .contact-section {
-  padding: 1rem 2rem 2rem;  /* Reduced from 1rem 2rem 4rem */
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Remove padding as it's handled by section-container */
 }
 
 .section-title {
@@ -142,8 +142,7 @@
 
 @media (max-width: 768px) {
   .contact-section {
-    padding: 1rem 1rem 3rem;
-    width: 100%;
+    /* Remove padding as it's handled by section-container */
   }
 
   .section-title {

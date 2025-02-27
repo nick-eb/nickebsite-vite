@@ -50,7 +50,7 @@ const Intro = () => {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.8 }}  // Reduced from 1.4
           >
-            I'm a computer science student at York University who is passionate about
+            I'm a computer science student currently attending York University. I am passionate about
             using computers to make life easier and more accessible for all.
           </motion.p>
 

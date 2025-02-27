@@ -6,6 +6,7 @@ export interface BlogPost {
   date: string;
   excerpt: string;
   content: string;
+  thumbnail?: string;
 }
 
 // Fix the typing for import.meta.glob
@@ -30,12 +31,14 @@ export async function loadBlogPosts(): Promise<BlogPost[]> {
     const titleMatch = frontMatter.match(/title:\s*(.+)/);
     const dateMatch = frontMatter.match(/date:\s*(.+)/);
     const excerptMatch = frontMatter.match(/excerpt:\s*(.+)/);
+    const thumbnailMatch = frontMatter.match(/thumbnail:\s*(.+)/);
     
     posts.push({
       slug,
       title: titleMatch ? titleMatch[1].trim() : slug,
       date: dateMatch ? dateMatch[1].trim() : new Date().toISOString(),
       excerpt: excerptMatch ? excerptMatch[1].trim() : '',
+      thumbnail: thumbnailMatch ? thumbnailMatch[1].trim() : undefined,
       content: mainContent
     });
   }

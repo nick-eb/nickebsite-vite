@@ -37,13 +37,7 @@
   margin-top: 2rem;
 }
 
-.blog-card-link {
-  text-decoration: none;
-  color: inherit;
-  display: block;
-  height: 100%;
-}
-
+/* Card Styles */
 .blog-card {
   background: var(--surface-1);
   border: 1px solid var(--surface-2);
@@ -60,13 +54,14 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-.blog-card a {
+.blog-card-link {
   text-decoration: none;
   color: inherit;
   display: block;
   height: 100%;
 }
 
+/* Typography */
 .blog-title {
   font-size: 1.25rem;
   font-weight: 600;
@@ -94,6 +89,7 @@
   font-size: 0.875rem;
 }
 
+/* Header Styles */
 .section-title {
   font-size: 2.5rem;
   font-weight: 600;
@@ -116,6 +112,7 @@
   text-align: center;
 }
 
+/* Back Button */
 .back-button {
   padding: 0.75rem 1.5rem;
   background: var(--surface-1);
@@ -124,10 +121,8 @@
   border-radius: 8px;
   cursor: pointer;
   transition: all var(--transition-quick);
-  margin-top: 2rem;
+  margin: 2rem auto 0;
   display: block;
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .back-button:hover {
@@ -145,7 +140,7 @@
   }
   
   .section-title {
-    font-size: 2.5rem;
+    font-size: 2rem;
   }
 
   .blog-header {
@@ -160,7 +155,7 @@
     background: var(--surface-1);
   }
   
-  .blog-title {
+  .blog-title, .section-title {
     color: var(--text-primary);
   }
   
@@ -170,9 +165,5 @@
   
   .read-more {
     color: var(--accent);
-  }
-  
-  .section-title {
-    color: var(--text-primary);
   }
 }

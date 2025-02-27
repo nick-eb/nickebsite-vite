@@ -7,6 +7,8 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import './BlogPreview.css';
 
+const DEFAULT_THUMBNAIL = '/assets/img/logo.png';
+
 const BlogPreview = () => {
   const navigate = useNavigate();
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -97,22 +99,32 @@ const BlogPreview = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: i * 0.1 }}
                 >
-                  <Link to={`/blog/${post.slug}`} className="blog-preview-link">
-                    <h3 className="blog-preview-title">{post.title}</h3>
-                    <time className="blog-preview-date">
-                      {new Date(post.date).toLocaleDateString()}
-                    </time>
-                    <p className="blog-preview-excerpt">{post.excerpt}</p>
+                  <Link to={`/blog/${post.slug}`} className="blog-card-link">
+                    <div className="blog-image">
+                      <img 
+                        src={post.thumbnail || DEFAULT_THUMBNAIL}
+                        alt={`${post.title} thumbnail`}
+                        loading="lazy"
+                      />
+                    </div>
+                    <div className="blog-card-content">
+                      <h3 className="blog-title">{post.title}</h3>
+                      <time className="blog-date">
+                        {new Date(post.date).toLocaleDateString()}
+                      </time>
+                      <p className="blog-excerpt">{post.excerpt}</p>
+                      <span className="read-more">Read more →</span>
+                    </div>
                   </Link>
                 </motion.article>
               </div>
             ))}
           </Slider>
+          
+          <Link to="/blog" className="view-all-link" onClick={handleViewAll}>
+            View all posts →
+          </Link>
         </div>
-
-        <Link to="/blog" className="view-all-link" onClick={handleViewAll}>
-          View all posts →
-        </Link>
       </div>
     </section>
   );
