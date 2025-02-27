@@ -4,6 +4,5 @@ date: 2025-02-22
 excerpt: How far can we push Sony's best console?
 ---
 
-# Your blog post content here...
-## Hello world
-### HELLO
+# UNDER CONSTRUCTION
+## check back later ;)
