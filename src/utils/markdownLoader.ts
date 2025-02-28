@@ -19,28 +19,45 @@ export async function loadBlogPosts(): Promise<BlogPost[]> {
   const posts: BlogPost[] = [];
 
   for (const path in blogPosts) {
-    const content = blogPosts[path];
-    const slug = path.split('/').pop()?.replace('.md', '') || '';
-    
-    // Extract front matter
-    const frontMatterMatch = content.match(/^---\n([\s\S]*?)\n---/);
-    const frontMatter = frontMatterMatch ? frontMatterMatch[1] : '';
-    const mainContent = content.replace(/^---\n[\s\S]*?\n---/, '').trim();
-    
-    // Parse front matter
-    const titleMatch = frontMatter.match(/title:\s*(.+)/);
-    const dateMatch = frontMatter.match(/date:\s*(.+)/);
-    const excerptMatch = frontMatter.match(/excerpt:\s*(.+)/);
-    const thumbnailMatch = frontMatter.match(/thumbnail:\s*(.+)/);
-    
-    posts.push({
-      slug,
-      title: titleMatch ? titleMatch[1].trim() : slug,
-      date: dateMatch ? dateMatch[1].trim() : new Date().toISOString(),
-      excerpt: excerptMatch ? excerptMatch[1].trim() : '',
-      thumbnail: thumbnailMatch ? thumbnailMatch[1].trim() : undefined,
-      content: mainContent
-    });
+    try {
+      const content = blogPosts[path];
+      const slug = path.split('/').pop()?.replace('.md', '') || '';
+      
+      // Normalize line endings
+      const normalizedContent = content.replace(/\r\n/g, '\n');
+      
+      // Extract front matter with more robust regex
+      const frontMatterMatch = normalizedContent.match(/^---\s*\n([\s\S]*?)\n---\s*\n/);
+      const frontMatter = frontMatterMatch ? frontMatterMatch[1] : '';
+      const mainContent = normalizedContent.replace(/^---\s*\n[\s\S]*?\n---\s*\n/, '').trim();
+      
+      // Improved front matter parsing with optional whitespace
+      const getFrontMatterValue = (key: string): string => {
+        const match = frontMatter.match(new RegExp(`${key}:\\s*(.+?)\\s*(?:\\n|$)`));
+        return match ? match[1].trim() : '';
+      };
+
+      const post: BlogPost = {
+        slug,
+        title: getFrontMatterValue('title') || slug,
+        date: getFrontMatterValue('date') || new Date().toISOString(),
+        excerpt: getFrontMatterValue('excerpt') || '',
+        thumbnail: getFrontMatterValue('thumbnail') || undefined,
+        content: mainContent
+      };
+
+      // Debug logging
+      console.debug(`Parsed post "${path}":`, {
+        slug: post.slug,
+        title: post.title,
+        hasContent: !!post.content,
+        frontMatter: !!frontMatter
+      });
+
+      posts.push(post);
+    } catch (error) {
+      console.error(`Error parsing blog post ${path}:`, error);
+    }
   }
 
   // Sort by date, newest first
@@ -54,7 +71,6 @@ export async function loadBlogPost(slug: string): Promise<BlogPost | null> {
     
     if (!post) return null;
     
-    // Fix: await the marked function
     post.content = await marked(post.content);
     return post;
   } catch (error) {
