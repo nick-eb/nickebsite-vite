@@ -55,6 +55,45 @@
   font-size: 0.9em;
 }
 
+/* Terminal/Console styling */
+.blog-post-content .console {
+  background: #282c34;
+  border-radius: 6px;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
+.blog-post-content .console code {
+  display: block;
+  font-family: var(--ff-mono);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #abb2bf;
+  background: transparent;
+  padding: 0;
+  white-space: pre-wrap;
+}
+
+.blog-post-content .console code::before {
+  content: "$ ";
+  color: #98c379;
+  user-select: none;
+}
+
+/* Optional terminal title bar */
+.blog-post-content .console[data-title]::before {
+  content: attr(data-title);
+  display: block;
+  background: #21252b;
+  padding: 0.5rem 1rem;
+  margin: -1rem -1rem 1rem -1rem;
+  border-radius: 6px 6px 0 0;
+  color: #abb2bf;
+  font-size: 0.85rem;
+  font-family: var(--ff-mono);
+}
+
 .back-button {
   margin-top: 3rem;
   padding: 0.75rem 1.5rem;
@@ -97,6 +136,19 @@
     background: var(--surface-2);
   }
   
+  .blog-post-content .console {
+    background: #282c34;
+  }
+  
+  .blog-post-content .console code {
+    color: #abb2bf;
+  }
+  
+  .blog-post-content .console[data-title]::before {
+    background: #21252b;
+    color: #abb2bf;
+  }
+  
   .back-button {
     background: var(--surface-1);
     color: var(--text-primary);
@@ -114,5 +166,14 @@
   
   .blog-post-content {
     padding: 1.5rem;
+  }
+  
+  .blog-post-content .console {
+    margin: 1rem -0.5rem;
+    border-radius: 4px;
+  }
+  
+  .blog-post-content .console code {
+    font-size: 0.85rem;
   }
 }
