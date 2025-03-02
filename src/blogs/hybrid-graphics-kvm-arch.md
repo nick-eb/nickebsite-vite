@@ -18,7 +18,7 @@ modprobe: FATAL: Module nvidia_drm is in use.</code>
 
 The culprit was two of my startup apps, Mullvad VPN and Vesktop, using `nvidia_drm` for some reason? 
 
-I have `nvidia_drm.modeset=0` set in my commandline as well as in my modprobe.d configs, and running `sudo cat /sys/module/nvidia_drm/parameters/modeset` returns `N` as expected. I also tried with `nvidia_drm.modeset=1` and the same issue with apps launching 'with' nvidia_drm would occur.
+I have `nvidia_drm.modeset=1` set in my commandline, and running `sudo cat /sys/module/nvidia_drm/parameters/modeset` returns `Y` as expected. I also tried with `nvidia_drm.modeset=0` and the same issue behaviour occurs.
 
 #### SOLUTION:
 Running `sudo lsmod | grep nvidia` revealed that 2 processes that were using `nvidia_drm`:
