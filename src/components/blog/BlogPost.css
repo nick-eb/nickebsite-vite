@@ -208,14 +208,13 @@
 .image-carousel {
   max-width: 720px; /* Match blog content width */
   width: 100%;
-  margin: 2rem auto;
+  margin: 1rem auto;
   overflow: hidden;
   /* Remove background and box-shadow */
 }
 
 .carousel-container {
   position: relative;
-  padding-top: 0; /* Remove fixed aspect ratio */
   min-height: 400px; /* Set minimum height */
   background: var(--surface-2-dark); /* Subtle background for image container */
   border-radius: 8px;
@@ -316,7 +315,7 @@
 
 @media (max-width: 768px) {
   .image-carousel {
-    margin: 1.5rem 0;
+    margin: 0.5rem 0;
     border-radius: 8px;
   }
 
@@ -544,7 +543,7 @@
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
   .image-carousel {
-    margin: 1.5rem 0;
+    margin: 0.5rem 0;
   }
 
   .carousel-container {
