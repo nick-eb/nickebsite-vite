@@ -24,8 +24,6 @@ const BlogPost = () => {
     handleTouchStart,
     handleTouchEnd,
     updateCarouselState,
-    syncCarouselPosition,
-    carouselStates,
   } = useSlideshow();
 
   const handleFullscreenSlideChange = useCallback((direction: number) => {

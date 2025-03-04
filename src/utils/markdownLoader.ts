@@ -74,7 +74,7 @@ export async function loadBlogPost(slug: string): Promise<BlogPost | null> {
     // Transform image paths before markdown parsing
     const transformedContent = post.content.replace(
       /!\[(.*?)\]\((?!http|\/)(.*?)\)/g,
-      (match, alt, imagePath) => {
+      (_match, alt, imagePath) => {  // Add underscore to indicate intentionally unused parameter
         return `![${alt}](/assets/img/blog-post-imgs/${post.slug}/${imagePath})`;
       }
     );
