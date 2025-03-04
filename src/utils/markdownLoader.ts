@@ -71,7 +71,15 @@ export async function loadBlogPost(slug: string): Promise<BlogPost | null> {
     
     if (!post) return null;
     
-    post.content = await marked(post.content);
+    // Transform image paths before markdown parsing
+    const transformedContent = post.content.replace(
+      /!\[(.*?)\]\((?!http|\/)(.*?)\)/g,
+      (match, alt, imagePath) => {
+        return `![${alt}](/assets/img/blog-post-imgs/${post.slug}/${imagePath})`;
+      }
+    );
+    
+    post.content = await marked(transformedContent);
     return post;
   } catch (error) {
     console.error('Error loading blog post:', error);

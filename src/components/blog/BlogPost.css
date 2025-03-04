@@ -1,11 +1,11 @@
 .blog-post-section {
-  padding: 6rem 0;
+  padding: 2rem 0;
   min-height: calc(100vh - 56px);
 }
 
 .blog-post-header {
   text-align: center;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
 }
 
 .blog-post-header h1 {
@@ -26,7 +26,7 @@
   margin: 0 auto;
   background: var(--surface-1-dark);
   border-radius: 12px;
-  padding: 2rem;
+  padding: 0.5rem 2rem;
 }
 
 .blog-post-content h2 {
@@ -38,7 +38,7 @@
 .blog-post-content h3 {
   color: var(--text-primary-dark);
   font-size: 1.25rem;
-  margin: 1.5rem 0 1rem;
+  margin: 0rem 0 1rem;
 }
 
 .blog-post-content p {
@@ -92,6 +92,28 @@
   color: #abb2bf;
   font-size: 0.85rem;
   font-family: var(--ff-mono);
+}
+
+.blog-post-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 2rem auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Optional: Add a container with max-width for extra-wide images */
+.blog-post-content p:has(img) {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Optional: Add hover effect */
+.blog-post-content img:hover {
+  transform: scale(1.01);
+  transition: transform 0.2s ease-in-out;
 }
 
 .back-button {
@@ -175,5 +197,463 @@
   
   .blog-post-content .console code {
     font-size: 0.85rem;
+  }
+
+  .blog-post-content img {
+    margin: 1.5rem auto;
+  }
+}
+
+/* Modern Carousel Styles */
+.image-carousel {
+  max-width: 720px; /* Match blog content width */
+  width: 100%;
+  margin: 2rem auto;
+  overflow: hidden;
+  /* Remove background and box-shadow */
+}
+
+.carousel-container {
+  position: relative;
+  padding-top: 0; /* Remove fixed aspect ratio */
+  min-height: 400px; /* Set minimum height */
+  background: var(--surface-2-dark); /* Subtle background for image container */
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.carousel-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 400px; /* Match container min-height */
+  opacity: 0;
+  transform: translateX(100%);
+  transition: all 0.4s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-slide.active {
+  opacity: 1;
+  transform: translateX(0);
+  z-index: 1;
+}
+
+.carousel-slide img {
+  position: relative; /* Change from absolute to relative */
+  top: auto;
+  left: auto;
+  transform: none; /* Remove transform */
+  max-width: calc(100% - 2rem); /* Account for padding */
+  max-height: calc(100% - 2rem); /* Account for padding */
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  margin: 1rem; /* Use margin instead of padding */
+  cursor: zoom-in;
+  transition: transform 0.3s ease;
+}
+
+/* Update carousel controls to be more subtle */
+.carousel-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 0; /* Remove horizontal padding */
+  background: none; /* Remove background */
+  border-radius: 0;
+  width: 100%;
+  margin: 0rem 0 0;
+}
+
+.carousel-controls .image-caption {
+  flex-grow: 1;
+  color: var(--text-secondary-dark);
+  font-size: 0.9rem;
+  margin: 0;
+  text-align: left;
+  font-style: italic;
+}
+
+.carousel-controls .carousel-buttons {
+  display: flex;
+  gap: .5rem;
+  margin: 0;
+}
+
+.carousel-buttons {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.carousel-button {
+  background: var(--surface-2-dark);
+  color: var(--text-primary-dark);
+  border: none;
+  width: 32px; /* Slightly smaller buttons */
+  height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  transition: all 0.2s ease;
+}
+
+.carousel-button:hover {
+  background: var(--surface-3);
+  transform: translateY(-1px);
+}
+
+.carousel-button:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+  .image-carousel {
+    margin: 1.5rem 0;
+    border-radius: 8px;
+  }
+
+  .carousel-controls {
+    padding: 0.5rem 0;
+  }
+
+  .carousel-controls .image-caption {
+    font-size: 0.85rem;
+    margin-right: 0.5rem;
+  }
+
+  .carousel-container {
+    min-height: 300px;
+  }
+
+  .carousel-slide {
+    min-height: 300px;
+  }
+
+  .carousel-slide img {
+    max-width: calc(100% - 1rem);
+    max-height: calc(100% - 1rem);
+    margin: 0.5rem;
+  }
+
+  .carousel-slide {
+    height: 100%;
+  }
+
+  .carousel-slide img {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    padding: 0.5rem; /* Reduce padding on mobile */
+  }
+
+  .image-caption {
+    font-size: 0.85rem;
+  }
+
+  .fullscreen-controls {
+    width: 95%;
+    padding: 0.75rem 1rem; /* Reduce padding further on mobile */
+    margin: -4px auto 0;
+  }
+
+  .fullscreen-controls .image-caption {
+    font-size: 0.85rem;
+    margin-right: 0.5rem; /* Add some space between text and buttons */
+  }
+
+  .fullscreen-controls .carousel-button {
+    width: 28px;
+    height: 28px;
+    font-size: 1rem;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  .carousel-container {
+    background: var(--surface-2);
+  }
+
+  .carousel-controls .image-caption {
+    color: var(--text-secondary);
+  }
+
+  .carousel-button {
+    background: var(--surface-2);
+    color: var(--text-primary);
+  }
+}
+
+/* Fullscreen mode enhancements */
+.fullscreen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(8px);
+  padding: 1rem; /* Add padding to prevent content from touching edges */
+}
+
+.fullscreen-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  cursor: pointer; /* Indicate clickable area */
+}
+
+.fullscreen-image {
+  max-width: calc(100vw - 4rem);
+  max-height: calc(100vh - 10rem);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  cursor: default; /* Reset cursor for image */
+}
+
+/* Update fullscreen controls to match non-fullscreen style */
+.fullscreen-controls {
+  position: relative; /* Change from absolute to relative */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 720px; /* Match carousel width */
+  margin: 0.5rem auto;
+  padding: 0.75rem 0;
+  background: transparent;
+  border-radius: 0;
+}
+
+.fullscreen-controls .carousel-buttons {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* Style the image caption to match non-fullscreen */
+.fullscreen-controls .image-caption {
+  color: var(--text-secondary-dark);
+  font-size: 0.9rem;
+  margin: 0;
+  text-align: left;
+  font-style: italic;
+  flex: 1;
+}
+
+/* Update close button to be inline with controls */
+.exit-fullscreen {
+  position: static; /* Change from absolute to static */
+  margin-left: 0.5rem; /* Add margin to separate from arrow buttons */
+  background: var(--surface-2-dark);
+  color: var(--text-primary-dark);
+  border: none;
+  width: 32px; /* Match other button sizes */
+  height: 32px;
+  border-radius: 6px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.exit-fullscreen:hover {
+  background: var(--surface-3);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .fullscreen-controls {
+    padding: 0.5rem 0;
+    max-width: calc(100% - 2rem);
+  }
+
+  .exit-fullscreen {
+    width: 28px; /* Match mobile button sizes */
+    height: 28px;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .fullscreen-controls {
+    padding: 0.5rem 0;
+    max-width: calc(100% - 2rem);
+  }
+
+  .fullscreen-image {
+    max-height: calc(100vh - 8rem);
+  }
+
+  .fullscreen-controls .image-caption {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .fullscreen-content {
+    padding: 1rem;
+  }
+
+  .fullscreen-image {
+    max-height: calc(100vh - 6rem);
+  }
+}
+
+.close-fullscreen {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 4px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.close-fullscreen:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+  .image-carousel {
+    margin: 1.5rem 0;
+  }
+
+  .carousel-container {
+    min-height: 300px;
+  }
+
+  .carousel-slide {
+    min-height: 300px;
+  }
+
+  .carousel-slide img {
+    max-width: calc(100% - 1rem);
+    max-height: calc(100% - 1rem);
+    margin: 0.5rem;
+  }
+
+  .fullscreen-content {
+    padding: 1rem;
+  }
+
+  .fullscreen-image {
+    max-width: calc(100vw - 2rem);
+    max-height: calc(100vh - 10rem);
+  }
+}
+
+/* Landscape Mode Optimization */
+@media (max-width: 768px) and (orientation: landscape) {
+  .carousel-container {
+    min-height: 250px;
+  }
+
+  .carousel-slide {
+    min-height: 250px;
+  }
+
+  .fullscreen-image {
+    max-height: calc(100vh - 8rem);
+  }
+
+  .fullscreen-controls {
+    padding: 0.5rem;
+  }
+}
+
+/* Update fullscreen styles */
+.fullscreen-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(8px);
+}
+
+.fullscreen-image-container {
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.fullscreen-image {
+  max-width: calc(100vw - 4rem);
+  max-height: calc(100vh - 10rem);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  cursor: default;
+}
+
+.exit-fullscreen {
+  position: absolute;
+  top: -40px;
+  right: 0;  /* Changed from 50% */
+  transform: none;  /* Remove transform that was centering the button */
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  line-height: 1;
+  z-index: 1000;
+}
+
+.exit-fullscreen:hover {
+  background: var(--surface-3);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .exit-fullscreen {
+    top: -1.5rem;
+    right: -0.5rem;
+    width: 28px;
+    height: 28px;
+    font-size: 1rem;
+  }
+
+  .fullscreen-image {
+    max-width: calc(100vw - 2rem);
   }
 }
