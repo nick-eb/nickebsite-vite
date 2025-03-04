@@ -11,9 +11,11 @@ const Home = () => {
   const initialScroll = useRef(false);
   const location = useLocation();
 
-  // Set initial active section when component mounts
+  // Only set initial section to intro when first mounting AND we're at the top of the page
   useEffect(() => {
-    setActiveSection('intro');
+    if (window.scrollY === 0) {
+      setActiveSection('intro');
+    }
   }, []); // Run only once on mount
 
   useEffect(() => {

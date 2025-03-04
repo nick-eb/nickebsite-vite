@@ -5,17 +5,13 @@ const ScrollToTop = () => {
   const { pathname, state } = useLocation();
 
   useEffect(() => {
-    // If there's a specific scroll target in the state, don't scroll to top
+    // If there's a specific scroll target, don't interfere
     if (state?.scrollTo) {
       return;
     }
-    
-    // Add a small delay to ensure DOM is ready
-    const timeoutId = setTimeout(() => {
-      window.scrollTo(0, 0);
-    }, 0);
 
-    return () => clearTimeout(timeoutId);
+    // In all other cases, scroll to top
+    window.scrollTo(0, 0);
   }, [pathname, state]);
 
   return null;
