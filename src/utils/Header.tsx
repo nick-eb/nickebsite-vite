@@ -7,6 +7,7 @@ const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { activeSection, setActiveSection } = useNav();
+  const isBlogPost = location.pathname.startsWith('/blog/');
   const isAllPosts = location.pathname === '/blog';
 
   useEffect(() => {
@@ -21,7 +22,7 @@ const Header = () => {
     };
 
     const observer = new IntersectionObserver(observerCallback, {
-      rootMargin: '-50% 0px -50% 0px' // Only trigger when section is in middle half of viewport
+      rootMargin: '-50% 0px -50% 0px'
     });
 
     const sections = document.querySelectorAll('section[id]');
@@ -38,9 +39,22 @@ const Header = () => {
       return;
     }
     
+    // Special handling for 'intro' section
+    if (sectionId === 'intro') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setActiveSection('intro');
+      return;
+    }
+    
     const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      const headerOffset = 60;
+      const offsetPosition = element.offsetTop - headerOffset;
+      
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
       setActiveSection(sectionId);
     }
   };
@@ -48,9 +62,7 @@ const Header = () => {
   const handleBlogClick = (e: React.MouseEvent) => {
     if (location.pathname === '/blog') {
       e.preventDefault();
-      window.scrollTo(0, 0);
-    } else {
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
 
@@ -69,7 +81,9 @@ const Header = () => {
             <li key={id}>
               <button 
                 onClick={() => scrollToSection(id)}
-                className={`nav-button ${!isAllPosts && activeSection === id ? 'active' : ''}`}
+                className={`nav-button ${
+                  !isAllPosts && !isBlogPost && activeSection === id ? 'active' : ''
+                }`}
               >
                 {label}
               </button>
@@ -78,7 +92,7 @@ const Header = () => {
           <li className="all-posts-item">
             <Link 
               to="/blog" 
-              className={`nav-button ${isAllPosts ? 'active' : ''}`}
+              className={`nav-button ${isAllPosts || isBlogPost ? 'active' : ''}`}
               onClick={handleBlogClick}
             >
               All Posts

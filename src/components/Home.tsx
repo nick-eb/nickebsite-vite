@@ -11,13 +11,26 @@ const Home = () => {
   const initialScroll = useRef(false);
   const location = useLocation();
 
+  // Set initial active section when component mounts
+  useEffect(() => {
+    setActiveSection('intro');
+  }, []); // Run only once on mount
+
   useEffect(() => {
     const handleScroll = () => {
       const sections = ['intro', 'projects', 'blog', 'contact'];
       const scrollPosition = window.scrollY + (window.innerHeight / 4);
+      
+      // Check if we're at the bottom of the page
+      const isAtBottom = window.innerHeight + window.pageYOffset >= document.documentElement.scrollHeight - 100;
+
+      if (isAtBottom) {
+        setActiveSection('contact');
+        return;
+      }
 
       // Find the last section that has been scrolled past
-      let currentSection = sections[0];
+      let currentSection = 'intro';
       
       sections.forEach(id => {
         const element = document.getElementById(id);
@@ -29,25 +42,32 @@ const Home = () => {
       setActiveSection(currentSection);
     };
 
-    // Attach scroll listener
     window.addEventListener('scroll', handleScroll);
-    
-    // Initial check
-    handleScroll();
+    handleScroll(); // Check initial scroll position
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, [setActiveSection]);
 
   useEffect(() => {
-    // Check if we have a section to scroll to
     if (location.state?.scrollTo && !initialScroll.current) {
-      const element = document.getElementById(location.state.scrollTo);
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+      const timeoutId = setTimeout(() => {
+        const element = document.getElementById(location.state.scrollTo);
+        if (element) {
+          const headerOffset = 60;
+          const offsetPosition = element.offsetTop - headerOffset;
+          
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          });
+          setActiveSection(location.state.scrollTo);
+        }
         initialScroll.current = true;
-      }
+      }, 100);
+
+      return () => clearTimeout(timeoutId);
     }
-  }, [location]);
+  }, [location, setActiveSection]);
 
   return (
     <main className="home-container">
