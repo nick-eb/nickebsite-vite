@@ -1,19 +1,9 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-@layer base {
-  html, body {
-    @apply h-full m-0 p-0;
-  }
-  
-  body {
-    @apply bg-gray-100 text-gray-900;
-  }
-
-  #root {
-    @apply min-h-full;
-  }
+/* Add near the top of the file */
+.card,
+.card-image,
+.card-content {
+  border: none !important;
+  margin: 0 !important;
 }
 
 :root {
@@ -64,7 +54,6 @@ body {
   min-width: 320px;
   min-height: 100vh;
   /* Remove the display: flex and place-items: center */
-  @apply min-h-screen;
   background: linear-gradient(135deg, var(--clr-dark) 0%, #1a1a2e 100%);
   color: var(--clr-light);
 }
@@ -91,24 +80,6 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
-
-#root {
-  @apply min-h-screen;
-}
-
-@layer components {
-  .container {
-    @apply max-w-7xl mx-auto px-4;
-  }
-  
-  .section-title {
-    @apply text-4xl md:text-5xl font-bold text-center text-white mb-16;
-  }
-  
-  .section-title-bar {
-    @apply w-24 h-1 bg-blue-500 mx-auto mt-4;
-  }
 }
 
 @media (prefers-color-scheme: light) {

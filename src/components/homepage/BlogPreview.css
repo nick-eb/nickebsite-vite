@@ -1,378 +1,90 @@
+/* Remove any dimension-related styles, keep only specific styling */
 .blog-preview-section {
   max-width: 1200px;
   margin: 0 auto;
-  width: 100%;
+  width: calc(100% - 2rem);  /* Match slider container width */
   position: relative;
   overflow: hidden;
-  /* Remove padding as it's handled by section-container */
 }
 
-.blog-preview-header {
-  text-decoration: none;
-  display: block;
-  margin-bottom: 0.25rem;  /* Reduced from 0.5rem */
-}
 
-.blog-preview-header:hover .view-all {
-  transform: translateX(5px);
-}
-
-.view-all-link {
-  display: block;
-  text-align: center;
-  color: var(--text-secondary);
-  text-decoration: none;
-  margin: 1rem 1.5rem 0.5rem;  /* Adjusted margins */
-  font-size: 0.95rem;
-  transition: transform var(--transition-quick);
-}
-
-.view-all-link:hover {
-  transform: translateX(5px);
-}
-
-.blog-preview-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-}
-
-.blog-preview-card {
-  background: var(--surface-1-dark);
-  border-radius: 16px;
+/* Make blog preview cards slightly taller */
+.blog-preview-slider .card {
+  height: 350px;  /* Keep blog cards slightly taller */
   overflow: hidden;
-  transition: transform 0.2s ease;
+}
+
+.blog-preview-slider .card-link {
   height: 100%;
   display: flex;
   flex-direction: column;
-  margin: 0.5rem;
-  min-height: 240px;
 }
 
-.blog-preview-card:hover {
-  transform: translateY(-2px);
-  background: var(--surface-2-dark);
-  box-shadow: var(--shadow-md);
-}
-
-.blog-card-link {
+.blog-preview-slider .card-content {
   display: flex;
   flex-direction: column;
-  height: 100%;
-  text-decoration: none;
-  color: inherit;
+  height: calc(100% - 160px); /* Subtract image height */
+  gap: 0.5rem;      /* Reduced from 0.75rem */
+  justify-content: space-between; /* Distribute space evenly */
+  padding-bottom: 0;  /* Remove bottom padding from content */
 }
 
-.blog-image {
-  height: 160px;
-  position: relative;
+.blog-preview-slider .card-title {
+  font-size: 1.25rem;  /* Reduced from 1.5rem */
+  line-height: 1.2;
+  margin: 0;
+  min-height: 3rem;   /* Adjusted for new font size: 1.25rem * 1.2 * 2 */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
   overflow: hidden;
-  border-bottom: 1px solid var(--surface-2-dark);
-  margin-bottom: -0.5rem;
-}
-
-.blog-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  background: var(--surface-2-dark);
-}
-
-.blog-card-content {
-  padding: 0.75rem;
-  flex: 1;
   display: flex;
-  flex-direction: column;
-}
-
-.blog-title {
-  color: var(--text-primary);
-  font-size: 1.1rem;
-  font-weight: 600;
-  line-height: 1.3;
-  margin: 0; /* Remove margin to use gap instead */
+  align-items: center; /* Center title text vertically */
 }
 
 .blog-date {
+  color: var(--text-secondary);
   font-size: 0.875rem;
-  color: var(--text-secondary);
-  font-family: var(--ff-mono);
-}
-
-.blog-excerpt {
-  color: var(--text-secondary);
-  font-size: 0.95rem;
-  margin: 0; /* Remove margin to use gap instead */
-  flex: 1;
-  line-height: 1.4;
-  display: -webkit-box;
-  line-clamp: 2;
-  -webkit-line-clamp: 4;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.read-more {
-  color: var(--accent);
-  font-size: 0.9rem;
-  margin: 0; /* Remove margin to use gap instead */
-}
-
-.blog-preview-link {
-  padding: 1rem;  /* Reduced from 1.5rem */
+  margin: 0;  /* Equal spacing above and below */
+  line-height: 1;  /* Tighten line height */
+  height: 0.875rem; /* Force consistent height */
   display: flex;
-  flex-direction: column;
-  height: 100%;
-  justify-content: space-between;
-  text-decoration: none;
-  color: inherit;
-  gap: 0.5rem;  /* Consistent spacing */
-}
-
-.blog-preview-title {
-  font-size: 1.1rem;  /* Reduced from 1.5rem */
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 0.5rem;  /* Reduced from 0.75rem */
-  line-height: 1.3;
-}
-
-.blog-preview-date {
-  font-size: 0.875rem;
-  color: var(--text-secondary);
-  display: block;
-  margin-bottom: 0.75rem;  /* Reduced from 1rem */
-  font-family: var(--ff-mono);
-}
-
-.blog-preview-excerpt {
-  color: var(--text-secondary);
-  font-size: 1rem;
-  line-height: 1.6;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;  /* Match GitHub Projects */
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  margin-bottom: 0;  /* Remove bottom margin since we're using flex */
-  min-height: 3rem;  /* Ensure consistent height */
-  margin-top: 1rem;  /* Push to bottom of container */
-  flex: 1;
-}
-
-.blog-preview-slider {
-  margin: 0;
-  padding: 0 1.5rem;  /* Match GitHub Projects */
-  position: relative;
-}
-
-.blog-preview-slider::after {
-  display: none;
-}
-
-.blog-preview-slider:not(.at-start):not(.at-end)::after {
-  opacity: 1;  /* Only show when slider is in middle */
-}
-
-.blog-preview-slider.at-end::after {
-  opacity: 0;
-}
-
-.slider-item {
-  padding: 0.5rem;  /* Match GitHub Projects */
-  box-sizing: border-box; /* Ensure padding is included in width calculations */
-  height: inherit !important;
-}
-
-/* Remove all prev/next button styles */
-.slick-prev,
-.slick-next {
-  display: none !important;
-}
-
-.slick-dots {
-  bottom: -1rem;  /* Reduced from -2rem */
-  padding: 0.25rem 0;  /* Reduced from 0.5rem */
-  position: relative;
-  margin-top: 0.5rem;  /* Reduced from 1rem */
-}
-
-.slick-dots li button:before {
-  font-size: 10px;
-  color: var(--text-secondary);
-  opacity: 0.4;
-}
-
-.slick-dots li.slick-active button:before {
-  color: var(--accent);
-  opacity: 1;
-}
-
-.slick-list {
-  overflow: hidden;
-  margin: 0;
-}
-
-.slick-track {
-  margin-left: 0;
-  margin-right: 0;
-  display: flex !important;
-}
-
-.slider-container {
-  position: relative;
-  margin: 0 -1.5rem;
-  padding: 0;
-}
-
-.slider-container::before,
-.slider-container::after {
-  display: none;
-}
-
-.section-title {
-  font-size: 2rem;
-  margin-bottom: 0.5rem;  /* Reduced from 0.75rem */
+  align-items: center;
+  justify-content: center; /* Center date horizontally */
   text-align: center;
 }
 
-@media (max-width: 1024px) {
-  .blog-preview-slider {
-    padding: 0 1.5rem;
-  }
-  
-  .slider-item {
-    padding: 0.5rem;
-  }
-  
-  .blog-preview-title {
-    font-size: 1.3rem;
-  }
+.blog-preview-slider .card-description {
+  margin-top: -0.5rem;
+  min-height: 27%; 
 }
 
-@media (max-width: 768px) {
-  .blog-preview-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .view-all {
-    display: block;
-    margin: 0.5rem 0 0 0;
-    font-size: 0.9rem;
-  }
 
-  .blog-preview-section {
-    /* Remove padding as it's handled by section-container */
-  }
-
-  .blog-preview-slider {
-    padding: 0 1rem;
-  }
-  
-  .blog-preview-slider::after {
-    width: 60px;
-  }
-  
-  .slick-prev {
-    left: 5px;
-  }
-  
-  .slick-next {
-    right: 5px;
-  }
-
-  .slider-item {
-    padding: 0.25rem 0.5rem;
-  }
-
-  .blog-preview-card {
-    margin: 0.25rem 0.125rem;
-    width: 100%;  /* Ensure card takes full width of slider item */
-    border-radius: 12px;
-  }
-
-  .blog-image {
-    height: 160px;
-  }
-
-  .blog-card-content {
-    padding: 1rem;
-  }
-
-  .blog-title {
-    font-size: 1rem;
-  }
-
-  .blog-preview-link {
-    padding: 1.25rem;  /* Match GitHub Projects mobile padding */
-  }
-
-  .blog-preview-title {
-    font-size: 1rem;
-  }
-
-  .slider-container {
-    margin: 0 -1rem;
-    padding: 0;
-  }
-
-  .slider-container::before,
-  .slider-container::after {
-    width: 40px;
-  }
-
-  .slick-dots {
-    bottom: -0.5rem;  /* Reduced from -1.5rem */
-    margin-top: 0.25rem;  /* Reduced from 0.5rem */
-    background: none;
-    padding: 0.5rem 0;
-  }
-
-  .slick-dots li button:before {
-    color: var(--text-secondary);
-  }
-
-  .slick-dots li.slick-active button:before {
-    color: var(--accent);
-  }
-
-  .slick-prev,
-  .slick-next {
-    display: none !important;
-  }
-
-  .section-title {
-    font-size: 1.75rem;
-    white-space: nowrap;  /* Prevent wrapping on mobile */
-  }
-
-  .view-all-link {
-    margin: 1rem 1rem 0.5rem;  /* Adjusted margins for mobile */
-    font-size: 0.9rem;
-  }
+.blog-preview-slider .read-more {
+  padding: 0.5rem 0;  /* Remove horizontal padding */
+  margin-top: auto;  /* Push to bottom */
+  border-top: 1px solid color-mix(in srgb, var(--text-primary) 15%, transparent);
+  width: 100%;  /* Use full width of card-content */
+  text-align: right;
 }
 
-@media (max-width: 640px) {
-  .slider-container {
-    margin: 0 -0.5rem;
-    padding: 0;
-  }
+.read-more {
+  margin-top: auto;
+  padding: 0.875rem 1rem;  /* Match other card padding */
+  height: auto;            /* Remove fixed height */
+  border-top: 1px solid color-mix(in srgb, var(--text-primary) 15%, transparent);
+  color: var(--accent);
+  font-size: 0.9rem;
+  text-align: right;
+  width: 100%;
+  display: flex;
+  align-items: center; /* Center read more text vertically */
+  justify-content: flex-end; /* Keep text right-aligned */
+  line-height: 1;  /* Ensure text is centered */
+}
 
-  .blog-preview-slider {
-    padding: 0 0.5rem;
-  }
-
-  .blog-preview-card {
-    min-height: 200px;  /* Shorter cards on mobile */
-  }
-
-  .blog-preview-title {
-    font-size: 1.2rem;
-  }
-
-  .blog-preview-excerpt {
-    font-size: 0.95rem;
-  }
-
-  .view-all-link {
-    margin: 1rem 0.5rem 0.5rem;  /* Adjusted margins for small screens */
-  }
+/* Remove this if it exists */
+.view-all-link {
+  display: none;  /* Remove old styling */
 }

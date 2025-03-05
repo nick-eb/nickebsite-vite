@@ -1,0 +1,398 @@
+
+/* Section title */
+.section-title {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+
+/* Shared Card Styles */
+.card-grid {
+  display: block;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.5rem;
+  padding: 0;
+}
+
+/* Card basics */
+.card {
+  background: var(--surface-1-dark);
+  border-radius: 12px;
+  width: 340px;  /* Match slider-item width */
+  height: 340px;  /* Reduced from 380px */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  margin: 0 auto;
+  border: none;
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -2px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;  /* Faster transition */
+  position: relative;
+  isolation: isolate;
+  padding: 0;
+  box-sizing: border-box;
+  pointer-events: all !important;  /* Enable pointer events on the card */
+  transform: translateY(0);
+  cursor: pointer;  /* Show pointer cursor */
+  transition: transform 0.2s ease,
+              box-shadow 0.2s ease;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+}
+
+.card:hover {
+  transform: translateY(-4px);  /* Simplified lift effect */
+  box-shadow: 
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+/* Remove the ::before gradient effect */
+.card::before {
+  display: none;
+}
+
+.card-image {
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+  position: relative;
+  pointer-events: none;  /* Disable pointer events on all card contents */
+  user-select: none;     /* Prevent text selection */
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+}
+
+/* Remove the gradient overlay */
+.card-image::after {
+  display: none;
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;      /* Center image content */
+  pointer-events: none;  /* Disable pointer events on all card contents */
+  user-select: none;     /* Prevent text selection */
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+}
+
+.card-content {
+  flex: 1;
+  width: 100%;
+  padding: 1rem;  /* Simplified padding */
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;  /* Reduced from 0.75rem */
+  position: relative;
+  z-index: 2;
+  align-items: flex-start;     /* Change to flex-start for natural alignment */
+  text-align: left;            /* Left align text */
+  box-sizing: border-box;  /* Ensure padding is included in width */
+  pointer-events: none;  /* Disable pointer events on all card contents */
+  user-select: none;     /* Prevent text selection */
+}
+
+/* Card typography */
+.card-title {
+  font-size: 1.5rem;  /* Increased from 1.25rem */
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  margin: 0;
+  line-height: 1.4;
+  width: 100%;               /* Full width for proper centering */
+  pointer-events: none;  /* Disable pointer events on all card contents */
+  user-select: none;     /* Prevent text selection */
+}
+
+/* Adjust description to ensure it fits */
+.card-description {
+  font-size: 0.9rem;
+  line-height: 1.4;  /* Reduced from 1.5 */
+  color: var(--text-secondary);
+  opacity: 0.9;
+  margin: 0;        /* Ensure NO margins */
+  margin-top: 0;    /* Explicitly remove top margin */
+  margin-bottom: 0; /* Explicitly remove bottom margin */
+  padding: 0;  /* Ensure no padding */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;  /* Show 3 lines instead of 2 */
+  -webkit-line-clamp: 3;  /* Show 3 lines instead of 2 */
+  line-clamp: 3;  /* Show 3 lines instead of 2 */
+  overflow: hidden;
+  width: 100%;               /* Full width for proper centering */
+  pointer-events: none;  /* Disable pointer events on all card contents */
+  user-select: none;     /* Prevent text selection */
+}
+
+/* Project metadata styling */
+.project-meta {
+  margin-top: auto;          /* Push to bottom */
+  padding: 0.75rem 1rem;  /* Match card-content padding */
+  border-top: 1px solid color-mix(in srgb, var(--text-primary) 15%, transparent);
+  width: 100%;              /* Full width for proper centering */
+  display: flex;
+  justify-content: space-between;   /* Space between items */
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  box-sizing: border-box;  /* Ensure padding is included in width calculation */
+  pointer-events: none;  /* Disable pointer events on all card contents */
+  user-select: none;     /* Prevent text selection */
+}
+
+.stars {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.demo-link {
+  margin-top: 0;
+  padding: 0.875rem 1rem;  /* Match other paddings */
+  font-size: 0.9rem;
+  opacity: 0.9;
+  width: 100%;
+  text-align: center;
+  background: color-mix(in srgb, var(--accent) 15%, transparent);
+  color: var(--accent);
+  font-weight: 500;
+  transition: all 0.2s ease;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  pointer-events: auto;
+}
+
+.demo-link:hover {
+  background: color-mix(in srgb, var(--accent) 20%, transparent);
+  color: color-mix(in srgb, var(--accent) 90%, white);
+}
+
+/* Shared Slider Styles */
+.slider-container {
+  position: relative;
+  width: 100%;  /* Changed from calc(100% - 2rem) */
+  max-width: 1200px;
+  overflow: visible;  /* Allow dots to be visible outside container */
+  margin: 0 auto;  /* Center the container */
+  padding: 1rem 1rem 3rem;  /* Added horizontal padding */
+}
+
+/* Slick slider core fixes */
+.slick-slider {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  display: flex;
+  touch-action: pan-y pinch-zoom;
+  cursor: default;  /* Reset default cursor */
+  pointer-events: all !important;
+}
+
+.slick-slider:active {
+  cursor: grabbing;  /* Only show grabbing during active drag */
+}
+
+.slick-list {
+  overflow: visible;
+  margin: 0;
+  padding: 1rem 0 !important;
+  width: 100%;
+  cursor: default;  /* Reset default cursor */
+  touch-action: pan-y;   /* Enable vertical touch scrolling */
+}
+
+.slick-list:active {
+  cursor: grabbing;  /* Only show grabbing during active drag */
+}
+
+.slick-track {
+  display: flex !important;
+  gap: 0;
+  width: 100% !important;  /* Force full width */
+  margin-left: auto !important;  /* Changed from auto to 0 */
+  margin-right: auto !important;
+  justify-content: center !important;  /* Center by default */
+  margin-left: auto !important;  /* Center alignment for full width */
+  margin-right: auto !important;
+}
+
+.slider-item {
+  width: 340px;  /* Increased from 320px */
+  padding: 0 0.75rem;  /* Increased padding */
+  pointer-events: none;  /* Disable pointer events on the item wrapper */
+}
+
+/* Hide navigation arrows */
+.slick-arrow,
+.slick-prev,
+.slick-next {
+  display: none !important;
+}
+
+.slick-slide {
+  display: flex;
+  justify-content: center;
+  padding: 0 calc(max(0.25rem, 1%));  /* Match item padding */
+  width: 340px !important;  /* Match slider-item width */
+  pointer-events: auto !important;
+}
+
+.slick-slide > div {
+  width: 340px;  /* Match slider-item width */
+  height: 100%;
+}
+
+.slick-dots {
+  position: absolute !important;
+  bottom: -1rem !important;  /* Moved up to make room for view all link */
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  display: flex !important;
+  justify-content: center !important;
+  z-index: 1;  /* Ensure dots are above content */
+  bottom: -24px;
+  padding: 0.25rem 0;
+  position: relative;
+  margin-top: 0.25rem;
+  width: 100%;  /* Ensure dots container spans full width */
+  display: flex !important;
+  justify-content: center;
+  left: 0;  /* Reset any offset */
+}
+
+.slick-dots li {
+  margin: 0 4px !important;  /* Consistent dot spacing */
+}
+
+.slick-dots li button:before {
+  font-size: 10px;
+  color: var(--text-secondary);
+  opacity: 0.4;
+}
+
+.slick-dots li.slick-active button:before {
+  color: var(--accent);
+  opacity: 1;
+}
+
+/* Add media queries for responsive alignment */
+@media (max-width: 1024px) {
+  .slick-track {
+    margin-left: 1rem !important;
+    justify-content: flex-start !important;  /* Force left alignment on smaller screens */
+  }
+  
+  .slick-list {
+    padding-right: 2rem !important;
+  }
+}
+
+/* Remove ALL media queries - let the core responsive settings handle it */
+.card a,
+.card button,
+.demo-link,
+.card-link {
+  pointer-events: auto !important;  /* Re-enable pointer events for links */
+}
+
+/* Blog preview specific overrides */
+.blog-preview-slider .card {
+  pointer-events: all !important;
+  transform: translateY(0);
+  transition: transform 0.2s ease,
+              box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.blog-preview-slider .card-link {
+  pointer-events: all !important;  /* Enable pointer events */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;  /* Show pointer cursor */
+}
+
+.blog-preview-slider .slick-slide {
+  pointer-events: all !important;
+}
+
+.blog-preview-slider .slick-list {
+  cursor: default;  /* Reset default cursor */
+}
+
+.blog-preview-slider .slick-list:active {
+  cursor: grabbing;  /* Only show grabbing during active drag */
+}
+
+.blog-preview-slider .card:hover {
+  transform: translateY(-4px);
+  box-shadow: 
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+/* Update slider-item pointer events for both carousels */
+.blog-preview-slider .slider-item,
+.projects-slider .slider-item {
+  pointer-events: none;
+}
+
+/* Update slick-slide pointer events for both carousels */
+.blog-preview-slider .slick-slide,
+.projects-slider .slick-slide {
+  pointer-events: auto !important;
+}
+
+/* Style for view all link */
+.view-all-link {
+  display: block;
+  text-align: center;
+  color: var(--accent);
+  margin-top: 2.5rem;  /* Space after the dots */
+  padding-bottom: 1rem;
+  font-size: 0.95rem;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+/* Add global link drag prevention */
+a {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+}
+
+/* Prevent dragging on cards and their contents */
+.card,
+.card * {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+}
+
+.card img {
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+}

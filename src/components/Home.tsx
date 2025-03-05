@@ -74,13 +74,13 @@ const Home = () => {
   return (
     <main className="home-container">
       <div className="content-wrapper">
-        <section id="intro" className="section-container">
+        <section id="intro" className="section-container mb-16">
           <Intro />
         </section>
-        <section id="projects" className="section-container">
+        <section id="projects" className="section-container mb-16 px-4">
           <GitHubProjects />
         </section>
-        <section id="blog" className="section-container">
+        <section id="blog" className="section-container mb-16 px-4">
           <BlogPreview />
         </section>
         <section id="contact" className="section-container">

@@ -1,7 +1,7 @@
 ---
-title: Power management and gaming VMs with NVIDIA hybrid laptop dGPUs
+title: NVIDIA PRIME & dynamic dGPU handling for VMs on laptops
 date: 2025-02-27
-excerpt: How I achieved power management and graphics-accelerated VMs using libvirt and QEMU on my NVIDIA hybrid graphics laptop.
+excerpt: Tips on achieving graphics-accelerated VMs on NVIDIA PRIME hybrid graphics laptop.
 thumbnail: /assets/img/hybrid-kvm-redmibook.png
 ---
 
