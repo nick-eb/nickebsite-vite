@@ -1,12 +1,12 @@
 /* Remove any dimension-related styles, keep only specific styling */
 .blog-preview-section {
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 0 auto;  /* Remove vertical margin */
   width: calc(100% - 2rem);  /* Match slider container width */
   position: relative;
   overflow: hidden;
+  margin-bottom: 0;  /* Remove bottom margin completely */
 }
-
 
 /* Make blog preview cards slightly taller */
 .blog-preview-slider .card {
@@ -60,6 +60,9 @@
   min-height: 27%; 
 }
 
+.slider-container {
+  padding: 0.5rem 0 2rem;  /* Reduced top padding from 1rem */
+}
 
 .blog-preview-slider .read-more {
   padding: 0.5rem 0;  /* Remove horizontal padding */

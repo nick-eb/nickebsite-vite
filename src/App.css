@@ -269,15 +269,18 @@ main {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0rem 0;  /* Reduced from 4rem */
+  padding: 0;
+  margin: 0;  /* Remove all margins */
 }
 
 .section-container:first-child {
-  padding-top: 1.5rem;  /* Reduced from 6rem */
+  padding-top: 0.25rem;  /* Minimal top padding */
+  margin-top: 0;
 }
 
 .section-container:last-child {
-  padding-bottom: 1rem;  /* Reduced from 2rem */
+  padding-bottom: 0.25rem;  /* Minimal bottom padding */
+  margin-bottom: 0;
 }
 
 @media (max-width: 768px) {

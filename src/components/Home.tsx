@@ -73,14 +73,14 @@ const Home = () => {
 
   return (
     <main className="home-container">
-      <div className="content-wrapper">
+      <div className="content-wrapper max-w-[1200px] mx-auto px-4">
         <section id="intro" className="section-container mb-16">
           <Intro />
         </section>
-        <section id="projects" className="section-container mb-16 px-4">
+        <section id="projects" className="section-container mb-16">
           <GitHubProjects />
         </section>
-        <section id="blog" className="section-container mb-16 px-4">
+        <section id="blog" className="section-container mb-8">
           <BlogPreview />
         </section>
         <section id="contact" className="section-container">
