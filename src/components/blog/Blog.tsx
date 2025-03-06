@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { loadBlogPosts, type BlogPost } from '../../utils/markdownLoader';
+import '../../styles/CardStyles.css';  // Import shared card styles
 import './Blog.css';
+import '../homepage/BlogPreview.css';  // Import BlogPreview styles
 
 const Blog = () => {
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -64,23 +66,26 @@ const Blog = () => {
             {posts.length === 0 ? (
               <p className="text-center text-gray-400">No blog posts found.</p>
             ) : (
-              <div className="blog-grid">
+              <div className="blog-grid blog-preview-slider">
                 {posts.map(post => (
-                  <article 
-                    key={post.slug}
-                    className="blog-card"
-                  >
-                    <Link to={`/blog/${post.slug}`} className="blog-card-link">
-                      <div className="blog-card-content">
-                        <h2 className="blog-title">{post.title}</h2>
+                  <div key={post.slug} className="card">
+                    <Link to={`/blog/${post.slug}`} className="card-link">
+                      <div className="card-image">
+                        <img 
+                          src={post.thumbnail || '/logo.png'} 
+                          alt={post.title}
+                        />
+                      </div>
+                      <div className="card-content">
+                        <h2 className="card-title">{post.title}</h2>
                         <time className="blog-date">
                           {new Date(post.date).toLocaleDateString()}
                         </time>
-                        <p className="blog-excerpt">{post.excerpt}</p>
-                        <span className="read-more">Read more →</span>
+                        <p className="card-description">{post.excerpt}</p>
+                        <div className="read-more">Read more →</div>
                       </div>
                     </Link>
-                  </article>
+                  </div>
                 ))}
               </div>
             )}
