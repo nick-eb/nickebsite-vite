@@ -31,14 +31,55 @@ thumbnail: /assets/img/hybrid-kvm-redmibook.png
 - RAM: 16GB 3200MHz Soldered RAM :(
 - Display: 15.6" 3200x2000 90Hz IPS (!!!)
 
-### Solving `modprobe: FATAL: Module nvidia_drm is in use`
+
+### Getting accelerated video output through Looking-Glass without a physical dummy plug using Virtual Display Driver (VDD)
+
+This is a list of issues I had setting up my Windows virtual machines using libvirt + QEMU and Looking-Glass for video output on my NVIDIA PRIME/hybrid graphics Arch Linux laptop. I compiled this page to document issues I was having and how I solved/worked around them
+
+### QEMU hooks `prepare/begin` and `release/end` scripts
+#### start.sh (`prepare/begin/start.sh`)
+```
+#!/bin/bash
+modprobe -r nvidia_uvm nvidia_drm nvidia_modeset nvidia
+```
+This script unloads the `nvidia` drivers when the VM starts.
+
+#### stop.sh (`release/end/stop.sh`)
+```
+#!/bin/bash
+modprobe nvidia_uvm nvidia_drm nvidia_modeset nvidia
+modprobe nvidia_drm modeset=1
+modprobe nvidia_drm fbdev=1
+```
+This script reloads the `nvidia` drivers once the VM ends, then re-sets the `modeset` and `fbdev` for `nvidia_drm` to 1 to allow for proper re-use of the NVIDIA card on our host. I found that not explicitly re-setting the the `modeset` and `fbdev` to 1 after the VM ends would not allow me to launch applications using the NVIDIA GPU and `sudo cat /proc/driver/nvidia/gpus/0000:2b:00.0/power` would return `?`/question marks in place of the GPU's power features:
+
+#### After running `modprobe nvidia_uvm nvidia_drm nvidia_modeset nvidia` but before running `modprobe nvidia_drm modeset=1` & `modprobe nvidia_drm fbdev=1`:
+
+<div class="console" data-title="Terminal">
+<code>nick@hybrid:~$ sudo cat /proc/driver/nvidia/gpus/0000:2b:00.0/power
+Runtime D3 status:          ?
+Video Memory:               ?
+GPU Hardware Support:
+ Video Memory Self Refresh: ?
+ Video Memory Off:          Supported
+S0ix Power Management:
+ Platform Support:          Supported
+ Status:                    Enabled
+</code>
+</div>
+
+
+### Solving `modprobe: FATAL: Module nvidia_drm is in use` when attempting to unload `nvidia` drivers
 #### PROBLEM:
-Updating `nvidia-dkms` to `570.124.04-1` from `570.86.16-2` led to some applications using `nvidia_drm` unexpectedly. This could be an issue with my configuration, nonetheless this is how I dealt with it
+
+When trying to unload `nvidia` drivers using the above `start.sh` script, I would recieve the following error:
 
 <div class="console" data-title="Terminal">
 <code>nick@hybrid:~$ sudo modprobe -r nvidia_drm
 modprobe: FATAL: Module nvidia_drm is in use.</code>
 </div>
+
+Updating `nvidia-dkms` from `570.86.16-2` to `570.124.04-1` led to some applications using `nvidia_drm` unexpectedly. This could be an issue with my configuration, nonetheless this is how I dealt with it
 
 The culprit was two of my startup apps, Mullvad VPN and Vesktop, using `nvidia_drm`. 
 
