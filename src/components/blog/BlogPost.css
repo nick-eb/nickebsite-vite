@@ -72,10 +72,11 @@
   color: #abb2bf;
   background: transparent;
   padding: 0;
-  white-space: pre-wrap;
+  white-space: pre;
 }
 
-.blog-post-content .console code::before {
+/* Add $ only to command lines */
+.blog-post-content .console code span.command::before {
   content: "$ ";
   color: #98c379;
   user-select: none;
@@ -91,7 +92,31 @@
   border-radius: 6px 6px 0 0;
   color: #abb2bf;
   font-size: 0.85rem;
+}
+
+/* New textfile styling */
+.blog-post-content .textfile {
+  background: #282c34;
+  border-radius: 6px;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
   font-family: var(--ff-mono);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #abb2bf;
+  white-space: pre;
+}
+
+.blog-post-content .textfile[data-title]::before {
+  content: attr(data-title);
+  display: block;
+  background: #21252b;
+  padding: 0.5rem 1rem;
+  margin: -1rem -1rem 0 -1rem;  /* Changed margin-bottom from 1rem to 0 */
+  border-radius: 6px 6px 0 0;
+  color: #abb2bf;
+  font-size: 0.85rem;
 }
 
 .blog-post-content img {
@@ -190,12 +215,14 @@
     padding: 1.0rem;
   }
   
-  .blog-post-content .console {
+  .blog-post-content .console,
+  .blog-post-content .textfile {
     margin: 1rem -0.5rem;
     border-radius: 4px;
   }
   
-  .blog-post-content .console code {
+  .blog-post-content .console code,
+  .blog-post-content .textfile {
     font-size: 0.85rem;
   }
 

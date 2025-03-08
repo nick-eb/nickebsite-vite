@@ -20,12 +20,17 @@ export default defineConfig({
   },
   server: {
     port: 3000,
-    open: true
+    open: true,
   },
   build: {
     assetsDir: 'assets',
     outDir: 'dist',
     sourcemap: true,
-    emptyOutDir: true
+    emptyOutDir: true,
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
   }
 });
