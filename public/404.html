@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <title>Redirecting...</title>
-    <script>
-      sessionStorage.redirect = location.href;
-    </script>
-    <meta http-equiv="refresh" content="0;URL='/'">
-  </head>
-  <body>
-    Redirecting...
-  </body>
+<head>
+  <meta charset="utf-8">
+  <title>Redirecting...</title>
+  <script>
+    // Save the current URL path to session storage
+    const pathSegmentsToKeep = 0; // Adjust this if your site is in a subdirectory
+    const currentUrl = window.location.href;
+    const pathname = window.location.pathname;
+    
+    // Preserve the URL path by storing it in session storage
+    const redirectTo = pathname.split('/').slice(pathSegmentsToKeep).join('/');
+    sessionStorage.setItem('redirectPath', redirectTo || '');
+    
+    // Redirect to the home page
+    window.location.href = window.location.origin;
+  </script>
+</head>
+<body>
+  <p>Redirecting...</p>
+</body>
 </html>
