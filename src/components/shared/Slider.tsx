@@ -111,6 +111,7 @@ export const Slider: React.FC<SliderProps> = ({
         breakpoint: 1024,
         settings: {
           slidesToShow: Math.min(2, totalSlides),
+          dots: totalSlides > Math.min(2, totalSlides) ? (settings.dots !== false) : false,
           centerMode: false,
           centerPadding: '0px'
         }
@@ -119,6 +120,7 @@ export const Slider: React.FC<SliderProps> = ({
         breakpoint: 768,
         settings: {
           slidesToShow: Math.min(1, totalSlides),
+          dots: totalSlides > Math.min(1, totalSlides) ? (settings.dots !== false) : false,
           centerMode: false,
           centerPadding: '0px'
         }
@@ -127,6 +129,7 @@ export const Slider: React.FC<SliderProps> = ({
         breakpoint: 480,
         settings: {
           slidesToShow: 1,
+          dots: totalSlides > 1 ? (settings.dots !== false) : false,
           centerMode: false,
           centerPadding: '0px'
         }
@@ -134,10 +137,14 @@ export const Slider: React.FC<SliderProps> = ({
     ];
   };
 
+  const currentSlidesToShow = Math.min(settings.slidesToShow || 3, totalSlides);
+  
   const mergedSettings: SliderSettings = {
     ...defaultSettings,
     ...settings,
-    slidesToShow: Math.min(settings.slidesToShow || 3, totalSlides),
+    slidesToShow: currentSlidesToShow,
+    // Only show dots if we have more slides than what's visible
+    dots: totalSlides > currentSlidesToShow ? (settings.dots !== false) : false,
     responsive: getResponsiveSettings(),
     beforeChange: (current: number, next: number) => {
       onDragStart?.();

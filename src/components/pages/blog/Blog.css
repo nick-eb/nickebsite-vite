@@ -10,7 +10,7 @@
 }
 
 .blog-section .content-container {
-  width: min(90%, 1100px);
+  width: min(92%, 1400px);
   position: relative;
   z-index: 1;
 }
@@ -18,10 +18,13 @@
 .blog-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-  gap: 1.5rem;
+  gap: 2rem;
   margin-top: 2rem;
   justify-items: center;
   width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .blog-grid .card {
@@ -64,14 +67,42 @@
   transform: translateX(-2px);
 }
 
+/* Desktop improvements */
+@media (min-width: 1024px) {
+  .blog-section .content-container {
+    width: min(94%, 1400px);
+  }
+  
+  .blog-grid {
+    gap: 2.5rem;
+    max-width: 1300px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .blog-section .content-container {
+    width: min(96%, 1600px);
+  }
+  
+  .blog-grid {
+    gap: 3rem;
+    max-width: 1400px;
+  }
+}
+
 @media (max-width: 768px) {
   .blog-section {
     padding: 4rem 0;
   }
   
+  .blog-section .content-container {
+    width: min(95%, 100%);
+  }
+  
   .blog-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
+    max-width: 100%;
   }
   
   .blog-header h1 {

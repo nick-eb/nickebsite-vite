@@ -272,18 +272,40 @@
 
 .slick-list {
   overflow: visible;
+  overflow-x: auto; /* Add horizontal scrollbar when needed */
   margin: 0;
   padding: 1rem 0 !important;
   width: 100%;
   cursor: default;
   touch-action: pan-x;
   position: relative;
+  scrollbar-width: thin;
+  scrollbar-color: var(--surface-3) var(--surface-1);
+}
+
+.slick-list::-webkit-scrollbar {
+  height: 8px;
+}
+
+.slick-list::-webkit-scrollbar-track {
+  background: var(--surface-1);
+  border-radius: 4px;
+}
+
+.slick-list::-webkit-scrollbar-thumb {
+  background: var(--surface-3);
+  border-radius: 4px;
+}
+
+.slick-list::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--surface-3) 80%, black);
 }
 
 /* Enable carousel mode when needed */
 @media (max-width: 1024px) {
   .slick-list {
-    overflow: hidden !important;
+    overflow-x: auto !important; /* Enable horizontal scrolling */
+    overflow-y: hidden !important;
     cursor: grab;
   }
   
@@ -312,15 +334,11 @@
   transition: transform 0.3s ease !important;
 }
 
-/* Center-justify GitHub projects carousel */
-.github-projects-slider .slick-track {
+/* Center-justify both GitHub projects and blog preview carousels */
+.github-projects-slider .slick-track,
+.blog-preview-slider .slick-track {
   justify-content: center !important;
   margin: 0 auto !important;
-}
-
-/* Ensure blog posts stay left-justified */
-.blog-preview-slider .slick-track {
-  justify-content: flex-start !important;
 }
 
 .slider-item {
@@ -513,7 +531,8 @@
   }
   
   .slick-list {
-    overflow: hidden !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
     padding-right: 1rem !important;
   }
   
@@ -568,7 +587,8 @@
   }
   
   .slick-list {
-    overflow: hidden !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
     padding-right: 1rem !important;
   }
   

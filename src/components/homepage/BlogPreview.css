@@ -2,7 +2,7 @@
 .blog-preview-section {
   max-width: 1200px;
   margin: 0 auto;
-  width: calc(100% - 2rem);
+  width: calc(100% - 2rem);  /* Match slider container width */
   position: relative;
   overflow: hidden;
   margin-bottom: 0;
