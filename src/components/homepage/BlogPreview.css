@@ -1,93 +1,83 @@
-/* Remove any dimension-related styles, keep only specific styling */
+/* Blog Preview Section - using unified card system */
 .blog-preview-section {
   max-width: 1200px;
-  margin: 0 auto;  /* Remove vertical margin */
-  width: calc(100% - 2rem);  /* Match slider container width */
+  margin: 0 auto;
+  width: calc(100% - 2rem);
   position: relative;
   overflow: hidden;
-  margin-bottom: 0;  /* Remove bottom margin completely */
+  margin-bottom: 0;
 }
 
-/* Make blog preview cards slightly taller */
+/* Blog preview card overrides - extend unified card system */
 .blog-preview-slider .card {
-  height: 350px;  /* Keep blog cards slightly taller */
-  overflow: hidden;
+  /* Use card--blog variant from components.css */
 }
 
 .blog-preview-slider .card-link {
   height: 100%;
   display: flex;
   flex-direction: column;
+  text-decoration: none;
+  color: inherit;
 }
 
 .blog-preview-slider .card-content {
   display: flex;
   flex-direction: column;
-  height: calc(100% - 160px); /* Subtract image height */
-  gap: 0.5rem;      /* Reduced from 0.75rem */
-  justify-content: space-between; /* Distribute space evenly */
-  padding-bottom: 0;  /* Remove bottom padding from content */
+  height: calc(100% - 160px);
+  gap: 0.5rem;
+  justify-content: space-between;
+  padding-bottom: 0;
 }
 
 .blog-preview-slider .card-title {
-  font-size: 1.25rem;  /* Reduced from 1.5rem */
+  font-size: 1.25rem;
   line-height: 1.2;
   margin: 0;
-  min-height: 3rem;   /* Adjusted for new font size: 1.25rem * 1.2 * 2 */
+  min-height: 3rem;
   display: -webkit-box;
   -webkit-line-clamp: 2;
-  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
-  display: flex;
-  align-items: center; /* Center title text vertically */
 }
 
 .blog-date {
   color: var(--text-secondary);
   font-size: 0.875rem;
-  margin: 0;  /* Equal spacing above and below */
-  line-height: 1;  /* Tighten line height */
-  height: 0.875rem; /* Force consistent height */
+  margin: 0;
+  line-height: 1;
+  height: 0.875rem;
   display: flex;
   align-items: center;
-  justify-content: center; /* Center date horizontally */
+  justify-content: center;
   text-align: center;
 }
 
 .blog-preview-slider .card-description {
   margin-top: -0.5rem;
-  min-height: 27%; 
-}
-
-.slider-container {
-  padding: 0.5rem 0 2rem;  /* Reduced top padding from 1rem */
+  min-height: 27%;
 }
 
 .blog-preview-slider .read-more {
-  padding: 0.5rem 0;  /* Remove horizontal padding */
-  margin-top: auto;  /* Push to bottom */
-  border-top: 1px solid color-mix(in srgb, var(--text-primary) 15%, transparent);
-  width: 100%;  /* Use full width of card-content */
-  text-align: right;
-}
-
-.read-more {
+  padding: 0.5rem 0;
   margin-top: auto;
-  padding: 0.875rem 1rem;  /* Match other card padding */
-  height: auto;            /* Remove fixed height */
-  border-top: 1px solid color-mix(in srgb, var(--text-primary) 15%, transparent);
+  border-top: 1px solid var(--border-color-light);
+  width: 100%;
+  text-align: right;
   color: var(--accent);
   font-size: 0.9rem;
-  text-align: right;
-  width: 100%;
   display: flex;
-  align-items: center; /* Center read more text vertically */
-  justify-content: flex-end; /* Keep text right-aligned */
-  line-height: 1;  /* Ensure text is centered */
+  align-items: center;
+  justify-content: flex-end;
+  line-height: 1;
+  transition: color var(--transition-quick);
 }
 
-/* Remove this if it exists */
-.view-all-link {
-  display: none;  /* Remove old styling */
+.blog-preview-slider .read-more:hover {
+  color: var(--accent-light);
+}
+
+/* Slider container override */
+.blog-preview-section .slider-container {
+  padding: 0.5rem 0 2rem;
 }

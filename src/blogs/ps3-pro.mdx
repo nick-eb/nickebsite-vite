@@ -1,0 +1,32 @@
+import * as React from 'react';
+
+export const title = "How I Built a 'PS3 Pro'";
+export const date = "2025-02-22";
+export const excerpt = "How far can we push Sony's best console?";
+
+const UnderConstructionNotice = () => (
+  <div
+    style={{
+      border: '2px solid #f39c12',
+      background: '#fffbe6',
+      color: '#b9770e',
+      borderRadius: '10px',
+      padding: '2rem',
+      margin: '2rem 0',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '1.5rem',
+      boxShadow: '0 2px 8px rgba(243,156,18,0.08)'
+    }}
+  >
+    <span style={{ fontSize: '2.5rem', lineHeight: 1 }}>🚧</span>
+    <div>
+      <h2 style={{ margin: 0, fontWeight: 700 }}>Under Construction</h2>
+      <p style={{ margin: '0.5rem 0 0 0', fontSize: '1.1rem' }}>
+        This post is not ready yet. Check back later 😉
+      </p>
+    </div>
+  </div>
+);
+
+<UnderConstructionNotice />

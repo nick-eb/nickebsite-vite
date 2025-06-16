@@ -1,291 +1,59 @@
-:root {
-  /* Typography */
-  --ff-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --ff-mono: ui-monospace, 'SF Mono', 'Roboto Mono', monospace;
-  
-  /* Colors - Light mode */
-  --surface-0: #ffffff;
-  --surface-1: rgba(30, 30, 30, 0.7);
-  --surface-2: rgba(36, 36, 36, 0.7);
-  --surface-3: rgba(48, 48, 48, 0.7);
-  --text-primary: #0f172a;
-  --text-secondary: #475569;
-  --accent: #2563eb;
-  --accent-light: #3b82f6;
-  --error: #dc2626;
-  
-  /* Colors - Dark mode */
-  --surface-0-dark: var(--background);  /* Dark Reader friendly */
-  --surface-1-dark: var(--surface-1);  /* Dark Reader friendly */
-  --surface-2-dark: var(--surface-2);  /* Dark Reader friendly */
-  --surface-3-dark: var(--surface-3);  /* Dark Reader friendly */
-  --text-primary-dark: #f8fafc;
-  --text-secondary-dark: #cbd5e1;
-  
-  /* Elevation */
-  --shadow-color: color-mix(in srgb, var(--background) 70%, black);  /* Dark Reader friendly */
-  --shadow-sm: 0 1px 2px var(--shadow-color);
-  --shadow-md: 0 4px 6px var(--shadow-color);
-  --shadow-lg: 0 10px 15px var(--shadow-color);
-  
-  /* Animation - Reduced */
-  --transition-quick: 0.2s ease;
-  --transition-medium: 0.3s ease;
-}
+/* App-specific styles that don't belong in the consolidated system */
 
-body {
-  font-family: var(--ff-primary);
-  background: var(--surface-0-dark);
-  color: var(--text-primary-dark);
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  overflow-x: hidden;
-}
-
-.app-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background: var(--surface-0-dark);  /* Simple dark background */
-}
-
-.main-content {
-  flex: 1 0 auto;
-  margin-top: 0;  /* Remove the top margin since we're handling it in components */
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  /* Remove the padding here as we'll handle it in the container */
-}
-
-/* Add new container utility */
-.content-container {
-  max-width: 1100px;  /* Reduced from 1200px */
-  width: 90%;        /* Add width constraint */
-  margin-left: auto;
-  margin-right: auto;
-  padding: 0 1.5rem;
-}
-
-#root {
-  max-width: 100%;
-  margin: 0;
-  padding: 0;
-  text-align: left;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
+/* Improved desktop layout */
+@media (min-width: 1200px) {
+  .min-h-screen {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-/* Remove or modify this if it exists */
-.card {
-  padding: 0 !important;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-@media (prefers-color-scheme: dark) {
-  body {
-    background: var(--surface-0-dark);
-    color: var(--text-primary-dark);
-  }
-}
-
-/* Modern scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--surface-1-dark);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--surface-2-dark);
-  border-radius: 4px;
-}
-
-/* Glass effect utility classes */
-.glass {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Animation utilities */
-.fade-in {
-  animation: simpleFade 0.3s ease forwards;
-}
-
-@keyframes simpleFade {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-/* Hover effects */
-.hover-effect {
-  transition: var(--transition);
-}
-
-.hover-effect:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-}
-
-/* Services section animations */
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-@keyframes float {
-  0% {
-    transform: translateY(0px) translateX(0px);
-    opacity: 0;
-  }
-  50% {
-    opacity: 0.8;
-  }
-  100% {
-    transform: translateY(-100vh) translateX(100px);
-    opacity: 0;
-  }
-}
-
-.animate-gradient-slow {
-  animation: gradient-shift 15s ease infinite;
-  background-size: 400% 400%;
-}
-
-.particle {
-  opacity: 0;
-  transform-origin: center;
-}
-
-@media (prefers-color-scheme: light) {
-  body {
-    background: var(--surface-0);
-    color: var(--text-primary);
-  }
-  
-  ::-webkit-scrollbar-track {
-    background: var(--surface-1);
-  }
-  
-  ::-webkit-scrollbar-thumb {
-    background: var(--surface-2);
-  }
-}
-
-/* Remove or comment out the gradient-bg class as it's no longer needed */
-.gradient-bg {
-  display: none;
-}
-
-/* Add this new class */
-.home-container,
-.blog-section,
-.blog-post-section {
-  background: var(--surface-0-dark);
-  min-height: 100vh;
-  width: 100%;
-}
-
-.home-container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-main {
-  flex: 1;
-}
-
-@media (max-width: 768px) {
-  .home-container {
-    padding: 0;
-    overflow-x: hidden;
-  }
-  
-  main {
-    width: 100%;
-  }
-}
-
-/* Add Dark Reader specific overrides */
+/* Dark Reader specific overrides for the app */
 [data-darkreader-mode] * {
-  border-color: color-mix(in srgb, var(--background) 80%, white) !important;
+  border-color: color-mix(in srgb, var(--background, #242424) 80%, white) !important;
 }
 
 [data-darkreader-mode] .glass {
-  background: color-mix(in srgb, var(--background) 95%, white) !important;
+  background: color-mix(in srgb, var(--background, #242424) 95%, white) !important;
   backdrop-filter: blur(10px);
 }
 
-/* Add new utility classes for section centering */
-.content-wrapper {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
+/* Error Boundary Styles */
+.error-boundary {
+  min-height: 50vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
-}
-
-.section-container {
-  width: 100%;
-  display: flex;
   justify-content: center;
-  align-items: center;
-  padding: 0;
-  margin: 0;  /* Remove all margins */
+  padding: 2rem;
 }
 
-.section-container:first-child {
-  padding-top: 0.25rem;  /* Minimal top padding */
-  margin-top: 0;
+.error-boundary-content {
+  text-align: center;
+  max-width: 600px;
+  padding: 2rem;
+  border: 1px solid rgb(239 68 68);
+  border-radius: 0.5rem;
+  background-color: rgba(239, 68, 68, 0.1);
 }
 
-.section-container:last-child {
-  padding-bottom: 0.25rem;  /* Minimal bottom padding */
-  margin-bottom: 0;
+.error-boundary-content details {
+  margin-top: 1rem;
+  text-align: left;
 }
 
-@media (max-width: 768px) {
-  .content-wrapper {
-    width: 100%;
-    padding: 0;
-  }
+.error-boundary-content summary {
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+}
+
+.error-boundary-content summary:hover {
+  color: rgb(209 213 219);
+}
+
+.error-boundary-content pre {
+  max-height: 200px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
 }

@@ -46,7 +46,7 @@ export async function getRepository(owner: string, repo: string): Promise<Reposi
       html_url: repoData.data.html_url,
       stargazers_count: repoData.data.stargazers_count,
       language: primaryLanguage || null,
-      languageColor: getLanguageColor(primaryLanguage),
+      languageColor: getLanguageColor(primaryLanguage || null),
       homepage: repoData.data.homepage,
       openGraphImageUrl: socialPreviewUrl,
       social_preview_url: socialPreviewUrl

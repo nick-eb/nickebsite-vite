@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { useNav } from './NavContext';
+import { useNav } from '../../utils/NavContext';
 import './Header.css';
 
 const Header = () => {

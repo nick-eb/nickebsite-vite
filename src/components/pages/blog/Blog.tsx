@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { loadBlogPosts, type BlogPost } from '../../utils/markdownLoader';
-import '../../styles/CardStyles.css';  // Import shared card styles
+import { loadAllPosts, type BlogPost } from '../../../utils/contentLoader';
+import { Loading } from '../../shared';
 import './Blog.css';
-import '../homepage/BlogPreview.css';  // Import BlogPreview styles
+import '../../homepage/BlogPreview.css';  // Import BlogPreview styles
 
 const Blog = () => {
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -14,12 +14,9 @@ const Blog = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const allPosts = await loadBlogPosts();
-        // Sort posts by date, most recent first
-        const sortedPosts = allPosts.sort((a, b) => 
-          new Date(b.date).getTime() - new Date(a.date).getTime()
-        );
-        setPosts(sortedPosts);
+        const allPosts = await loadAllPosts();
+        // Posts are already sorted by date in the loader
+        setPosts(allPosts);
       } catch (err) {
         console.error('Error loading blog posts:', err);
         setError('Failed to load blog posts');
@@ -35,7 +32,7 @@ const Blog = () => {
     return (
       <div className="blog-section">
         <div className="content-container">
-          <div className="loading">Loading posts...</div>
+          <Loading message="Loading posts..." />
         </div>
       </div>
     );

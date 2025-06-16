@@ -60,7 +60,7 @@ export function useSlideshow() {
     const index = slides.findIndex(slide => slide.src === src);
     if (index !== -1) {
       const slide = slides[index];
-      if (slide.group) {
+      if (slide && slide.group) {
         // Find the relative index within the group
         const groupSlides = slides.filter(s => s.group === slide.group);
         const groupIndex = groupSlides.findIndex(s => s.src === src);
@@ -78,15 +78,19 @@ export function useSlideshow() {
   }, []);
 
   const handleTouchStart = useCallback((e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
+    if (e.touches[0]) {
+      touchStartX.current = e.touches[0].clientX;
+    }
   }, []);
 
   const handleTouchEnd = useCallback((e: React.TouchEvent) => {
-    const touchEndX = e.changedTouches[0].clientX;
-    const diff = touchStartX.current - touchEndX;
-    
-    if (Math.abs(diff) > 50) {
-      goToSlide(currentSlide + (diff > 0 ? 1 : -1));
+    if (e.changedTouches[0]) {
+      const touchEndX = e.changedTouches[0].clientX;
+      const diff = touchStartX.current - touchEndX;
+      
+      if (Math.abs(diff) > 50) {
+        goToSlide(currentSlide + (diff > 0 ? 1 : -1));
+      }
     }
   }, [currentSlide, goToSlide]);
 

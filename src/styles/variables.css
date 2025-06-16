@@ -1,35 +1,139 @@
 :root {
-  /* Light mode */
-  --surface-1: #ffffff;
-  --surface-2: #f1f5f9;
-  --surface-3: #e2e8f0;
+  /* Typography */
+  --ff-primary: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --ff-mono: ui-monospace, 'SF Mono', 'Roboto Mono', Consolas, 'Liberation Mono', Menlo, monospace;
   
-  --text-primary: #1e293b;
-  --text-secondary: #475569;
+  /* Base Colors - Light Mode */
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-gray-50: #f8fafc;
+  --color-gray-100: #f1f5f9;
+  --color-gray-200: #e2e8f0;
+  --color-gray-300: #cbd5e1;
+  --color-gray-400: #94a3b8;
+  --color-gray-500: #64748b;
+  --color-gray-600: #475569;
+  --color-gray-700: #334155;
+  --color-gray-800: #1e293b;
+  --color-gray-900: #0f172a;
   
-  --accent: #3b82f6;
-  --accent-light: #60a5fa;
-  --accent-dark: #2563eb;
+  /* Accent Colors */
+  --accent-hue: 217;
+  --accent-saturation: 91%;
+  --accent-lightness: 60%;
+  --color-accent-50: hsl(var(--accent-hue) var(--accent-saturation) 95%);
+  --color-accent-100: hsl(var(--accent-hue) var(--accent-saturation) 90%);
+  --color-accent-200: hsl(var(--accent-hue) var(--accent-saturation) 80%);
+  --color-accent-300: hsl(var(--accent-hue) var(--accent-saturation) 70%);
+  --color-accent: hsl(var(--accent-hue) var(--accent-saturation) var(--accent-lightness));
+  --color-accent-600: hsl(var(--accent-hue) var(--accent-saturation) 50%);
+  --color-accent-700: hsl(var(--accent-hue) var(--accent-saturation) 40%);
+  --color-accent-800: hsl(var(--accent-hue) var(--accent-saturation) 30%);
+  --color-accent-900: hsl(var(--accent-hue) var(--accent-saturation) 20%);
   
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.1);
-  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
+  /* Error Colors */
+  --color-error: #dc2626;
+  --color-error-light: #ef4444;
+  --color-error-dark: #b91c1c;
   
-  --backdrop-blur: blur(20px);
-  --transition-quick: 0.3s ease;
+  /* Light Mode Theme */
+  --surface-0: var(--color-white);
+  --surface-1: var(--color-gray-50);
+  --surface-2: var(--color-gray-100);
+  --surface-3: var(--color-gray-200);
+  
+  --text-primary: var(--color-gray-900);
+  --text-secondary: var(--color-gray-600);
+  --text-tertiary: var(--color-gray-500);
+  
+  --accent: var(--color-accent);
+  --accent-light: var(--color-accent-300);
+  --accent-dark: var(--color-accent-700);
+  
+  /* Borders */
+  --border-color: var(--color-gray-200);
+  --border-color-light: var(--color-gray-100);
+  
+  /* Shadows */
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --shadow-sm: 0 1px 2px var(--shadow-color);
+  --shadow-md: 0 4px 6px -1px var(--shadow-color), 0 2px 4px -2px var(--shadow-color);
+  --shadow-lg: 0 10px 15px -3px var(--shadow-color), 0 4px 6px -4px var(--shadow-color);
+  --shadow-xl: 0 20px 25px -5px var(--shadow-color), 0 8px 10px -6px var(--shadow-color);
+  
+  /* Glass Effects */
+  --glass-bg: rgba(255, 255, 255, 0.1);
+  --glass-border: rgba(255, 255, 255, 0.2);
+  --backdrop-blur: blur(10px);
+  
+  /* Transitions */
+  --transition-quick: 0.2s ease;
+  --transition-medium: 0.3s ease;
+  --transition-slow: 0.5s ease;
 }
 
+/* Dark Mode */
 @media (prefers-color-scheme: dark) {
   :root {
-    --surface-1: rgba(15, 23, 42, 0.8);
-    --surface-2: rgba(30, 41, 59, 0.8);
-    --surface-3: rgba(51, 65, 85, 0.8);
+    /* Dark Mode Theme */
+    --surface-0: #242424;
+    --surface-1: color-mix(in srgb, var(--surface-0) 95%, white);
+    --surface-2: color-mix(in srgb, var(--surface-0) 90%, white);
+    --surface-3: color-mix(in srgb, var(--surface-0) 85%, white);
     
-    --text-primary: #f1f5f9;
-    --text-secondary: #94a3b8;
+    --text-primary: var(--color-gray-50);
+    --text-secondary: var(--color-gray-300);
+    --text-tertiary: var(--color-gray-400);
     
-    --accent: #60a5fa;
-    --accent-light: #93c5fd;
-    --accent-dark: #3b82f6;
+    --accent: hsl(var(--accent-hue) var(--accent-saturation) 65%);
+    --accent-light: hsl(var(--accent-hue) var(--accent-saturation) 70%);
+    --accent-dark: hsl(var(--accent-hue) var(--accent-saturation) 55%);
+    
+    /* Dark Mode Borders */
+    --border-color: color-mix(in srgb, var(--surface-0) 80%, white);
+    --border-color-light: color-mix(in srgb, var(--surface-0) 85%, white);
+    
+    /* Dark Mode Shadows */
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    
+    /* Dark Mode Glass Effects */
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
   }
+}
+
+/* Dark Reader Compatibility */
+[data-darkreader-mode] {
+  --surface-0: var(--background, #242424) !important;
+  --surface-1: color-mix(in srgb, var(--background, #242424) 95%, white) !important;
+  --surface-2: color-mix(in srgb, var(--background, #242424) 90%, white) !important;
+  --surface-3: color-mix(in srgb, var(--background, #242424) 85%, white) !important;
+  
+  --text-primary: rgba(255, 255, 255, 0.87) !important;
+  --text-secondary: rgba(255, 255, 255, 0.6) !important;
+  --text-tertiary: rgba(255, 255, 255, 0.4) !important;
+  
+  --border-color: color-mix(in srgb, var(--background, #242424) 80%, white) !important;
+  --glass-bg: color-mix(in srgb, var(--background, #242424) 95%, white) !important;
+  --glass-border: color-mix(in srgb, var(--background, #242424) 80%, white) !important;
+}
+
+/* Legacy Variable Support (for gradual migration) */
+:root {
+  /* Legacy surface variables - map to new system */
+  --surface-0-dark: var(--surface-0);
+  --surface-1-dark: var(--surface-1);
+  --surface-2-dark: var(--surface-2);
+  --surface-3-dark: var(--surface-3);
+  
+  --text-primary-dark: var(--text-primary);
+  --text-secondary-dark: var(--text-secondary);
+  
+  /* Legacy color variables */
+  --clr-dark: var(--color-gray-900);
+  --clr-light: var(--color-white);
+  --clr-accent: var(--accent);
+  
+  /* Background fallback for Dark Reader */
+  --background: var(--surface-0);
 }

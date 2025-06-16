@@ -1,10 +1,10 @@
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useNav } from '../utils/NavContext';
-import Intro from './homepage/Intro';
-import BlogPreview from './homepage/BlogPreview';
-import Contact from './homepage/Contact';
-import GitHubProjects from './homepage/GitHubProjects';
+import { useNav } from '../../utils/NavContext';
+import Intro from '../homepage/Intro';
+import BlogPreview from '../homepage/BlogPreview';
+import Contact from '../homepage/Contact';
+import GitHubProjects from '../homepage/GitHubProjects';
 
 const Home = () => {
   const { setActiveSection } = useNav();
@@ -69,18 +69,19 @@ const Home = () => {
 
       return () => clearTimeout(timeoutId);
     }
+    return undefined;
   }, [location, setActiveSection]);
 
   return (
     <main className="home-container">
-      <div className="content-wrapper max-w-[1200px] mx-auto px-4">
-        <section id="intro" className="section-container mb-16">
+      <div className="content-wrapper">
+        <section id="intro" className="section-container mb-20">
           <Intro />
         </section>
-        <section id="projects" className="section-container mb-16">
+        <section id="projects" className="section-container mb-24">
           <GitHubProjects />
         </section>
-        <section id="blog" className="section-container mb-8">
+        <section id="blog" className="section-container mb-20">
           <BlogPreview />
         </section>
         <section id="contact" className="section-container">

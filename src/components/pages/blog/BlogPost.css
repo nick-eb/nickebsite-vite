@@ -1,0 +1,290 @@
+.blog-post-section {
+  padding: 2rem 0;
+  min-height: calc(100vh - 56px);
+}
+
+.blog-post-header {
+  text-align: center;
+  margin: 2rem;
+}
+
+.blog-post-header h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: .5rem;
+}
+
+.blog-post-header time {
+  color: var(--text-secondary);
+  font-family: var(--ff-mono);
+  font-size: .9rem;
+}
+
+.blog-post-content {
+  max-width: 720px;
+  margin: -1rem auto;
+  background: var(--surface-1);
+  border-radius: 12px;
+  padding: .5rem 2rem;
+}
+
+.blog-post-content h2 {
+  color: var(--text-primary);
+  font-size: 1.75rem;
+  margin: 2rem 0 1rem;
+}
+
+.blog-post-content h3 {
+  color: var(--text-primary);
+  font-size: 1.25rem;
+  margin: 0rem 0 1rem;
+}
+
+.blog-post-content p {
+  color: var(--text-secondary);
+  margin-bottom: 1.25rem;
+  line-height: 1.7;
+}
+
+.blog-post-content code {
+  font-family: var(--ff-mono);
+  background: var(--surface-2);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+
+/* Enhanced code block styling integration */
+.blog-post-content pre {
+  background: #282c34;
+  border-radius: 8px;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.blog-post-content pre code {
+  background: transparent;
+  padding: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #abb2bf;
+}
+
+/* Integration with highlight.js */
+.blog-post-content .hljs {
+  background: #282c34 !important;
+  color: #abb2bf !important;
+}
+
+/* Terminal/Console styling */
+.blog-post-content .console {
+  background: #282c34;
+  border-radius: 6px;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
+.blog-post-content .console code {
+  display: block;
+  font-family: var(--ff-mono);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #abb2bf;
+  background: transparent;
+  padding: 0;
+  white-space: pre;
+}
+
+/* Add $ only to command lines */
+.blog-post-content .console code span.command::before {
+  content: "$ ";
+  color: #98c379;
+  user-select: none;
+}
+
+/* Optional terminal title bar */
+.blog-post-content .console[data-title]::before {
+  content: attr(data-title);
+  display: block;
+  background: #21252b;
+  padding: 0.5rem 1rem;
+  margin: -1rem -1rem 1rem -1rem;
+  border-radius: 6px 6px 0 0;
+  color: #abb2bf;
+  font-size: 0.85rem;
+}
+
+/* New textfile styling */
+.blog-post-content .textfile {
+  background: #282c34;
+  border-radius: 6px;
+  padding: 1rem;
+  margin: 1.5rem 0;
+  overflow-x: auto;
+  font-family: var(--ff-mono);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: #abb2bf;
+  white-space: pre;
+}
+
+.blog-post-content .textfile[data-title]::before {
+  content: attr(data-title);
+  display: block;
+  background: #21252b;
+  padding: 0.5rem 1rem;
+  margin: -1rem -1rem 0 -1rem;  /* Changed margin-bottom from 1rem to 0 */
+  border-radius: 6px 6px 0 0;
+  color: #abb2bf;
+  font-size: 0.85rem;
+}
+
+.blog-post-content img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 2rem auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Optional: Add a container with max-width for extra-wide images */
+.blog-post-content p:has(img) {
+  max-width: 800px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Optional: Add hover effect */
+.blog-post-content img:hover {
+  transform: scale(1.01);
+  transition: transform 0.2s ease-in-out;
+}
+
+.back-button {
+  margin-top: 3rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--surface-1);
+  color: var(--text-primary);
+  border: none;
+  border-radius: 8px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background var(--transition-quick);
+}
+
+.back-button:hover {
+  background: var(--surface-2);
+}
+
+@media (max-width: 768px) {
+  .blog-post-header h1 {
+    font-size: 2rem;
+  }
+  
+  .blog-post-content {
+    padding: 1.0rem;
+  }
+  
+  .blog-post-content .console,
+  .blog-post-content .textfile {
+    margin: 1rem -0.5rem;
+    border-radius: 4px;
+  }
+  
+  .blog-post-content .console code,
+  .blog-post-content .textfile {
+    font-size: 0.85rem;
+  }
+
+  .blog-post-content img {
+    margin: 1.5rem auto;
+  }
+}
+
+
+
+/* Blog-specific slider card overrides - use unified card system */
+.slider-card {
+  background: var(--surface-1);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: transform var(--transition-quick);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  margin: 0.5rem;
+  min-height: 240px;
+  border: 1px solid var(--border-color-light);
+}
+
+.slider-card:hover {
+  transform: translateY(-2px);
+  background: var(--surface-2);
+  box-shadow: var(--shadow-md);
+}
+
+.slider-card .card-image {
+  height: 160px;
+  position: relative;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border-color-light);
+  background: var(--surface-2);
+}
+
+.slider-card .card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: var(--surface-2);
+}
+
+.slider-card .card-content {
+  padding: 0.75rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.slider-card .card-title {
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.slider-card .card-description {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  flex: 1;
+  display: block;
+  -webkit-line-clamp: unset;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  min-height: unset;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .slider-card {
+    border-radius: 12px;
+    min-height: 200px;
+  }
+
+  .slider-card .card-content {
+    padding: 0.75rem;
+  }
+
+  .slider-card .card-title {
+    font-size: 1rem;
+  }
+
+  .slider-card .card-description {
+    font-size: 0.9rem;
+  }
+}
