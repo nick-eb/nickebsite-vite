@@ -3,6 +3,7 @@ import { Slider } from '../shared/Slider';
 import { ProjectCard as SharedProjectCard } from '../shared/Card';
 import { Repository, getRepository } from '../../utils/github';
 import { PROJECTS } from '../../utils/projects';
+import { useSliderDrag } from '../../hooks/useSliderDrag';
 import './GitHubProjects.css';
 
 const GitHubProjects: React.FC = () => {
@@ -10,6 +11,18 @@ const GitHubProjects: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [isStart, setIsStart] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
+
+  // Initialize slider drag functionality
+  const {
+    sliderRef,
+    handleDragStart: sliderDragStart,
+    handleDrag: sliderDrag,
+    handleDragEnd: sliderDragEnd
+  } = useSliderDrag({
+    enabled: true,
+    smoothScrolling: true,
+    scrollMultiplier: 1.2
+  });
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -35,7 +48,10 @@ const GitHubProjects: React.FC = () => {
   return (
     <section className="github-projects">
       <h2 className="section-title">Coding Projects</h2>
-      <div className={`slider-container github-projects-slider ${isStart ? 'at-start' : ''} ${isEnd ? 'at-end' : ''} ${!isStart && !isEnd ? 'in-middle' : ''}`}>
+      <div
+        ref={sliderRef}
+        className={`slider-container github-projects-slider ${isStart ? 'at-start' : ''} ${isEnd ? 'at-end' : ''} ${!isStart && !isEnd ? 'in-middle' : ''}`}
+      >
         <Slider
           className="projects-slider"
           totalSlides={projects.length}
@@ -56,6 +72,9 @@ const GitHubProjects: React.FC = () => {
                   stargazers_count={project.stargazers_count}
                   image={customData?.customImage || project.social_preview_url}
                   homepage={project.homepage || undefined}
+                  onDragStart={sliderDragStart}
+                  onDrag={sliderDrag}
+                  onDragEnd={sliderDragEnd}
                 />
               </div>
             );

@@ -2,13 +2,25 @@ import React, { useState, useEffect } from 'react';
 import { Slider } from '../shared/Slider';
 import { BlogCard } from '../shared/Card';
 import { loadAllPosts, type BlogPost } from '../../utils/contentLoader';
+import { useSliderDrag } from '../../hooks/useSliderDrag';
 import './BlogPreview.css';
 
 const BlogPreview: React.FC = () => {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [isStart, setIsStart] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
-  const [isDragging, setIsDragging] = useState(false);
+
+  // Initialize slider drag functionality
+  const {
+    sliderRef,
+    handleDragStart: sliderDragStart,
+    handleDrag: sliderDrag,
+    handleDragEnd: sliderDragEnd
+  } = useSliderDrag({
+    enabled: true,
+    smoothScrolling: true,
+    scrollMultiplier: 1.2
+  });
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -35,11 +47,11 @@ const BlogPreview: React.FC = () => {
   };
 
   const handleDragStart = () => {
-    setIsDragging(true);
+    // Drag start handled by card interaction
   };
 
   const handleDragEnd = () => {
-    setTimeout(() => setIsDragging(false), 100);
+    // Drag end handled by card interaction
   };
 
   if (posts.length === 0) return null;
@@ -48,7 +60,10 @@ const BlogPreview: React.FC = () => {
     <section className="blog-preview-section">
       <h2 className="section-title">Writeups & Guides</h2>
 
-      <div className={`slider-container blog-preview-slider ${isStart ? 'at-start' : ''} ${isEnd ? 'at-end' : ''} ${!isStart && !isEnd ? 'in-middle' : ''}`}>
+      <div
+        ref={sliderRef}
+        className={`slider-container blog-preview-slider ${isStart ? 'at-start' : ''} ${isEnd ? 'at-end' : ''} ${!isStart && !isEnd ? 'in-middle' : ''}`}
+      >
         <Slider
           className="blog-preview-slider"
           totalSlides={posts.length}
@@ -64,7 +79,9 @@ const BlogPreview: React.FC = () => {
                 date={post.date}
                 excerpt={post.excerpt}
                 thumbnail={post.thumbnail}
-                isDragging={isDragging}
+                onDragStart={sliderDragStart}
+                onDrag={sliderDrag}
+                onDragEnd={sliderDragEnd}
               />
             </div>
           ))}

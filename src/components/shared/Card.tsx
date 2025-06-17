@@ -1,10 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useCardInteraction } from '../../hooks/useCardInteraction';
 
 export interface BaseCardProps {
   className?: string;
   children: React.ReactNode;
   draggable?: boolean;
+  onDragStart?: (startX: number, startY: number) => void;
+  onDrag?: (deltaX: number, deltaY: number, currentX: number, currentY: number) => void;
+  onDragEnd?: () => void;
 }
 
 export interface LinkCardProps extends BaseCardProps {
@@ -55,52 +59,91 @@ export interface CardDescriptionProps {
 export interface CardMetaProps {
   children: React.ReactNode;
 }
-
 // Main Card component
 export const Card: React.FC<CardProps> = (props) => {
-  const { className = '', children, draggable = false } = props;
+  const { className = '', children, draggable = false, onDragStart, onDrag, onDragEnd } = props;
+  const navigate = useNavigate();
+  
   const cardClassName = `card ${className}`;
 
   if (props.variant === 'link') {
     const { to, onClick } = props;
+    
+    const { isDragging, isPressed, handlers } = useCardInteraction({
+      onNavigate: () => navigate(to),
+      ...(onDragStart && { onDragStart }),
+      ...(onDrag && { onDrag }),
+      ...(onDragEnd && { onDragEnd })
+    });
+    
+    const finalClassName = `${cardClassName} ${isDragging ? 'card--dragging' : ''} ${isPressed ? 'card--pressed' : ''}`;
+    
     return (
-      <Link 
-        to={to} 
-        className={cardClassName}
+      <div
+        className={finalClassName}
         draggable={draggable}
-        onClick={onClick}
+        {...handlers}
+        onClick={(e) => {
+          handlers.onClick(e);
+          if (!isDragging) {
+            onClick?.(e as any);
+          }
+        }}
       >
         {children}
-      </Link>
+      </div>
     );
   }
 
   if (props.variant === 'external') {
     const { href, target = '_blank', rel = 'noopener noreferrer' } = props;
+    
+    const { isDragging, isPressed, handlers } = useCardInteraction({
+      onNavigate: () => window.open(href, target, rel ? `noreferrer=${rel}` : undefined),
+      ...(onDragStart && { onDragStart }),
+      ...(onDrag && { onDrag }),
+      ...(onDragEnd && { onDragEnd })
+    });
+    
+    const finalClassName = `${cardClassName} ${isDragging ? 'card--dragging' : ''} ${isPressed ? 'card--pressed' : ''}`;
+    
     return (
-      <a 
-        href={href}
-        target={target}
-        rel={rel}
-        className={cardClassName}
+      <div
+        className={finalClassName}
         draggable={draggable}
+        {...handlers}
       >
         {children}
-      </a>
+      </div>
     );
   }
 
   if (props.variant === 'button') {
-    const { onClick, type = 'button' } = props;
+    const { onClick } = props;
+    
+    const { isDragging, isPressed, handlers } = useCardInteraction({
+      onNavigate: () => onClick?.({} as any),
+      ...(onDragStart && { onDragStart }),
+      ...(onDrag && { onDrag }),
+      ...(onDragEnd && { onDragEnd })
+    });
+    
+    const finalClassName = `${cardClassName} ${isDragging ? 'card--dragging' : ''} ${isPressed ? 'card--pressed' : ''}`;
+    
     return (
-      <button 
-        type={type}
-        className={cardClassName}
-        onClick={onClick}
+      <div
+        className={finalClassName}
         draggable={draggable}
+        {...handlers}
+        onClick={(e) => {
+          handlers.onClick(e);
+          if (!isDragging) {
+            onClick?.({} as any);
+          }
+        }}
       >
         {children}
-      </button>
+      </div>
     );
   }
 
@@ -163,15 +206,18 @@ export const CardMeta: React.FC<CardMetaProps> = ({ children }) => (
 );
 
 // Blog-specific card variant
+// Blog-specific card variant
 export interface BlogCardProps {
   to: string;
   title: string;
   date: string;
   excerpt: string;
   thumbnail?: string | undefined;
-  isDragging?: boolean;
   className?: string;
   onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+  onDragStart?: (startX: number, startY: number) => void;
+  onDrag?: (deltaX: number, deltaY: number, currentX: number, currentY: number) => void;
+  onDragEnd?: () => void;
 }
 
 export const BlogCard: React.FC<BlogCardProps> = ({
@@ -180,39 +226,41 @@ export const BlogCard: React.FC<BlogCardProps> = ({
   date,
   excerpt,
   thumbnail,
-  isDragging,
   onClick,
   className = '',
+  onDragStart,
+  onDrag,
+  onDragEnd,
   ...props
-}) => (
-  <Card 
-    variant="link" 
-    to={to} 
-    className={className}
-    onClick={(e) => {
-      if (isDragging) {
-        e.preventDefault();
-        return;
-      }
-      onClick?.(e);
-    }}
-    {...props}
-  >
-    <CardImage 
-      src={thumbnail || '/assets/img/logo.png'} 
-      alt={`${title} thumbnail`}
-    />
-    <CardContent>
-      <CardTitle>{title}</CardTitle>
-      <time className="blog-date">
-        {new Date(date).toLocaleDateString()}
-      </time>
-      <CardDescription>{excerpt}</CardDescription>
-      <div className="read-more">Read more →</div>
-    </CardContent>
-  </Card>
-);
+}) => {
+  const cardProps = {
+    variant: 'link' as const,
+    to,
+    className: `${className} card--blog`,
+    ...(onDragStart && { onDragStart }),
+    ...(onDrag && { onDrag }),
+    ...(onDragEnd && { onDragEnd }),
+    ...props,
+    ...(onClick && { onClick })
+  };
 
+  return (
+    <Card {...cardProps}>
+      <CardImage
+        src={thumbnail || '/assets/img/logo.png'}
+        alt={`${title} thumbnail`}
+      />
+      <CardContent>
+        <CardTitle>{title}</CardTitle>
+        <time className="blog-date">
+          {new Date(date).toLocaleDateString()}
+        </time>
+        <CardDescription>{excerpt}</CardDescription>
+        <div className="read-more">Read more →</div>
+      </CardContent>
+    </Card>
+  );
+};
 // Project-specific card variant
 export interface ProjectCardProps {
   href: string;
@@ -224,6 +272,9 @@ export interface ProjectCardProps {
   image?: string | undefined;
   homepage?: string | undefined;
   className?: string;
+  onDragStart?: (startX: number, startY: number) => void;
+  onDrag?: (deltaX: number, deltaY: number, currentX: number, currentY: number) => void;
+  onDragEnd?: () => void;
 }
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({
@@ -236,11 +287,22 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   image,
   homepage,
   className = '',
+  onDragStart,
+  onDrag,
+  onDragEnd,
   ...props
 }) => (
-  <Card variant="external" href={href} className={className} {...props}>
-    <CardImage 
-      src={image || '/assets/img/github-placeholder.png'} 
+  <Card
+    variant="external"
+    href={href}
+    className={`${className} card--project`}
+    {...(onDragStart && { onDragStart })}
+    {...(onDrag && { onDrag })}
+    {...(onDragEnd && { onDragEnd })}
+    {...props}
+  >
+    <CardImage
+      src={image || '/assets/img/github-placeholder.png'}
       alt={`${name} preview`}
       onError={(e) => {
         const img = e.currentTarget;
@@ -253,8 +315,8 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
       <CardDescription>{description}</CardDescription>
       <CardMeta>
         {language && (
-          <span 
-            className="language" 
+          <span
+            className="language"
             style={{ '--lang-color': languageColor } as React.CSSProperties}
           >
             <span className="lang-dot"></span>
@@ -265,7 +327,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
       </CardMeta>
     </CardContent>
     {homepage && (
-      <a 
+      <a
         href={homepage}
         target="_blank"
         rel="noopener noreferrer"

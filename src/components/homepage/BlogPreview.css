@@ -7,10 +7,23 @@
   overflow: hidden;
   margin-bottom: 0;
 }
-
 /* Blog preview card overrides - extend unified card system */
 .blog-preview-slider .card {
   /* Use card--blog variant from components.css */
+  /* Override base card styling that might interfere */
+  height: 420px !important; /* Significantly increased height to accommodate 4 lines + proper spacing */
+  min-height: 420px !important;
+}
+
+/* Override base card title styling that might conflict */
+.blog-preview-slider .card .card-title {
+  /* Reset any conflicting base styles */
+  min-height: auto !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  align-items: flex-start !important;
 }
 
 .blog-preview-slider .card-link {
@@ -25,26 +38,56 @@
   display: flex;
   flex-direction: column;
   height: calc(100% - 160px);
-  gap: 0.75rem;
-  justify-content: space-between;
-  padding-bottom: 0;
+  gap: 0.75rem; /* Increased gap for better spacing */
+  justify-content: flex-start;
+  padding: 1rem 1rem 0 1rem; /* Explicit padding with zero bottom */
+  position: relative; /* For read-more positioning */
 }
 
 .blog-preview-slider .card-title {
   font-size: 1.25rem;
   line-height: 1.2;
   margin: 0;
-  min-height: 3rem;
+  margin-bottom: 0.5rem; /* Increased spacing after title */
+  /* Properly implement title truncation to 2 lines */
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: calc(1.2em * 2); /* 2 lines with 1.2 line-height */
+  word-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+  /* Ensure proper text flow */
+  white-space: normal;
+  /* Prevent any text leaking */
+  position: relative;
+}
+
+/* Ensure no text bleeds through - use dynamic background */
+.blog-preview-slider .card-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 30px;
+  height: 1.2em;
+  background: linear-gradient(to right, transparent, var(--surface-1));
+  pointer-events: none;
+  transition: background var(--transition-quick);
+}
+
+/* Update gradient on card hover */
+.blog-preview-slider .card:hover .card-title::after {
+  background: linear-gradient(to right, transparent, var(--surface-2));
 }
 
 .blog-date {
   color: var(--text-secondary);
   font-size: 0.875rem;
   margin: 0;
+  margin-bottom: 0.75rem; /* Add space after date */
   line-height: 1;
   height: 0.875rem;
   display: flex;
@@ -54,31 +97,183 @@
 }
 
 .blog-preview-slider .card-description {
-  margin-top: -0.5rem;
-  min-height: 30%;
-  -webkit-line-clamp: 5;
+  margin-top: 0;
+  margin-bottom: 0;
+  flex: 1;
+  /* Calculate proper space for 4 full lines + buffer for read-more button */
+  /* Line height: 1.4em, 4 lines = 5.6em, plus generous buffer for read-more button */
+  padding-bottom: 5rem; /* Dramatically increased space to ensure zero overlap with read-more button */
+  /* Limit blog excerpts to exactly 4 lines */
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.4; /* Slightly increased for better readability */
+  max-height: calc(1.4em * 4); /* 4 lines with improved line height */
 }
 
 .blog-preview-slider .read-more {
-  padding: 0.875rem 1.5rem;
-  margin-top: auto;
-  border-top: 1px solid var(--border-color-light);
-  width: 100%;
-  text-align: right;
+  /* Position at absolute bottom of card */
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: 0; /* Remove all margins */
+  padding: 0.5rem 1rem; /* Reduced padding */
+  
+  /* Visual styling */
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--accent) 8%, transparent),
+    color-mix(in srgb, var(--accent) 12%, transparent)
+  );
+  border-top: 1px solid color-mix(in srgb, var(--accent) 20%, transparent);
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  
+  /* Typography and layout */
   color: var(--accent);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: right;
+  line-height: 1.2;
+  min-height: 2rem;
+  
+  /* Flexbox centering */
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  line-height: 1;
-  transition: color var(--transition-quick);
+  gap: 0.5rem;
+  
+  /* Interaction */
+  cursor: pointer;
+  transition: all var(--transition-quick);
+  overflow: hidden;
 }
 
 .blog-preview-slider .read-more:hover {
   color: var(--accent-light);
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--accent) 15%, transparent),
+    color-mix(in srgb, var(--accent) 20%, transparent)
+  );
+  border-top-color: color-mix(in srgb, var(--accent) 30%, transparent);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 20%, transparent);
+}
+
+/* Add a subtle shine effect on hover */
+.blog-preview-slider .read-more::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--accent) 15%, transparent),
+    transparent
+  );
+  transition: left 0.6s ease;
+}
+
+.blog-preview-slider .read-more:hover::before {
+  left: 100%;
 }
 
 /* Slider container override */
 .blog-preview-section .slider-container {
-  padding: 0.5rem 0 2rem;
+  padding: 0.25rem 0 1.5rem; /* Reduced padding all around */
+}
+/* Responsive styling for blog cards */
+@media (max-width: 1024px) {
+  .blog-preview-slider .card {
+    height: 380px !important; /* Significantly increased height for better spacing on tablets */
+    min-height: 380px !important;
+  }
+  
+  .blog-preview-slider .card-title {
+    font-size: 1.1rem;
+    line-height: 1.2;
+    max-height: calc(1.2em * 2); /* Maintain 2-line title limit */
+    margin-bottom: 0.5rem; /* Maintain spacing */
+  }
+  .blog-preview-slider .card-description {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    max-height: calc(1.4em * 4); /* Maintain 4 lines on mobile */
+    padding-bottom: 4.5rem; /* Dramatically increased space to prevent overlap on tablets */
+  }
+  
+  .blog-preview-slider .read-more {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    min-height: 2rem;
+  }
+  
+  .blog-date {
+    margin-bottom: 0.6rem; /* Slightly reduced but still spaced */
+  }
+}
+
+@media (max-width: 768px) {
+  .blog-preview-slider .card {
+    height: 350px !important; /* Significantly increased height for better spacing on tablets */
+    min-height: 350px !important;
+  }
+  
+  .blog-preview-slider .card-title {
+    font-size: 1rem;
+    line-height: 1.2;
+    max-height: calc(1.2em * 2); /* Maintain 2-line title limit */
+    margin-bottom: 0.4rem; /* Slightly reduced for smaller screens */
+  }
+  .blog-preview-slider .card-description {
+    font-size: 0.8rem;
+    line-height: 1.4;
+    max-height: calc(1.4em * 4); /* Maintain 4 lines on tablet */
+    padding-bottom: 4.25rem; /* Dramatically increased space to prevent overlap on tablet */
+  }
+  
+  .blog-preview-slider .read-more {
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    min-height: 1.75rem;
+  }
+  
+  .blog-date {
+    margin-bottom: 0.5rem; /* Reduced for tablet */
+  }
+}
+
+@media (max-width: 480px) {
+  .blog-preview-slider .card {
+    height: 330px !important; /* Significantly increased height for better spacing on mobile */
+    min-height: 330px !important;
+  }
+  
+  .blog-preview-slider .card-title {
+    font-size: 0.95rem;
+    line-height: 1.2;
+    max-height: calc(1.2em * 2); /* Maintain 2-line title limit */
+    margin-bottom: 0.4rem; /* Consistent small spacing */
+  }
+  .blog-preview-slider .card-description {
+    font-size: 0.8rem;
+    line-height: 1.4;
+    max-height: calc(1.4em * 4); /* Maintain 4 lines on small mobile */
+    padding-bottom: 4rem; /* Dramatically increased space to prevent overlap on small mobile */
+  }
+  
+  .blog-preview-slider .read-more {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
+    min-height: 1.5rem;
+  }
+  
+  .blog-date {
+    margin-bottom: 0.4rem; /* Reduced for mobile */
+  }
 }

@@ -104,7 +104,7 @@ export const Slider: React.FC<SliderProps> = ({
     return Math.min(3, totalSlides);
   };
 
-  // Dynamic responsive settings based on total slides - always left-aligned
+  // Dynamic responsive settings - disable Slick features on mobile for native scrolling
   const getResponsiveSettings = () => {
     return [
       {
@@ -114,48 +114,60 @@ export const Slider: React.FC<SliderProps> = ({
           dots: false, // Disable dots on mobile
           centerMode: false,
           centerPadding: '0px',
-          swipe: true,
-          swipeToSlide: true,
-          touchThreshold: 5,
-          touchMove: true,
-          draggable: true,
-          variableWidth: true, // Allow natural width
+          swipe: false, // Disable Slick swipe to avoid conflicts
+          swipeToSlide: false,
+          touchThreshold: 100, // High threshold to prevent accidental Slick interaction
+          touchMove: false, // Disable Slick touch handling
+          draggable: false, // Disable Slick dragging
+          variableWidth: true,
           infinite: false,
-          arrows: false
+          arrows: false,
+          useCSS: false, // Disable CSS transforms
+          useTransform: false, // Disable transform positioning
+          speed: 0, // Instant transitions to avoid conflicts
+          waitForAnimate: false
         }
       },
       {
         breakpoint: 768,
         settings: {
           slidesToShow: Math.min(1, totalSlides),
-          dots: false, // Disable dots on mobile
+          dots: false,
           centerMode: false,
           centerPadding: '0px',
-          swipe: true,
-          swipeToSlide: true,
-          touchThreshold: 5,
-          touchMove: true,
-          draggable: true,
-          variableWidth: true, // Allow natural width
+          swipe: false,
+          swipeToSlide: false,
+          touchThreshold: 100,
+          touchMove: false,
+          draggable: false,
+          variableWidth: true,
           infinite: false,
-          arrows: false
+          arrows: false,
+          useCSS: false,
+          useTransform: false,
+          speed: 0,
+          waitForAnimate: false
         }
       },
       {
         breakpoint: 480,
         settings: {
           slidesToShow: 1,
-          dots: false, // Disable dots on mobile
+          dots: false,
           centerMode: false,
           centerPadding: '0px',
-          swipe: true,
-          swipeToSlide: true,
-          touchThreshold: 5,
-          touchMove: true,
-          draggable: true,
-          variableWidth: true, // Allow natural width
+          swipe: false,
+          swipeToSlide: false,
+          touchThreshold: 100,
+          touchMove: false,
+          draggable: false,
+          variableWidth: true,
           infinite: false,
-          arrows: false
+          arrows: false,
+          useCSS: false,
+          useTransform: false,
+          speed: 0,
+          waitForAnimate: false
         }
       }
     ];
@@ -171,7 +183,8 @@ export const Slider: React.FC<SliderProps> = ({
     dots: totalSlides > currentSlidesToShow ? (settings.dots !== false) : false,
     responsive: getResponsiveSettings(),
     waitForAnimate: false, // Disable animation waiting for smoother scrolling
-    useCSS: false, // Disable CSS transforms on mobile for natural scrolling
+    useCSS: true, // Enable on desktop, disabled via responsive settings on mobile
+    useTransform: true, // Enable on desktop, disabled via responsive settings on mobile
     beforeChange: (current: number, next: number) => {
       onDragStart?.();
       settings.beforeChange?.(current, next);
