@@ -12,13 +12,13 @@
 .section-title {
   font-size: 2.5rem;
   font-weight: bold;
-  margin-bottom: rem;  /* Reduced from 2rem to 1rem */
+  margin-bottom: 1rem;  /* Reduced from 2rem to 1rem */
   color: var(--text-primary);
   text-align: center;
 }
 
 .contact-card {
-  background: var(--surface-2-dark);
+  background: var(--surface-2);
   border-radius: 16px;
   padding: 2rem;
   display: flex;
@@ -32,7 +32,7 @@
 }
 
 .contact-card:hover {
-  background: var(--surface-2-dark);
+  background: var(--surface-2);
   box-shadow: var(--shadow-lg);
 }
 
@@ -59,14 +59,14 @@
   justify-content: center;
   gap: 1rem;
   padding: 1.5rem;
-  background: var(--surface-1-dark);
+  background: var(--surface-1);
   border-radius: 12px;
   transition: all var(--transition-quick);  /* Match GitHub cards transition */
 }
 
 .contact-info:hover {
   transform: translateY(-2px);
-  background: var(--surface-2-dark);
+  background: var(--surface-2);
   box-shadow: var(--shadow-md);  /* Match GitHub cards shadow */
 }
 
@@ -77,32 +77,32 @@
   gap: 0.75rem;
   font-size: 1rem;
   padding: 1rem;
-  background: var(--surface-2-dark);
+  background: var(--surface-2);
   border-radius: 8px;
 }
 
 .contact-email a {
-  color: white;
+  color: var(--text-primary);
   text-decoration: none;
 }
 
 .contact-email a:hover {
-  color: white;  /* Remove accent color on hover */
+  color: var(--accent);
 }
 
 .email-icon {
   font-size: 1.75rem;  /* Increased from 1.5rem */
-  color: white;  /* Change from accent to white */
+  color: var(--accent);
 }
 
 .email-link {
-  color: white;
+  color: var(--text-primary);
   text-decoration: none;
   font-size: 1.4rem;  /* Increased from 1.2rem */
 }
 
 .email-link:hover {
-  color: white;  /* Keep white on hover */
+  color: var(--accent);
   text-decoration: none;  /* Remove underline */
 }
 
@@ -119,22 +119,22 @@
   justify-content: center;
   gap: 0.75rem;
   padding: 1rem;
-  background: var(--surface-1-dark);
+  background: var(--surface-1);
   border-radius: 12px;
-  color: white;  /* Force white color */
+  color: var(--text-primary);
   text-decoration: none;
   font-size: 1.2rem;  /* Increased from 1rem */
-  transition: transform var(--transition-quick), 
-              background var(--transition-quick), 
-              box-shadow var(--transition-quick);  /* Remove color transition */
+  transition: transform var(--transition-quick),
+              background var(--transition-quick),
+              box-shadow var(--transition-quick),
+              color var(--transition-quick);
 }
 
 .social-link:hover {
   transform: translateY(-2px);
-  background: var(--surface-2-dark);
+  background: var(--surface-2);
   box-shadow: var(--shadow-md);
-  color: white;  /* Keep white on hover */
-  /* Color remains unchanged on hover */
+  color: var(--accent);
 }
 
 .social-link svg {

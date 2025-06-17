@@ -1,6 +1,6 @@
 .my-services {
   padding: 2rem 0 3rem;
-  margin-top: -2rem;
+  /* Remove negative margin to prevent spacing conflicts */
   /* Remove background property */
 }
 
