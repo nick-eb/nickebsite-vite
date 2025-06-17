@@ -397,17 +397,19 @@
 .mobile-controls {
   margin: 0;
 }
-
 /* Mobile responsiveness for Pong */
 @media (max-width: 768px) {
   .pong-game-container {
-    margin: 1rem;
+    margin: 1rem 0.5rem;
     padding: 1rem;
   }
   
   .pong-canvas {
     width: 100%;
     max-width: 100%;
+    height: 60vh; /* Make it taller on mobile - 60% of viewport height */
+    min-height: 400px;
+    max-height: 500px;
   }
   
   .pong-buttons {
@@ -422,6 +424,18 @@
   
   .pong-instructions {
     font-size: 0.85rem;
+  }
+  
+  .mobile-controls {
+    font-weight: 600;
+    color: var(--accent-primary);
+  }
+}
+
+/* Tablet and small desktop adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .pong-canvas {
+    max-width: 90%;
   }
 }
 

@@ -330,20 +330,16 @@ export const PongGame: React.FC = () => {
     if (!canvas) return;
 
     const rect = canvas.getBoundingClientRect();
-    const scaleX = CANVAS_WIDTH / rect.width;
     const scaleY = CANVAS_HEIGHT / rect.height;
 
     for (let i = 0; i < e.touches.length; i++) {
       const touch = e.touches[i];
       if (!touch) continue;
       
-      const x = (touch.clientX - rect.left) * scaleX;
       const y = (touch.clientY - rect.top) * scaleY;
 
-      // Only allow touch control on the left side (player side)
-      if (x < CANVAS_WIDTH / 2) {
-        gameStateRef.current.touches.left = y;
-      }
+      // Allow touch control anywhere on the canvas (entire game window is draggable)
+      gameStateRef.current.touches.left = y;
     }
   }, []);
 
@@ -406,7 +402,7 @@ export const PongGame: React.FC = () => {
             <strong>Desktop:</strong> Use W/S keys or ↑/↓ arrow keys to move your paddle
           </div>
           <div className="mobile-controls">
-            <strong>Mobile:</strong> Touch the left side of the game area to control your paddle
+            <strong>Mobile:</strong> Touch and drag anywhere on the game area to control your paddle
           </div>
         </div>
       </div>
