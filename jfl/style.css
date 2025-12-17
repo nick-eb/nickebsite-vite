@@ -196,6 +196,16 @@ input::placeholder {
     font-weight: 600;
 }
 
+/* Compact header for player view */
+#view-player .top-bar {
+    margin-bottom: 4px;
+    padding-bottom: 3px;
+}
+
+#view-player .top-bar h2 {
+    font-size: 18px;
+}
+
 /* ========== LIBRARY GRID ========== */
 .grid-container {
     display: flex;
