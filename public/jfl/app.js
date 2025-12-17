@@ -30,6 +30,9 @@ var App = {
         this.cacheDOM();
         this.bindEvents();
 
+        // Load cached library immediately
+        this.loadLibraryCache();
+
         if (this.state.accessToken && this.state.serverUrl) {
             this.showView('view-library');
             this.getMusicLibrary();
@@ -38,6 +41,44 @@ var App = {
             if (this.state.serverUrl) {
                 this.dom.serverUrl.value = this.state.serverUrl;
             }
+        }
+    },
+
+    loadLibraryCache: function () {
+        try {
+            var cached = localStorage.getItem('jf_library_cache');
+            if (cached) {
+                var data = JSON.parse(cached);
+                // Check if data is valid
+                if (Array.isArray(data) && data.length > 0) {
+                    this.state.allLibraryTracks = data;
+                    this.log('Loaded ' + data.length + ' tracks from cache.');
+                }
+            }
+        } catch (e) {
+            this.logError('Failed to load library cache: ' + e.message);
+        }
+    },
+
+    saveLibraryCache: function (tracks) {
+        try {
+            // Minify: Store only essential properties to save space
+            var miniTracks = tracks.map(function (t) {
+                return {
+                    Id: t.Id,
+                    Name: t.Name,
+                    Artists: t.Artists,
+                    AlbumArtist: t.AlbumArtist,
+                    AlbumId: t.AlbumId,
+                    ImageTags: t.ImageTags,
+                    RunTimeTicks: t.RunTimeTicks,
+                    Type: 'Audio' // Ensure type presence if checked elsewhere
+                };
+            });
+            localStorage.setItem('jf_library_cache', JSON.stringify(miniTracks));
+            this.log('Saved ' + miniTracks.length + ' tracks to cache.');
+        } catch (e) {
+            this.logError('Failed to save library cache (quota exceeded?): ' + e.message);
         }
     },
 
@@ -86,17 +127,60 @@ var App = {
             playerArt: document.getElementById('player-art'),
             playerTitle: document.getElementById('player-title'),
             playerArtist: document.getElementById('player-artist'),
-            playerArtist: document.getElementById('player-artist'),
+            // playerArtist duplicate removed
             btnPlayPause: document.getElementById('btn-playpause'),
             seekBar: document.getElementById('seek-bar'),
             currentTime: document.getElementById('current-time'),
             duration: document.getElementById('duration')
         };
+        this.dom.miniPlayer = document.getElementById('mini-player');
+        this.dom.miniArt = document.getElementById('mini-art');
+        this.dom.miniTitle = document.getElementById('mini-title');
+        this.dom.miniArtist = document.getElementById('mini-artist');
+        this.dom.miniProgressFill = document.getElementById('mini-progress-fill');
+        this.dom.miniBtnPlayPause = document.getElementById('mini-btn-playpause');
+        this.dom.miniBtnNext = document.getElementById('mini-btn-next');
+        // Click on mini-bar (except controls)
+        this.dom.miniContent = document.querySelector('.mini-content');
+
     },
 
     bindEvents: function () {
         var self = this;
 
+        // --- Mini Player Events ---
+        if (this.dom.miniContent) {
+            this.dom.miniContent.addEventListener('click', function (e) {
+                // Prevent bubbling if user clicked controls (though structure separates them, safe check)
+                if (e.target.tagName !== 'BUTTON') {
+                    self.showView('view-player');
+                }
+            });
+        }
+        if (this.dom.miniBtnPlayPause) {
+            this.dom.miniBtnPlayPause.addEventListener('click', function (e) {
+                e.stopPropagation(); // Don't open player
+                if (self.state.player.isPlaying) {
+                    self.dom.audio.pause();
+                    self.state.player.isPlaying = false;
+                    self.dom.btnPlayPause.textContent = '▶';
+                    this.textContent = '▶';
+                } else {
+                    self.dom.audio.play();
+                    self.state.player.isPlaying = true;
+                    self.dom.btnPlayPause.textContent = '⏸';
+                    this.textContent = '⏸';
+                }
+            });
+        }
+        if (this.dom.miniBtnNext) {
+            this.dom.miniBtnNext.addEventListener('click', function (e) {
+                e.stopPropagation();
+                self.playTrack(self.state.player.currentTrack + 1);
+            });
+        }
+
+        // Login
         this.dom.loginForm.addEventListener('submit', function (e) {
             e.preventDefault();
             self.handleLogin();
@@ -154,6 +238,11 @@ var App = {
             self.dom.seekBar.value = currentTime;
             self.dom.currentTime.textContent = self.formatTime(currentTime);
 
+            // Update mini-player progress bar
+            if (self.dom.miniProgressFill && audioDuration && !isNaN(audioDuration) && isFinite(audioDuration) && audioDuration > 0) {
+                self.dom.miniProgressFill.style.width = (currentTime / audioDuration * 100) + '%';
+            }
+
             // Only update duration if audio provides a valid value AND we don't have metadata duration
             // Prefer metadata duration as it's more reliable
             if (!self.state.player.metadataDuration) {
@@ -182,6 +271,22 @@ var App = {
         }
         var target = document.getElementById(viewId);
         if (target) target.classList.remove('hidden');
+
+        // Manage Mini Player Visibility
+        // Show if: NOT in player view, AND we have a playlist loaded
+        if (viewId !== 'view-player' && this.state.player.playlist && this.state.player.playlist.length > 0) {
+            this.dom.miniPlayer.classList.remove('hidden');
+        } else {
+            this.dom.miniPlayer.classList.add('hidden');
+        }
+
+        // Special handling if view is player
+        if (viewId === 'view-player') {
+            // Assuming updatePlayerUI exists or will be added to refresh player details
+            // For now, we just ensure the mini-player is hidden as per logic above
+            // If you want to update the main player UI when navigating to it, call a function here.
+            // this.updatePlayerUI(); // Placeholder if needed
+        }
         this.state.currentView = viewId;
     },
 
@@ -284,9 +389,11 @@ var App = {
         if (this.dom.audio.paused) {
             this.dom.audio.play();
             this.dom.btnPlayPause.textContent = '⏸';
+            if (this.dom.miniBtnPlayPause) this.dom.miniBtnPlayPause.textContent = '⏸';
         } else {
             this.dom.audio.pause();
             this.dom.btnPlayPause.textContent = '▶';
+            if (this.dom.miniBtnPlayPause) this.dom.miniBtnPlayPause.textContent = '▶';
         }
     },
 
@@ -321,6 +428,7 @@ var App = {
             }
 
             self.log('Found music view: ' + musicView.Id);
+            self.state.musicViewId = musicView.Id; // Store music view ID for syncLibrary
 
             // Step 2: Get Albums
             var albumUrl = server + '/Users/' + userId + '/Items?ParentId=' + musicView.Id + '&Recursive=true&IncludeItemTypes=MusicAlbum&SortBy=SortName';
@@ -332,6 +440,11 @@ var App = {
                 self.log('Got ' + data2.Items.length + ' albums');
                 self.renderLibrary(data2.Items);
             });
+
+            // Trigger background sync to keep cache fresh
+            setTimeout(function () {
+                self.syncLibrary();
+            }, 500);
         });
     },
 
@@ -542,9 +655,8 @@ var App = {
         }
 
         if (player.shuffleEnabled) {
-            // Shuffle ON: use cached tracks if available, otherwise fetch
+            // Shuffle ON
             var self = this;
-
             var doShuffle = function (allTracks) {
                 // Remove current track from list, then shuffle and prepend current
                 var remaining = [];
@@ -563,54 +675,21 @@ var App = {
                 self.log('Shuffle ON - ' + player.playlist.length + ' tracks in shuffled queue');
             };
 
-            // Use cache if available
+            // Try to use allLibraryTracks if available (even if partial/cached)
             if (this.state.allLibraryTracks && this.state.allLibraryTracks.length > 0) {
-                this.log('Using cached tracks for shuffle...');
+                this.log('Using cached/loaded library for shuffle...');
                 doShuffle(this.state.allLibraryTracks);
+
+                // Trigger background sync to ensure we have latest tracks
+                setTimeout(function () {
+                    self.syncLibrary();
+                }, 100);
             } else {
-                // Fetch from server
-                var userId = this.state.userId;
-                var server = this.state.serverUrl;
-                var headers = { 'X-Emby-Token': this.state.accessToken };
-
-                this.log('Shuffle ON - fetching all tracks...');
-
-                this.request('GET', server + '/Users/' + userId + '/Views', headers, null, function (err, data) {
-                    if (err) {
-                        self.logError('Views error: ' + err);
-                        return;
+                // Fallback if no cache: fetch immediately
+                this.syncLibrary(function (tracks) {
+                    if (tracks && tracks.length > 0) {
+                        doShuffle(tracks);
                     }
-
-                    var musicView = null;
-                    for (var i = 0; i < data.Items.length; i++) {
-                        if (data.Items[i].CollectionType === 'music') {
-                            musicView = data.Items[i];
-                            break;
-                        }
-                    }
-
-                    if (!musicView) {
-                        self.logError('No music library found');
-                        return;
-                    }
-
-                    var url = server + '/Users/' + userId + '/Items?ParentId=' + musicView.Id + '&Recursive=true&IncludeItemTypes=Audio&Limit=10000';
-                    self.request('GET', url, headers, null, function (err2, data2) {
-                        if (err2) {
-                            self.logError('Tracks error: ' + err2);
-                            return;
-                        }
-
-                        var allTracks = data2.Items || [];
-                        if (allTracks.length === 0) {
-                            self.log('No tracks found');
-                            return;
-                        }
-
-                        // Cache the tracks for future use
-                        self.state.allLibraryTracks = allTracks;
-                        doShuffle(allTracks);
-                    });
                 });
             }
         } else {
@@ -670,6 +749,111 @@ var App = {
         }
     },
 
+    // Background sync of library
+    syncLibrary: function (callback) {
+        var self = this;
+        var userId = this.state.userId;
+        var server = this.state.serverUrl;
+        var headers = { 'X-Emby-Token': this.state.accessToken };
+
+        if (!userId || !server) return;
+
+        // If we don't know the Music View ID yet, we have to find it
+        if (!this.state.musicViewId) {
+            this.request('GET', server + '/Users/' + userId + '/Views', headers, null, function (err, data) {
+                if (!err && data && data.Items) {
+                    for (var i = 0; i < data.Items.length; i++) {
+                        if (data.Items[i].CollectionType === 'music') {
+                            self.state.musicViewId = data.Items[i].Id;
+                            self.syncLibrary(callback); // retry
+                            return;
+                        }
+                    }
+                }
+                if (callback) callback([]);
+            });
+            return;
+        }
+
+        this.log('Background Sync: Fetching all tracks...');
+        var url = server + '/Users/' + userId + '/Items?ParentId=' + this.state.musicViewId + '&Recursive=true&IncludeItemTypes=Audio&SortBy=DateCreated&SortOrder=Descending&Limit=10000';
+
+        this.request('GET', url, headers, null, function (err, data) {
+            if (err) {
+                self.logError('Sync error: ' + err);
+                if (callback) callback([]);
+                return;
+            }
+
+            var remoteTracks = data.Items || [];
+            self.log('Background Sync: Got ' + remoteTracks.length + ' tracks from server.');
+
+            // Check for updates
+            var currentCount = self.state.allLibraryTracks ? self.state.allLibraryTracks.length : 0;
+
+            // Allow callback if provided (force mode)
+            if (callback) {
+                self.state.allLibraryTracks = remoteTracks;
+                self.saveLibraryCache(remoteTracks);
+                callback(remoteTracks);
+                // Continue to check for silent shuffle update
+            }
+
+            if (remoteTracks.length !== currentCount) {
+                self.log('Library update detected (Old: ' + currentCount + ', New: ' + remoteTracks.length + ')');
+
+                // Update Cache
+                self.state.allLibraryTracks = remoteTracks;
+                self.saveLibraryCache(remoteTracks);
+
+                // Silent Shuffle Update
+                if (self.state.player.shuffleEnabled) {
+                    self.updateShuffleQueueSilently(remoteTracks);
+                }
+            } else {
+                self.log('Library is up to date.');
+            }
+        });
+    },
+
+    updateShuffleQueueSilently: function (allTracks) {
+        // Find tracks that are NOT in the current playlist
+        // This is a naive diff based on ID
+        var player = this.state.player;
+        var currentIds = {};
+        for (var i = 0; i < player.originalPlaylist.length; i++) {
+            currentIds[player.originalPlaylist[i].Id] = true;
+        }
+
+        var newTracks = [];
+        for (var j = 0; j < allTracks.length; j++) {
+            if (!currentIds[allTracks[j].Id]) {
+                newTracks.push(allTracks[j]);
+            }
+        }
+
+        if (newTracks.length > 0) {
+            this.log('Adding ' + newTracks.length + ' new tracks to shuffle queue');
+
+            // Add to original playlist
+            player.originalPlaylist = player.originalPlaylist.concat(newTracks);
+
+            // Shuffle new tracks and insert randomly into current playlist (after current track)
+            var shuffledNew = this.shuffleArray(newTracks);
+
+            // Insert into playlist after current playing track
+            // We want to avoid disrupting the history (before current track)
+            var insertIndex = player.currentTrack + 1 + Math.floor(Math.random() * (player.playlist.length - player.currentTrack));
+
+            // Construct new playlist
+            var before = player.playlist.slice(0, insertIndex);
+            var after = player.playlist.slice(insertIndex);
+
+            player.playlist = before.concat(shuffledNew).concat(after);
+
+        }
+    },
+
     updateShuffleButton: function () {
         var btn = document.getElementById('btn-shuffle');
         if (btn) {
@@ -683,9 +867,6 @@ var App = {
 
     shuffleAll: function () {
         var self = this;
-        var userId = this.state.userId;
-        var server = this.state.serverUrl;
-        var headers = { 'X-Emby-Token': this.state.accessToken };
 
         // Immediate visual feedback
         var shuffleBtn = document.getElementById('shuffle-all-btn');
@@ -695,59 +876,42 @@ var App = {
             shuffleBtn.style.opacity = '0.7';
         }
 
-        this.log('Fetching all songs for shuffle...');
-
-        // Get music library view ID
-        this.request('GET', server + '/Users/' + userId + '/Views', headers, null, function (err, data) {
-            if (err) {
-                self.logError('Views error: ' + err);
-                self.resetShuffleBtn();
+        var startShuffle = function (tracks) {
+            self.resetShuffleBtn();
+            if (!tracks || tracks.length === 0) {
+                alert('No songs found');
                 return;
             }
 
-            var musicView = null;
-            for (var i = 0; i < data.Items.length; i++) {
-                if (data.Items[i].CollectionType === 'music') {
-                    musicView = data.Items[i];
-                    break;
-                }
-            }
+            var shuffled = self.shuffleArray(tracks);
 
-            if (!musicView) {
-                self.logError('No music library found');
-                self.resetShuffleBtn();
-                return;
-            }
+            // Set up player state
+            self.state.player.originalPlaylist = tracks.slice();
+            self.state.player.playlist = shuffled;
+            self.state.player.shuffleEnabled = true;
+            self.state.player.currentAlbumId = null;
+            self.updateShuffleButton();
+            self.showView('view-player');
+            self.playTrack(0);
+        };
 
-            // Fetch ALL audio tracks in one request (no per-album fetching)
-            var url = server + '/Users/' + userId + '/Items?ParentId=' + musicView.Id + '&Recursive=true&IncludeItemTypes=Audio&SortBy=Random&Limit=10000';
-            self.request('GET', url, headers, null, function (err2, data2) {
-                self.resetShuffleBtn();
-                if (err2) {
-                    self.logError('Tracks error: ' + err2);
-                    return;
-                }
+        // FAST PATH: Use cache if available
+        if (this.state.allLibraryTracks && this.state.allLibraryTracks.length > 0) {
+            this.log('Instant Shuffle from cache!');
+            startShuffle(this.state.allLibraryTracks);
 
-                self.log('Got ' + data2.Items.length + ' total tracks');
-                if (data2.Items.length === 0) {
-                    alert('No songs found');
-                    return;
-                }
+            // Background sync to catch up if needed
+            setTimeout(function () {
+                self.syncLibrary();
+            }, 500);
 
-                var shuffled = self.shuffleArray(data2.Items);
-                // Cache tracks for faster future reshuffles
-                self.state.allLibraryTracks = data2.Items.slice();
-                // Set up player state properly for shuffle toggle to work
-                self.state.player.originalPlaylist = data2.Items.slice();
-                self.state.player.playlist = shuffled;
-                self.state.player.shuffleEnabled = true;
-                self.state.player.currentAlbumId = null; // Shuffling all, not album-specific
-                self.updateShuffleButton();
-                self.showView('view-player');
-                // Use playTrack instead of loadTrack so first song auto-plays
-                self.playTrack(0);
+        } else {
+            // SLOW PATH: Fetch first
+            this.log('No cache, fetching for shuffle...');
+            this.syncLibrary(function (tracks) {
+                startShuffle(tracks);
             });
-        });
+        }
     },
 
     resetShuffleBtn: function () {
@@ -769,9 +933,9 @@ var App = {
         var track = this.state.player.playlist[index];
         this.state.player.currentTrack = index;
 
-        this.setTextFit(this.dom.playerTitle, track.Name);
+        this.setMarqueeText(this.dom.playerTitle, track.Name);
         var artist = track.AlbumArtist || (track.Artists && track.Artists[0]) || 'Unknown Artist';
-        this.setTextFit(this.dom.playerArtist, artist);
+        this.setMarqueeText(this.dom.playerArtist, artist);
 
         // Reset seek bar
         this.dom.seekBar.value = 0;
@@ -789,11 +953,20 @@ var App = {
             this.dom.duration.textContent = '-:--';
         }
 
+        // Update Mini Player
+        this.dom.miniTitle.textContent = track.Name;
+        // Don't marquee the mini player to keep it performing well, or use basic text
+        // (User asked for marquee on long text earlier, maybe implement later if requested)
+        this.dom.miniArtist.textContent = artist;
+
+        // Use same image logic
         if (track.AlbumId) {
-            var imgUrl = this.state.serverUrl + '/Items/' + track.AlbumId + '/Images/Primary?maxHeight=600&maxWidth=600';
+            var imgUrl = this.state.serverUrl + '/Items/' + track.AlbumId + '/Images/Primary?maxHeight=200&maxWidth=200';
             this.dom.playerArt.style.backgroundImage = 'url(' + imgUrl + ')';
+            this.dom.miniArt.style.backgroundImage = 'url(' + imgUrl + ')';
         } else {
             this.dom.playerArt.style.backgroundImage = 'none';
+            this.dom.miniArt.style.backgroundImage = 'none';
         }
         // Use /universal endpoint for automatic transcoding, or force transcode
         // Remove static=true, add AudioCodec=aac to force server-side transcoding for FLAC/etc
@@ -889,6 +1062,7 @@ var App = {
         }
         this.state.player.isPlaying = true;
         this.dom.btnPlayPause.textContent = '⏸';
+        if (this.dom.miniBtnPlayPause) this.dom.miniBtnPlayPause.textContent = '⏸';
     },
 
     playNextAlbum: function () {
@@ -944,36 +1118,33 @@ var App = {
         return min + ':' + sec;
     },
 
-    setTextFit: function (el, text) {
-        // Reset styles
-        el.style.fontSize = '';
-        el.textContent = text;
-
-        // Simple scale down logic
-        // Start from base size (defined in CSS) and shrink until it fits or hits limit
-        // Since we don't know exact CSS px, we'll try percentages relative to base
-
-        // Safety break
-        if (el.scrollWidth <= el.clientWidth) return;
-
-        var percent = 100;
-        var minPercent = 85; // Less aggressive: don't go below 85%
-
-        while (el.scrollWidth > el.clientWidth && percent > minPercent) {
-            percent -= 2; // Slower reduction (was 5)
-            el.style.fontSize = percent + '%';
-        }
-    },
-
     setMarqueeText: function (el, text) {
-        // Reset
-        el.className = el.id === 'player-title' ? '' : ''; // Keep existing classes if any, though currently none
-        el.innerHTML = '';
+        // Safe reset: remove marquee classes and structure
+        el.classList.remove('marquee-container');
+        el.title = text; // Tooltip for accessibility
         el.textContent = text;
 
-        // Check overflow
-        if (el.scrollWidth > el.clientWidth) {
-            el.innerHTML = '<div class="marquee"><span>' + text + '</span></div>';
+        // Force a reflow to ensure we get correct dimensions
+        var sw = el.scrollWidth;
+        var cw = el.clientWidth;
+
+        if (sw > cw) {
+            // Text is too long, wrap in marquee structure
+            // Duplicate text for seamless scrolling effect (iOS style)
+            var spacing = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'; // 8 spaces
+
+            // Calculate duration based on width to ensure consistent speed
+            // Base speed: e.g., 50 pixels per second
+            var pixelsPerSecond = 50;
+            var totalWidth = sw * 2; // Rough estimate of scroll distance (text + spacing + text) -> actually checks against single scroll width usually
+            // The scroll distance is effectively 100% of the single text width + spacing
+            // But 'sw' is the single text width.
+
+            // NOTE: We wrap content again. New scrollWidth will range.
+            var duration = Math.max(8, sw / 30); // Min 8s, or slower for long text (30px/s)
+
+            el.innerHTML = '<span class="marquee-content" style="animation-duration:' + duration + 's">' + text + spacing + text + spacing + '</span>';
+            el.classList.add('marquee-container');
         }
     }
 };
