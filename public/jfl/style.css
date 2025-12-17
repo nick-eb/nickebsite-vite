@@ -209,6 +209,125 @@ input::placeholder {
     /* Negative margin to offset card margins */
 }
 
+/* ========== ALBUM DETAIL VIEW ========== */
+.album-header {
+    display: flex;
+    display: -webkit-flex;
+    padding: 16px 0;
+    margin-bottom: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.album-header-art {
+    width: 100px;
+    height: 100px;
+    background: var(--glass-bg);
+    border-radius: var(--border-radius-sm);
+    background-size: cover;
+    background-position: center;
+    flex-shrink: 0;
+    -webkit-flex-shrink: 0;
+}
+
+.album-header-info {
+    margin-left: 16px;
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-flex-direction: column;
+    justify-content: center;
+    -webkit-justify-content: center;
+    flex: 1;
+    -webkit-flex: 1;
+    min-width: 0;
+}
+
+.album-header-info h2 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.album-header-info h3 {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-weight: 400;
+    margin-bottom: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.btn.primary.small {
+    padding: 8px 16px;
+    font-size: 14px;
+    width: auto;
+}
+
+/* Song List */
+.song-list {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 80px;
+}
+
+.song-item {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-align-items: center;
+    padding: 12px 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    cursor: pointer;
+    transition: background 0.15s;
+}
+
+.song-item:active {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.song-item-number {
+    width: 28px;
+    color: var(--text-muted);
+    font-size: 14px;
+    text-align: center;
+    flex-shrink: 0;
+    -webkit-flex-shrink: 0;
+}
+
+.song-item-info {
+    flex: 1;
+    -webkit-flex: 1;
+    min-width: 0;
+}
+
+.song-item-name {
+    font-size: 15px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.song-item-artist {
+    font-size: 13px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.song-item-duration {
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-left: 12px;
+    flex-shrink: 0;
+    -webkit-flex-shrink: 0;
+}
+
 .card {
     width: calc(50% - 12px);
     margin: 6px;
@@ -419,6 +538,37 @@ input::placeholder {
 
 .btn.control.large:active {
     transform: scale(0.95);
+}
+
+/* Shuffle button active state */
+.btn.control.active {
+    color: #ffffff;
+    background: var(--primary-gradient);
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(88, 86, 214, 0.5);
+}
+
+/* Shuffle row - centered below main controls */
+.shuffle-row {
+    text-align: center;
+    margin-top: 12px;
+}
+
+/* Small control button (50% size) */
+.btn.control.small {
+    font-size: 14px;
+    padding: 6px 10px;
+    min-width: 24px;
+    min-height: 24px;
+    line-height: 24px;
+}
+
+.btn.control.small.active {
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    padding: 0;
 }
 
 /* ========== DEBUG CONSOLE ========== */

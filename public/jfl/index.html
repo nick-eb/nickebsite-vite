@@ -25,76 +25,96 @@
     <div id="app">
         <!-- Notification/Error Area -->
         <div id="notification-area" class="hidden"></div>
-        <! -- ... snip ... -->
-            <script src="app.js?v=24"></script>
 
-            <!-- Login View -->
-            <div id="view-login" class="view">
-                <div class="login-container">
-                    <h1>Jellyfin Legacy</h1>
-                    <form id="login-form">
-                        <div class="form-group">
-                            <label for="server-url">Server URL</label>
-                            <input type="url" id="server-url" placeholder="http://192.168.1.5:8096" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="username">Username</label>
-                            <input type="text" id="username" placeholder="Username" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <input type="password" id="password" placeholder="Password">
-                        </div>
-                        <button type="submit" class="btn primary">Connect</button>
-                    </form>
+        <!-- Login View -->
+        <div id="view-login" class="view">
+            <div class="login-container">
+                <h1>Jellyfin Legacy</h1>
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="server-url">Server URL</label>
+                        <input type="url" id="server-url" placeholder="http://192.168.1.5:8096" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" placeholder="Username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" placeholder="Password">
+                    </div>
+                    <button type="submit" class="btn primary">Connect</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Library View -->
+        <div id="view-library" class="view hidden">
+            <header class="top-bar">
+                <h2>Library</h2>
+                <button id="logout-btn" class="btn text">Logout</button>
+            </header>
+            <div id="library-content" class="grid-container">
+                <!-- Artists/Albums will be injected here -->
+            </div>
+        </div>
+
+        <!-- Album Detail View -->
+        <div id="view-album" class="view hidden">
+            <header class="top-bar">
+                <button id="back-to-albums" class="btn text">&lt; Library</button>
+                <div style="flex:1"></div>
+            </header>
+            <div class="album-header">
+                <div class="album-header-art" id="album-header-art"></div>
+                <div class="album-header-info">
+                    <h2 id="album-detail-title">Album</h2>
+                    <h3 id="album-detail-artist">Artist</h3>
+                    <button id="play-album-btn" class="btn primary small">Play All</button>
                 </div>
             </div>
-
-            <!-- Library View -->
-            <div id="view-library" class="view hidden">
-                <header class="top-bar">
-                    <h2>Library</h2>
-                    <button id="logout-btn" class="btn text">Logout</button>
-                </header>
-                <div id="library-content" class="grid-container">
-                    <!-- Artists/Albums will be injected here -->
-                </div>
+            <div id="album-song-list" class="song-list">
+                <!-- Songs injected here -->
             </div>
+        </div>
 
-            <!-- Player View -->
-            <div id="view-player" class="view hidden">
-                <header class="top-bar">
-                    <button id="back-to-library" class="btn text">&lt; Back</button>
-                    <h2>Now Playing</h2>
-                </header>
-                <div class="player-content">
-                    <div class="album-art-large" id="player-art"></div>
-                    <div class="track-info">
-                        <h2 id="player-title">Track Title</h2>
-                        <h3 id="player-artist">Artist Name</h3>
-                    </div>
-
-                    <!-- Seek Bar -->
-                    <div class="seek-container">
-                        <span id="current-time">0:00</span>
-                        <input type="range" id="seek-bar" min="0" value="0" step="1">
-                        <span id="duration">0:00</span>
-                    </div>
-
-                    <div class="controls">
-                        <button id="btn-prev" class="btn control">⏮</button>
-                        <button id="btn-playpause" class="btn control large">▶</button>
-                        <button id="btn-next" class="btn control">⏭</button>
-                    </div>
-                    <audio id="audio-element"></audio>
+        <!-- Player View -->
+        <div id="view-player" class="view hidden">
+            <header class="top-bar">
+                <button id="back-to-library" class="btn text">&lt; Back</button>
+                <h2>Now Playing</h2>
+            </header>
+            <div class="player-content">
+                <div class="album-art-large" id="player-art"></div>
+                <div class="track-info">
+                    <h2 id="player-title">Track Title</h2>
+                    <h3 id="player-artist">Artist Name</h3>
                 </div>
+
+                <!-- Seek Bar -->
+                <div class="seek-container">
+                    <span id="current-time">0:00</span>
+                    <input type="range" id="seek-bar" min="0" value="0" step="1">
+                    <span id="duration">0:00</span>
+                </div>
+
+                <div class="controls">
+                    <button id="btn-prev" class="btn control">⏮</button>
+                    <button id="btn-playpause" class="btn control large">▶</button>
+                    <button id="btn-next" class="btn control">⏭</button>
+                </div>
+                <div class="shuffle-row">
+                    <button id="btn-shuffle" class="btn control small" title="Toggle Shuffle">🔀</button>
+                </div>
+                <audio id="audio-element"></audio>
             </div>
+        </div>
 
-            <!-- Debug Console -->
-            <div id="debug-console"></div>
+        <!-- Debug Console -->
+        <div id="debug-console"></div>
 
-            <!-- Floating Debug Toggle -->
-            <button id="debug-toggle" title="Toggle Debug Console">🐛</button>
+        <!-- Floating Debug Toggle -->
+        <button id="debug-toggle" title="Toggle Debug Console">🐛</button>
     </div>
 
     <!-- Error catcher BEFORE main script -->
