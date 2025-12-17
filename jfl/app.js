@@ -13,8 +13,13 @@ var App = {
         player: {
             currentTrack: null,
             playlist: [],
-            isPlaying: false
-        }
+            originalPlaylist: [],
+            isPlaying: false,
+            shuffleEnabled: false,
+            metadataDuration: null,
+            currentAlbumId: null
+        },
+        allLibraryTracks: null  // Cache for all tracks to avoid repeated API calls
     },
 
     dom: {},
@@ -70,6 +75,7 @@ var App = {
             views: {
                 login: document.getElementById('view-login'),
                 library: document.getElementById('view-library'),
+                album: document.getElementById('view-album'),
                 player: document.getElementById('view-player')
             },
 
@@ -120,6 +126,20 @@ var App = {
             self.showView('view-library');
         });
 
+        document.getElementById('back-to-albums').addEventListener('click', function () {
+            self.showView('view-library');
+        });
+
+        document.getElementById('play-album-btn').addEventListener('click', function () {
+            if (self.state.currentAlbumTracks && self.state.currentAlbumTracks.length > 0) {
+                self.startPlayback(self.state.currentAlbumTracks, 0, self.state.currentAlbumId);
+            }
+        });
+
+        document.getElementById('btn-shuffle').addEventListener('click', function () {
+            self.toggleShuffle();
+        });
+
         // Seek Bar Events
         this.dom.seekBar.addEventListener('input', function () {
             var time = parseFloat(this.value);
@@ -129,21 +149,24 @@ var App = {
 
         this.dom.audio.addEventListener('timeupdate', function () {
             var currentTime = this.currentTime;
-            var duration = this.duration;
+            var audioDuration = this.duration;
 
             self.dom.seekBar.value = currentTime;
             self.dom.currentTime.textContent = self.formatTime(currentTime);
 
-            // Only update max/duration from audio element if it's valid and finite
-            // Otherwise keep the one we set from metadata
-            if (duration && !isNaN(duration) && isFinite(duration) && duration > 1) {
-                self.dom.seekBar.max = duration;
-                self.dom.duration.textContent = self.formatTime(duration);
+            // Only update duration if audio provides a valid value AND we don't have metadata duration
+            // Prefer metadata duration as it's more reliable
+            if (!self.state.player.metadataDuration) {
+                if (audioDuration && !isNaN(audioDuration) && isFinite(audioDuration) && audioDuration > 1) {
+                    self.dom.seekBar.max = audioDuration;
+                    self.dom.duration.textContent = self.formatTime(audioDuration);
+                }
             }
         });
 
         this.dom.audio.addEventListener('loadedmetadata', function () {
-            if (!isNaN(this.duration)) {
+            // Only update from audio element if we don't already have metadata duration
+            if (!self.state.player.metadataDuration && !isNaN(this.duration) && isFinite(this.duration) && this.duration > 1) {
                 self.dom.seekBar.max = this.duration;
                 self.dom.duration.textContent = self.formatTime(this.duration);
             }
@@ -300,7 +323,7 @@ var App = {
             self.log('Found music view: ' + musicView.Id);
 
             // Step 2: Get Albums
-            var albumUrl = server + '/Users/' + userId + '/Items?ParentId=' + musicView.Id + '&Recursive=true&IncludeItemTypes=MusicAlbum&SortBy=SortName&Limit=50';
+            var albumUrl = server + '/Users/' + userId + '/Items?ParentId=' + musicView.Id + '&Recursive=true&IncludeItemTypes=MusicAlbum&SortBy=SortName';
             self.request('GET', albumUrl, headers, null, function (err2, data2) {
                 if (err2) {
                     self.logError('Albums error: ' + err2);
@@ -322,6 +345,7 @@ var App = {
 
         // Shuffle All button
         var shuffleBtn = document.createElement('button');
+        shuffleBtn.id = 'shuffle-all-btn';
         shuffleBtn.className = 'btn primary';
         shuffleBtn.textContent = 'Shuffle All';
         shuffleBtn.style.marginBottom = '16px';
@@ -341,7 +365,7 @@ var App = {
                 var card = document.createElement('div');
                 card.className = 'card';
                 card.onclick = function () {
-                    self.playAlbum(item.Id);
+                    self.showAlbumDetails(item);
                 };
 
                 var imgUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
@@ -368,6 +392,89 @@ var App = {
         }
     },
 
+    showAlbumDetails: function (album) {
+        var self = this;
+        var userId = this.state.userId;
+        var server = this.state.serverUrl;
+        var headers = { 'X-Emby-Token': this.state.accessToken };
+
+        // Set album header info
+        document.getElementById('album-detail-title').textContent = album.Name;
+        document.getElementById('album-detail-artist').textContent = album.AlbumArtist || 'Unknown Artist';
+
+        var artEl = document.getElementById('album-header-art');
+        if (album.ImageTags && album.ImageTags.Primary) {
+            artEl.style.backgroundImage = 'url(' + server + '/Items/' + album.Id + '/Images/Primary?maxHeight=200&maxWidth=200)';
+        } else {
+            artEl.style.backgroundImage = 'none';
+        }
+
+        // Fetch tracks
+        var url = server + '/Users/' + userId + '/Items?ParentId=' + album.Id + '&Recursive=true&IncludeItemTypes=Audio&SortBy=ParentIndexNumber,IndexNumber';
+        this.request('GET', url, headers, null, function (err, data) {
+            if (err) {
+                self.logError('Album tracks error: ' + err);
+                return;
+            }
+
+            var tracks = data.Items || [];
+            self.state.currentAlbumTracks = tracks;
+            self.state.currentAlbumId = album.Id;
+
+            var container = document.getElementById('album-song-list');
+            container.innerHTML = '';
+
+            for (var i = 0; i < tracks.length; i++) {
+                (function (track, index) {
+                    var item = document.createElement('div');
+                    item.className = 'song-item';
+
+                    var number = document.createElement('div');
+                    number.className = 'song-item-number';
+                    number.textContent = track.IndexNumber || (index + 1);
+
+                    var info = document.createElement('div');
+                    info.className = 'song-item-info';
+
+                    var name = document.createElement('div');
+                    name.className = 'song-item-name';
+                    name.textContent = track.Name;
+
+                    var artist = document.createElement('div');
+                    artist.className = 'song-item-artist';
+                    artist.textContent = track.Artists && track.Artists.length > 0 ? track.Artists.join(', ') : (track.AlbumArtist || '');
+
+                    info.appendChild(name);
+                    info.appendChild(artist);
+
+                    var duration = document.createElement('div');
+                    duration.className = 'song-item-duration';
+                    if (track.RunTimeTicks) {
+                        duration.textContent = self.formatTime(Math.floor(track.RunTimeTicks / 10000000));
+                    } else {
+                        duration.textContent = '--:--';
+                    }
+
+                    item.appendChild(number);
+                    item.appendChild(info);
+                    item.appendChild(duration);
+
+                    item.onclick = function () {
+                        self.startPlayback(tracks, index, album.Id);
+                    };
+
+                    container.appendChild(item);
+                })(tracks[i], i);
+            }
+
+            if (tracks.length === 0) {
+                container.innerHTML = '<p style="padding:20px;color:var(--text-muted)">No songs found in this album.</p>';
+            }
+        });
+
+        this.showView('view-album');
+    },
+
     playAlbum: function (albumId) {
         var self = this;
         var userId = this.state.userId;
@@ -386,10 +493,15 @@ var App = {
         });
     },
 
-    startPlayback: function (tracks, startIndex) {
+    startPlayback: function (tracks, startIndex, albumId) {
+        this.state.player.originalPlaylist = tracks.slice();
         this.state.player.playlist = tracks;
-        this.loadTrack(startIndex); // Load but don't play yet
+        this.state.player.shuffleEnabled = false;
+        this.state.player.currentAlbumId = albumId || null;
+        this.updateShuffleButton();
         this.showView('view-player');
+        // Use playTrack to auto-play the selected song
+        this.playTrack(startIndex);
     },
 
     // Shuffle helper
@@ -404,42 +516,246 @@ var App = {
         return shuffled;
     },
 
-    shuffleAll: function () {
-        var self = this;
-        var albums = this.state.albums || [];
-        if (albums.length === 0) {
-            alert('No albums to shuffle');
+    toggleShuffle: function () {
+        var player = this.state.player;
+
+        // Safety checks
+        if (!player.playlist || player.playlist.length === 0) {
+            this.log('Cannot toggle shuffle: no playlist');
+            return;
+        }
+        if (!player.originalPlaylist || player.originalPlaylist.length === 0) {
+            // If no original playlist saved, use current playlist as original
+            player.originalPlaylist = player.playlist.slice();
+        }
+        if (player.currentTrack < 0 || player.currentTrack >= player.playlist.length) {
+            player.currentTrack = 0;
+        }
+
+        player.shuffleEnabled = !player.shuffleEnabled;
+        this.updateShuffleButton();
+
+        var currentTrack = player.playlist[player.currentTrack];
+        if (!currentTrack) {
+            this.log('Cannot toggle shuffle: invalid current track');
             return;
         }
 
-        this.log('Shuffling all albums...');
+        if (player.shuffleEnabled) {
+            // Shuffle ON: use cached tracks if available, otherwise fetch
+            var self = this;
+
+            var doShuffle = function (allTracks) {
+                // Remove current track from list, then shuffle and prepend current
+                var remaining = [];
+                for (var j = 0; j < allTracks.length; j++) {
+                    if (allTracks[j].Id !== currentTrack.Id) {
+                        remaining.push(allTracks[j]);
+                    }
+                }
+
+                var shuffled = self.shuffleArray(remaining);
+                player.originalPlaylist = allTracks.slice();
+                player.playlist = [currentTrack].concat(shuffled);
+                player.currentTrack = 0;
+                player.currentAlbumId = null;
+
+                self.log('Shuffle ON - ' + player.playlist.length + ' tracks in shuffled queue');
+            };
+
+            // Use cache if available
+            if (this.state.allLibraryTracks && this.state.allLibraryTracks.length > 0) {
+                this.log('Using cached tracks for shuffle...');
+                doShuffle(this.state.allLibraryTracks);
+            } else {
+                // Fetch from server
+                var userId = this.state.userId;
+                var server = this.state.serverUrl;
+                var headers = { 'X-Emby-Token': this.state.accessToken };
+
+                this.log('Shuffle ON - fetching all tracks...');
+
+                this.request('GET', server + '/Users/' + userId + '/Views', headers, null, function (err, data) {
+                    if (err) {
+                        self.logError('Views error: ' + err);
+                        return;
+                    }
+
+                    var musicView = null;
+                    for (var i = 0; i < data.Items.length; i++) {
+                        if (data.Items[i].CollectionType === 'music') {
+                            musicView = data.Items[i];
+                            break;
+                        }
+                    }
+
+                    if (!musicView) {
+                        self.logError('No music library found');
+                        return;
+                    }
+
+                    var url = server + '/Users/' + userId + '/Items?ParentId=' + musicView.Id + '&Recursive=true&IncludeItemTypes=Audio&Limit=10000';
+                    self.request('GET', url, headers, null, function (err2, data2) {
+                        if (err2) {
+                            self.logError('Tracks error: ' + err2);
+                            return;
+                        }
+
+                        var allTracks = data2.Items || [];
+                        if (allTracks.length === 0) {
+                            self.log('No tracks found');
+                            return;
+                        }
+
+                        // Cache the tracks for future use
+                        self.state.allLibraryTracks = allTracks;
+                        doShuffle(allTracks);
+                    });
+                });
+            }
+        } else {
+            // Unshuffle: load the current track's album and continue from there
+            var albumId = currentTrack.AlbumId;
+            if (!albumId) {
+                // No album context, just keep current track playing
+                player.playlist = [currentTrack];
+                player.currentTrack = 0;
+                player.currentAlbumId = null;
+                this.log('Shuffle OFF - no album context, single track mode');
+                return;
+            }
+
+            // Fetch the album's tracks
+            var self = this;
+            var userId = this.state.userId;
+            var server = this.state.serverUrl;
+            var headers = { 'X-Emby-Token': this.state.accessToken };
+
+            var url = server + '/Users/' + userId + '/Items?ParentId=' + albumId + '&Recursive=true&IncludeItemTypes=Audio&SortBy=ParentIndexNumber,IndexNumber';
+            this.log('Shuffle OFF - fetching album tracks...');
+
+            this.request('GET', url, headers, null, function (err, data) {
+                if (err) {
+                    self.logError('Error fetching album: ' + err);
+                    // Fallback: just play current track
+                    player.playlist = [currentTrack];
+                    player.currentTrack = 0;
+                    return;
+                }
+
+                var albumTracks = data.Items || [];
+                if (albumTracks.length === 0) {
+                    player.playlist = [currentTrack];
+                    player.currentTrack = 0;
+                    return;
+                }
+
+                // Find current track position in album
+                var trackPosition = 0;
+                for (var k = 0; k < albumTracks.length; k++) {
+                    if (albumTracks[k].Id === currentTrack.Id) {
+                        trackPosition = k;
+                        break;
+                    }
+                }
+
+                // Set playlist to album tracks, starting from current
+                player.originalPlaylist = albumTracks.slice();
+                player.playlist = albumTracks;
+                player.currentTrack = trackPosition;
+                player.currentAlbumId = albumId;
+
+                self.log('Shuffle OFF - now playing album, track ' + (trackPosition + 1) + '/' + albumTracks.length);
+            });
+        }
+    },
+
+    updateShuffleButton: function () {
+        var btn = document.getElementById('btn-shuffle');
+        if (btn) {
+            if (this.state.player.shuffleEnabled) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
+        }
+    },
+
+    shuffleAll: function () {
+        var self = this;
         var userId = this.state.userId;
         var server = this.state.serverUrl;
         var headers = { 'X-Emby-Token': this.state.accessToken };
 
-        // Get ALL tracks from ALL albums
-        var allTracks = [];
-        var completed = 0;
-        var total = albums.length;
+        // Immediate visual feedback
+        var shuffleBtn = document.getElementById('shuffle-all-btn');
+        if (shuffleBtn) {
+            shuffleBtn.textContent = 'Shuffling...';
+            shuffleBtn.disabled = true;
+            shuffleBtn.style.opacity = '0.7';
+        }
 
-        for (var i = 0; i < albums.length; i++) {
-            (function (album) {
-                var url = server + '/Users/' + userId + '/Items?ParentId=' + album.Id + '&Recursive=true&IncludeItemTypes=Audio&SortBy=Random&Limit=100';
-                self.request('GET', url, headers, null, function (err, data) {
-                    completed++;
-                    if (!err && data && data.Items) {
-                        for (var j = 0; j < data.Items.length; j++) {
-                            allTracks.push(data.Items[j]);
-                        }
-                    }
-                    if (completed === total) {
-                        // All albums loaded, shuffle and play
-                        self.log('Got ' + allTracks.length + ' total tracks');
-                        var shuffled = self.shuffleArray(allTracks);
-                        self.startPlayback(shuffled, 0);
-                    }
-                });
-            })(albums[i]);
+        this.log('Fetching all songs for shuffle...');
+
+        // Get music library view ID
+        this.request('GET', server + '/Users/' + userId + '/Views', headers, null, function (err, data) {
+            if (err) {
+                self.logError('Views error: ' + err);
+                self.resetShuffleBtn();
+                return;
+            }
+
+            var musicView = null;
+            for (var i = 0; i < data.Items.length; i++) {
+                if (data.Items[i].CollectionType === 'music') {
+                    musicView = data.Items[i];
+                    break;
+                }
+            }
+
+            if (!musicView) {
+                self.logError('No music library found');
+                self.resetShuffleBtn();
+                return;
+            }
+
+            // Fetch ALL audio tracks in one request (no per-album fetching)
+            var url = server + '/Users/' + userId + '/Items?ParentId=' + musicView.Id + '&Recursive=true&IncludeItemTypes=Audio&SortBy=Random&Limit=10000';
+            self.request('GET', url, headers, null, function (err2, data2) {
+                self.resetShuffleBtn();
+                if (err2) {
+                    self.logError('Tracks error: ' + err2);
+                    return;
+                }
+
+                self.log('Got ' + data2.Items.length + ' total tracks');
+                if (data2.Items.length === 0) {
+                    alert('No songs found');
+                    return;
+                }
+
+                var shuffled = self.shuffleArray(data2.Items);
+                // Cache tracks for faster future reshuffles
+                self.state.allLibraryTracks = data2.Items.slice();
+                // Set up player state properly for shuffle toggle to work
+                self.state.player.originalPlaylist = data2.Items.slice();
+                self.state.player.playlist = shuffled;
+                self.state.player.shuffleEnabled = true;
+                self.state.player.currentAlbumId = null; // Shuffling all, not album-specific
+                self.updateShuffleButton();
+                self.showView('view-player');
+                // Use playTrack instead of loadTrack so first song auto-plays
+                self.playTrack(0);
+            });
+        });
+    },
+
+    resetShuffleBtn: function () {
+        var shuffleBtn = document.getElementById('shuffle-all-btn');
+        if (shuffleBtn) {
+            shuffleBtn.textContent = 'Shuffle All';
+            shuffleBtn.disabled = false;
+            shuffleBtn.style.opacity = '1';
         }
     },
 
@@ -462,11 +778,14 @@ var App = {
         this.dom.currentTime.textContent = '0:00';
 
         // Set duration from metadata if available (ticks -> seconds)
+        // Store this so timeupdate/loadedmetadata don't overwrite with bad values
         if (track.RunTimeTicks) {
             var durationSec = Math.floor(track.RunTimeTicks / 10000000);
+            this.state.player.metadataDuration = durationSec;
             this.dom.seekBar.max = durationSec;
             this.dom.duration.textContent = this.formatTime(durationSec);
         } else {
+            this.state.player.metadataDuration = null;
             this.dom.duration.textContent = '-:--';
         }
 
@@ -544,7 +863,22 @@ var App = {
     },
 
     playTrack: function (index) {
-        // For next/prev - load and attempt to play
+        // Handle playlist boundaries
+        if (index < 0) {
+            index = 0; // Go to start
+        }
+
+        // If we've gone past end of playlist
+        if (index >= this.state.player.playlist.length) {
+            // If shuffle is off, try to play next album
+            if (!this.state.player.shuffleEnabled && this.state.player.currentAlbumId) {
+                this.playNextAlbum();
+                return;
+            }
+            // Otherwise loop to start or stop
+            index = 0;
+        }
+
         this.loadTrack(index);
         // Try to play - user already interacted once
         var self = this;
@@ -555,8 +889,51 @@ var App = {
         }
         this.state.player.isPlaying = true;
         this.dom.btnPlayPause.textContent = '⏸';
-        this.state.player.isPlaying = true;
-        this.dom.btnPlayPause.textContent = '⏸';
+    },
+
+    playNextAlbum: function () {
+        var self = this;
+        var albums = this.state.albums || [];
+        var currentAlbumId = this.state.player.currentAlbumId;
+
+        if (albums.length === 0 || !currentAlbumId) {
+            this.log('No albums to continue to');
+            return;
+        }
+
+        // Find current album index
+        var currentIndex = -1;
+        for (var i = 0; i < albums.length; i++) {
+            if (albums[i].Id === currentAlbumId) {
+                currentIndex = i;
+                break;
+            }
+        }
+
+        // Get next album (wrap around to first if at end)
+        var nextIndex = (currentIndex + 1) % albums.length;
+        var nextAlbum = albums[nextIndex];
+
+        this.log('Playing next album: ' + nextAlbum.Name);
+
+        // Fetch and play next album
+        var userId = this.state.userId;
+        var server = this.state.serverUrl;
+        var headers = { 'X-Emby-Token': this.state.accessToken };
+
+        var url = server + '/Users/' + userId + '/Items?ParentId=' + nextAlbum.Id + '&Recursive=true&IncludeItemTypes=Audio&SortBy=ParentIndexNumber,IndexNumber';
+        this.request('GET', url, headers, null, function (err, data) {
+            if (err) {
+                self.logError('Next album error: ' + err);
+                return;
+            }
+            if (data.Items && data.Items.length > 0) {
+                self.state.player.currentAlbumId = nextAlbum.Id;
+                self.state.player.originalPlaylist = data.Items.slice();
+                self.state.player.playlist = data.Items;
+                self.playTrack(0);
+            }
+        });
     },
 
     formatTime: function (seconds) {
