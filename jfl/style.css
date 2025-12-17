@@ -1,0 +1,514 @@
+:root {
+    /* iOS 10 inspired color palette */
+    --bg-gradient-start: #1a1a2e;
+    --bg-gradient-end: #16213e;
+    --glass-bg: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.18);
+    --glass-shadow: rgba(0, 0, 0, 0.3);
+    --primary-color: #5856d6;
+    /* iOS purple */
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --text-color: #ffffff;
+    --text-muted: rgba(255, 255, 255, 0.6);
+    --success-color: #34c759;
+    --border-radius: 16px;
+    --border-radius-sm: 10px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+    height: 100%;
+    overflow: hidden;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: linear-gradient(145deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
+    color: var(--text-color);
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+}
+
+#app {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    /* Safe area insets for iOS notch/home indicator */
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+}
+
+.view {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    height: 100%;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Glass Card Effect */
+.glass {
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius);
+    box-shadow: 0 8px 32px var(--glass-shadow);
+}
+
+/* ========== LOGIN VIEW ========== */
+.login-container {
+    max-width: 380px;
+    margin: auto;
+    width: 100%;
+    padding: 32px 24px;
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius);
+    box-shadow: 0 8px 32px var(--glass-shadow);
+}
+
+.login-container h1 {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.login-container::before {
+    content: '🎵';
+    display: block;
+    text-align: center;
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+input {
+    width: 100%;
+    padding: 14px 16px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--border-radius-sm);
+    color: white;
+    font-size: 16px;
+    transition: all 0.2s ease;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.3);
+}
+
+/* ========== BUTTONS ========== */
+.btn {
+    padding: 14px 28px;
+    border: none;
+    border-radius: var(--border-radius-sm);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.btn.primary {
+    background: var(--primary-gradient);
+    color: white;
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(88, 86, 214, 0.4);
+}
+
+.btn.primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(88, 86, 214, 0.5);
+}
+
+.btn.primary:active {
+    transform: translateY(0);
+}
+
+.btn.text {
+    background: transparent;
+    color: var(--text-muted);
+    padding: 8px 12px;
+}
+
+.btn.text:hover {
+    color: white;
+}
+
+/* ========== HEADER ========== */
+.top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    /* Increased from 5px */
+    padding-bottom: 6px;
+    /* Increased from 4px */
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.top-bar h2 {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+/* ========== LIBRARY GRID ========== */
+.grid-container {
+    display: flex;
+    flex-wrap: wrap;
+    /* No gap - iOS 10 doesn't support it. Use margins on cards instead */
+    overflow-y: auto;
+    padding-bottom: 80px;
+    -webkit-overflow-scrolling: touch;
+    justify-content: space-between;
+    margin: 0 -6px;
+    /* Negative margin to offset card margins */
+}
+
+.card {
+    width: calc(50% - 12px);
+    margin: 6px;
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:active {
+    transform: scale(0.97);
+}
+
+/* iOS 10 doesn't support aspect-ratio, use padding-bottom hack */
+.card-img-wrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;
+    /* 1:1 aspect ratio */
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.card img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.card .title {
+    padding: 12px;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    color: var(--text-color);
+    text-align: center;
+    color: var(--text-color);
+}
+
+/* ========== PLAYER VIEW ========== */
+.player-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    padding: 20px;
+    padding-bottom: 80px;
+    /* Increased padding for Safari bottom bar */
+}
+
+.album-art-large {
+    width: 65vw;
+    /* Reduced from 75vw */
+    height: 65vw;
+    max-width: 280px;
+    /* Reduced from 320px */
+    max-height: 280px;
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    margin-bottom: 20px;
+    border-radius: 20px;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    flex-shrink: 0;
+    /* Prevent shrinking if space is tight */
+}
+
+.track-info {
+    text-align: center;
+    margin-bottom: 10px;
+    /* Further reduced from 20px for tightness */
+    max-width: 100%;
+    padding: 0 20px;
+    /* Fixed height to prevent jumps when font resizes */
+    height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.track-info h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    width: 100%;
+    /* Ensure font-size changes work smoothly */
+    transition: font-size 0.2s;
+}
+
+.track-info h3 {
+    color: var(--text-muted);
+    font-size: 16px;
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+/* Seek Bar */
+.seek-container {
+    width: 100%;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-align-items: center;
+    margin-bottom: 9px;
+    /* Reduced by 25% from 12px */
+    margin-top: 3px;
+    /* Reduced by 50% from 6px */
+    padding: 0 10px;
+    flex-shrink: 0;
+}
+
+.seek-container span {
+    font-size: 12px;
+    color: var(--text-muted);
+    min-width: 35px;
+    text-align: center;
+}
+
+#seek-bar {
+    flex: 1;
+    -webkit-flex: 1;
+    margin: 0 10px;
+    -webkit-appearance: none;
+    appearance: none;
+    /* Fix lint: standard property */
+    background: transparent;
+}
+
+#seek-bar:focus {
+    outline: none;
+}
+
+/* Range Slider Styling - WebKit */
+#seek-bar::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 4px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+}
+
+#seek-bar::-webkit-slider-thumb {
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #ffffff;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    margin-top: -6px;
+    /* center on track */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Player Controls */
+.controls {
+    display: table;
+    margin: 0 auto;
+}
+
+.btn.control {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    background: transparent;
+    color: white;
+    font-size: 28px;
+    padding: 12px 20px;
+    min-width: 48px;
+    min-height: 48px;
+    line-height: 48px;
+}
+
+.btn.control.large {
+    background: var(--primary-gradient);
+    border-radius: 50%;
+    width: 72px;
+    height: 72px;
+    padding: 0;
+    line-height: 72px;
+    font-size: 28px;
+    box-shadow: 0 8px 25px rgba(88, 86, 214, 0.5);
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.btn.control.large:active {
+    transform: scale(0.95);
+}
+
+/* ========== DEBUG CONSOLE ========== */
+#debug-console {
+    position: fixed;
+    bottom: 60px;
+    left: 10px;
+    right: 10px;
+    height: 180px;
+    background: rgba(0, 0, 0, 0.85);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    color: #00ff00;
+    padding: 12px;
+    font-family: 'SF Mono', 'Menlo', monospace;
+    font-size: 11px;
+    overflow-y: auto;
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(0, 255, 0, 0.2);
+    z-index: 999;
+    display: none;
+}
+
+#debug-console div {
+    padding: 2px 0;
+    border-bottom: 1px solid rgba(0, 255, 0, 0.1);
+}
+
+/* Floating Debug Toggle Button */
+#debug-toggle {
+    position: fixed;
+    bottom: 80px;
+    /* Raised from 16px to avoid cutoff on small screens */
+    right: 16px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 18px;
+    line-height: 44px;
+    text-align: center;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+#debug-toggle:active {
+    transform: scale(0.9);
+}
+
+#debug-toggle.active {
+    background: rgba(0, 255, 0, 0.3);
+    border-color: rgba(0, 255, 0, 0.5);
+}
+
+/* ========== NOTIFICATION AREA ========== */
+#notification-area {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(211, 47, 47, 0.9);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    color: white;
+    text-align: center;
+    z-index: 1001;
+    font-weight: 500;
+}
+
+/* ========== SCROLLBAR (WebKit) ========== */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}

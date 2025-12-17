@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Jellyfin Legacy</title>
+
+    <!-- iOS PWA / Full Screen Mode -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Jellyfin">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#1a1a2e">
+
+    <!-- Apple Touch Icon (placeholder - ideally use a real icon) -->
+    <link rel="apple-touch-icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎵</text></svg>">
+
+    <link rel="stylesheet" href="style.css?v=20">
+</head>
+
+<body>
+    <div id="app">
+        <!-- Notification/Error Area -->
+        <div id="notification-area" class="hidden"></div>
+        <! -- ... snip ... -->
+            <script src="app.js?v=24"></script>
+
+            <!-- Login View -->
+            <div id="view-login" class="view">
+                <div class="login-container">
+                    <h1>Jellyfin Legacy</h1>
+                    <form id="login-form">
+                        <div class="form-group">
+                            <label for="server-url">Server URL</label>
+                            <input type="url" id="server-url" placeholder="http://192.168.1.5:8096" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="username">Username</label>
+                            <input type="text" id="username" placeholder="Username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" id="password" placeholder="Password">
+                        </div>
+                        <button type="submit" class="btn primary">Connect</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Library View -->
+            <div id="view-library" class="view hidden">
+                <header class="top-bar">
+                    <h2>Library</h2>
+                    <button id="logout-btn" class="btn text">Logout</button>
+                </header>
+                <div id="library-content" class="grid-container">
+                    <!-- Artists/Albums will be injected here -->
+                </div>
+            </div>
+
+            <!-- Player View -->
+            <div id="view-player" class="view hidden">
+                <header class="top-bar">
+                    <button id="back-to-library" class="btn text">&lt; Back</button>
+                    <h2>Now Playing</h2>
+                </header>
+                <div class="player-content">
+                    <div class="album-art-large" id="player-art"></div>
+                    <div class="track-info">
+                        <h2 id="player-title">Track Title</h2>
+                        <h3 id="player-artist">Artist Name</h3>
+                    </div>
+
+                    <!-- Seek Bar -->
+                    <div class="seek-container">
+                        <span id="current-time">0:00</span>
+                        <input type="range" id="seek-bar" min="0" value="0" step="1">
+                        <span id="duration">0:00</span>
+                    </div>
+
+                    <div class="controls">
+                        <button id="btn-prev" class="btn control">⏮</button>
+                        <button id="btn-playpause" class="btn control large">▶</button>
+                        <button id="btn-next" class="btn control">⏭</button>
+                    </div>
+                    <audio id="audio-element"></audio>
+                </div>
+            </div>
+
+            <!-- Debug Console -->
+            <div id="debug-console"></div>
+
+            <!-- Floating Debug Toggle -->
+            <button id="debug-toggle" title="Toggle Debug Console">🐛</button>
+    </div>
+
+    <!-- Error catcher BEFORE main script -->
+    <script>
+        window.onerror = function (msg, url, line) {
+            var d = document.getElementById('debug-console');
+            if (d) {
+                d.style.display = 'block';
+                d.innerHTML += '<div style="color:red">[FATAL] ' + msg + ' @ line ' + line + '</div>';
+                document.getElementById('debug-toggle').classList.add('active');
+            } else {
+                alert('JS Error: ' + msg);
+            }
+            return true;
+        };
+
+        // Debug toggle button
+        document.addEventListener('DOMContentLoaded', function () {
+            var dc = document.getElementById('debug-console');
+            var toggle = document.getElementById('debug-toggle');
+
+            // Start hidden
+            dc.style.display = 'none';
+
+            toggle.addEventListener('click', function () {
+                if (dc.style.display === 'none') {
+                    dc.style.display = 'block';
+                    toggle.classList.add('active');
+                } else {
+                    dc.style.display = 'none';
+                    toggle.classList.remove('active');
+                }
+            });
+        });
+    </script>
+    <script src="app.js?v=17"></script>
+</body>
+
+</html>
