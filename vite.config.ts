@@ -23,7 +23,7 @@ export default defineConfig({
           // Copy the 404.html file to the build directory
           const publicDir = resolve(__dirname, './public');
           const outDir = resolve(__dirname, './dist');
-          
+
           if (fs.existsSync(path.join(publicDir, '404.html'))) {
             await fs.promises.copyFile(
               path.join(publicDir, '404.html'),
@@ -31,6 +31,19 @@ export default defineConfig({
             );
           }
         }
+      }
+    },
+    {
+      name: 'legacy-player-redirect',
+      configureServer(server) {
+        server.middlewares.use((req, res, next) => {
+          if (req.url === '/jfl' || req.url === '/jfl/') {
+            res.writeHead(301, { Location: '/jfl/index.html' });
+            res.end();
+            return;
+          }
+          next();
+        });
       }
     }
   ],
