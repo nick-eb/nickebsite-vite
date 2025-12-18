@@ -7,7 +7,8 @@
   left: 0;
   right: 0;
   z-index: 1000;
-  height: 3rem;  /* Reduced from 3.5rem */
+  height: 3rem;
+  /* Reduced from 3.5rem */
 }
 
 .nav-container {
@@ -15,8 +16,8 @@
   width: 90%;
   margin: 0 auto;
   height: 100%;
-  display: flex;
-  justify-content: center;  /* Changed back to center */
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
 }
 
@@ -28,13 +29,18 @@
 }
 
 .nav-links {
+  grid-column: 2;
   height: 100%;
   display: flex;
-  gap: 1rem;  /* Reduced from 2rem for better spacing */
+  gap: 1rem;
+  /* Reduced from 2rem for better spacing */
   align-items: center;
   margin: 0;
   padding: 0;
-  flex-wrap: nowrap;  /* Prevent wrapping */
+  flex-wrap: nowrap;
+  /* Prevent wrapping */
+  list-style: none;
+  /* Ensure no bullets */
 }
 
 .nav-links li {
@@ -87,7 +93,8 @@
 
 .logo button {
   color: var(--text-primary);
-  font-size: 0.95rem;  /* Match nav items size */
+  font-size: 0.95rem;
+  /* Match nav items size */
   font-weight: 500;
   height: 100%;
   display: flex;
@@ -101,8 +108,10 @@
   height: 100%;
   display: flex;
   align-items: center;
-  padding: 0 0.75rem;   /* Add horizontal padding */
-  white-space: nowrap;  /* Prevent text wrapping */
+  padding: 0 0.75rem;
+  /* Add horizontal padding */
+  white-space: nowrap;
+  /* Prevent text wrapping */
   opacity: 1;
   transition: opacity 0.2s ease;
 }
@@ -138,11 +147,34 @@
   transform: scaleX(1);
 }
 
+/* Jellyfin Button Styles */
+.jellyfin-button {
+  grid-column: 3;
+  justify-self: end;
+  background: var(--surface-2);
+  border: 1px solid var(--surface-3);
+  border-radius: 8px;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.jellyfin-button:hover {
+  background: var(--surface-3);
+  color: var(--text-primary);
+  border-color: var(--accent);
+  transform: translateY(-1px);
+}
+
 /* Remove ALL blog-nav-button specific styles */
 /* Let it just use nav-button styles */
 
 /* Only keep this for dimming other items when on blog */
-.all-posts-item ~ li .nav-button,
+.all-posts-item~li .nav-button,
 body[data-route="/blog"] .nav-button:not(.blog-nav-button) {
   opacity: 0.5;
 }
@@ -151,7 +183,8 @@ body[data-route="/blog"] .nav-button:not(.blog-nav-button) {
 .nav-links a.nav-button {
   text-decoration: none;
   font: inherit;
-  font-size: 0.95rem;  /* Match other nav items */
+  font-size: 0.95rem;
+  /* Match other nav items */
   height: 100%;
   display: flex;
   align-items: center;
@@ -163,34 +196,45 @@ body[data-route="/blog"] .nav-button:not(.blog-nav-button) {
     background-color: var(--surface-0);
     border-bottom-color: var(--surface-2);
   }
-  
+
   .logo a {
     color: var(--text-primary);
   }
-  
+
   .nav-links a {
     color: var(--text-secondary);
   }
 }
 
+@media (max-width: 900px) {
+  .nav-container {
+    display: flex;
+    justify-content: space-between;
+    /* Spread items out */
+    padding: 0 1rem;
+  }
+
+  /* Keep Jellyfin button visible but maybe smaller */
+  .jellyfin-button {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.6rem;
+  }
+}
+
 @media (max-width: 768px) {
   .nav-links {
-    gap: 0.5rem;  /* Further reduce gap on mobile */
-    padding: 0 0.5rem;  /* Add some padding */
+    gap: 0.5rem;
+    padding: 0;
   }
 
   .nav-button {
-    padding: 0 0.5rem;  /* Reduce padding on mobile */
-    font-size: 0.9rem;  /* Slightly smaller font */
+    padding: 0 0.4rem;
+    font-size: 0.85rem;
   }
 
-  /* Remove this rule that was hiding the button */
-  /*.blog-nav-button {
-    display: none;
-  }*/
-}
-
-/* Add styles for all-posts item */
-.all-posts-item {
-  margin-left: auto;  /* Push to the right */
+  /* On very small screens, maybe just icon or abbreviated text? 
+     For now, just keeping it flowable */
+  .jellyfin-button {
+    margin-left: 0.5rem;
+  }
 }

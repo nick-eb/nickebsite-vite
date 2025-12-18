@@ -1,0 +1,103 @@
+/* ===========================================
+   CAROUSEL / SLIDER COMPONENT
+   =========================================== */
+
+.carousel {
+    position: relative;
+    width: 100%;
+}
+
+.carousel-track {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1.5rem 2rem;
+    overflow-x: auto;
+
+    /* Enable smooth scroll for programmatic scrolling */
+    scroll-behavior: smooth;
+
+    /* Touch scrolling on mobile */
+    -webkit-overflow-scrolling: touch;
+
+    /* Prevent text selection while dragging */
+    user-select: none;
+}
+
+/* Ensure cards don't shrink */
+.carousel-track>* {
+    flex: 0 0 auto;
+}
+
+/* ===========================================
+   SCROLLBAR STATES
+   =========================================== */
+
+/* When scrolling is possible - show grab cursor and scrollbar */
+.carousel-track.can-scroll {
+    cursor: grab;
+}
+
+/* When content fits - center it and hide scrollbar */
+.carousel-track.centered {
+    justify-content: center;
+    cursor: default;
+    overflow-x: hidden;
+    /* Hide scrollbar when not needed */
+}
+
+/* ===========================================
+   SCROLLBAR STYLING
+   =========================================== */
+
+/* Firefox */
+.carousel-track.can-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: var(--surface-3) var(--surface-1);
+}
+
+/* Chrome, Safari, Edge */
+.carousel-track.can-scroll::-webkit-scrollbar {
+    height: 8px;
+}
+
+.carousel-track.can-scroll::-webkit-scrollbar-track {
+    background: var(--surface-1);
+    border-radius: 4px;
+}
+
+.carousel-track.can-scroll::-webkit-scrollbar-thumb {
+    background: var(--surface-3);
+    border-radius: 4px;
+}
+
+.carousel-track.can-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
+/* Hide scrollbar when centered (content fits) */
+.carousel-track.centered::-webkit-scrollbar {
+    display: none;
+}
+
+.carousel-track.centered {
+    scrollbar-width: none;
+}
+
+/* ===========================================
+   RESPONSIVE ADJUSTMENTS
+   =========================================== */
+
+@media (max-width: 768px) {
+    .carousel-track {
+        gap: 1rem;
+        padding: 1rem;
+    }
+}
+
+/* ===========================================
+   SLIDER ITEM (for compatibility)
+   =========================================== */
+
+.slider-item {
+    flex: 0 0 auto;
+}

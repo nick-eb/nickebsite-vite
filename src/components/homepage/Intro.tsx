@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion';
-import { TypeAnimation } from 'react-type-animation';
 import './Intro.css';
 
 const Intro = () => {
@@ -15,75 +14,75 @@ const Intro = () => {
       <div className="intro-content">
         <div className="intro-text">
           <motion.div
-            className="typed-intro"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
           >
-            <TypeAnimation
-              sequence={['Hi, my name is']}
-              speed={50}
-              cursor={false}  // Remove cursor
-              className="intro-greeting"
-            />
+            <h1 className="intro-name">Nicholas Bonello</h1>
+            <h2 className="intro-degree">
+              Specialized Honours Computer Science <br />
+              @ York University '26
+            </h2>
           </motion.div>
-          
-          <motion.h1 
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.4 }}  // Reduced from 1.0
+
+          <motion.div
+            className="intro-roles"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
           >
-            Nicholas Bonello
-          </motion.h1>
-          
-          <motion.h2
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.6 }}  // Reduced from 1.2
-          >
-            Full Stack Developer
-          </motion.h2>
-          
+            <span className="role-pill">Full-Stack Developer</span>
+            <span className="role-pill">Hardware Diagnostics & Repair</span>
+            <span className="role-pill">Hobbyist Security Researcher</span>
+            <span className="role-pill">Digital Privacy Advocate</span>
+            <span className="role-pill">Right to Repair Advocate</span>
+          </motion.div>
+
           <motion.p
             className="intro-bio"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 0.8 }}  // Reduced from 1.4
+            transition={{ duration: 0.5, delay: 0.4 }}
           >
-            I'm a computer science student currently attending York University. I am passionate about
-            using computers to make life easier and more accessible for all.
+            <span className="bio-status">I'm a YorkU Computer Science student graduating with Specialized Honours in 2026.</span>
+            <br />
+            I am driven by curiosity and a passion for technology across all fields and applications. My work spans <span className="highlight">software development</span>, <span className="highlight">reverse engineering</span>, <span className="highlight">hardware repair</span>, <span className="highlight">security research</span>, and <span className="highlight">more!</span>
           </motion.p>
 
-          <motion.div 
+          <motion.div
             className="intro-buttons"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5, delay: 1 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
           >
-            <a 
+            <a
               href="/assets/Nicholas Bonello Resume.pdf"
               className="intro-button"
               download
             >
               Download CV
             </a>
-            <button 
-              onClick={scrollToContact} 
+            <button
+              onClick={scrollToContact}
               className="intro-button contact"
             >
               Contact Me
             </button>
           </motion.div>
         </div>
-        
-        <motion.div 
+
+        {/* 
+        <motion.div
           className="intro-logo"
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <img src="/assets/img/logo.png" alt="Nick B Logo" />
+          <div className="logo-circle">
+            <img src="/assets/img/logo.png" alt="Nick B Logo" className="logo-image" />
+          </div>
         </motion.div>
+        */}
       </div>
     </section>
   );

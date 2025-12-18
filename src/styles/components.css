@@ -8,8 +8,10 @@
   background: var(--surface-1);
   border-radius: 12px;
   width: 340px;
-  min-height: 400px; /* Changed from fixed height to min-height */
-  height: 100%; /* Allow card to fill available height */
+  min-height: 400px;
+  /* Changed from fixed height to min-height */
+  height: 100%;
+  /* Allow card to fill available height */
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -24,7 +26,8 @@
   cursor: pointer;
   text-decoration: none;
   color: inherit;
-  pointer-events: auto !important; /* Ensure cards are always clickable */
+  pointer-events: auto !important;
+  /* Ensure cards are always clickable */
   user-select: none;
   touch-action: manipulation;
 }
@@ -149,14 +152,17 @@ a.card:hover {
   align-items: flex-start;
   text-align: left;
   box-sizing: border-box;
-  pointer-events: auto; /* Allow interaction with card content */
+  pointer-events: auto;
+  /* Allow interaction with card content */
   user-select: none;
 }
 
 /* Override card content padding for blog cards to be more compact */
 .card--blog .card-content {
-  padding: 1rem; /* Reduced from 1.5rem for more compact layout */
-  gap: 0.5rem; /* Reduced gap between elements */
+  padding: 1rem;
+  /* Reduced from 1.5rem for more compact layout */
+  gap: 0.5rem;
+  /* Reduced gap between elements */
 }
 
 /* Card Typography */
@@ -168,7 +174,8 @@ a.card:hover {
   margin: 0;
   line-height: 1.3;
   width: 100%;
-  pointer-events: auto; /* Allow clicking on title */
+  pointer-events: auto;
+  /* Allow clicking on title */
   user-select: none;
 }
 
@@ -180,7 +187,8 @@ a.card:hover {
   margin: 0;
   padding: 0;
   width: 100%;
-  pointer-events: auto; /* Allow clicking on description */
+  pointer-events: auto;
+  /* Allow clicking on description */
   user-select: none;
   /* Remove line clamp to show full descriptions */
 }
@@ -197,7 +205,8 @@ a.card:hover {
   font-size: 0.85rem;
   color: var(--text-secondary);
   box-sizing: border-box;
-  pointer-events: auto; /* Allow clicking on metadata */
+  pointer-events: auto;
+  /* Allow clicking on metadata */
   user-select: none;
 }
 
@@ -207,8 +216,10 @@ a.card:hover {
 
 /* Blog Card Variant */
 .card--blog {
-  height: 360px; /* Fixed height for uniform blog cards */
-  min-height: 360px; /* Fallback for older browsers */
+  height: 360px;
+  /* Fixed height for uniform blog cards */
+  min-height: 360px;
+  /* Fallback for older browsers */
 }
 
 .card--blog .card-title {
@@ -255,6 +266,7 @@ a.card:hover {
   background: color-mix(in srgb, var(--accent) 5%, transparent);
   cursor: pointer;
 }
+
 .card--blog .read-more:hover {
   color: var(--accent-light);
   background: color-mix(in srgb, var(--accent) 10%, transparent);
@@ -262,8 +274,10 @@ a.card:hover {
 
 /* Project Card Variant */
 .card--project {
-  height: 420px; /* Match unified card heights */
-  min-height: 420px; /* Fallback for older browsers */
+  height: 420px;
+  /* Match unified card heights */
+  min-height: 420px;
+  /* Fallback for older browsers */
 }
 
 .card--project .project-meta {
@@ -313,397 +327,17 @@ a.card:hover {
    SLIDER COMPONENTS
    ================================================================= */
 
-/* Slider Container */
+/* Slider container matches generic structure but specific variants like .github-projects override details */
 .slider-container {
-  position: relative;
   width: 100%;
-  max-width: 100%;
-  overflow: visible;
-  margin: 0 auto;
-  padding: 1.5rem 0 4rem;  /* Increased bottom padding for dots */
-}
-
-/* Reduce bottom padding on mobile since dots are hidden */
-@media (max-width: 1024px) {
-  .slider-container {
-    padding: 1.5rem 0 2rem; /* Reduced bottom padding for mobile */
-  }
-}
-
-/* Carousel mode indicators */
-@media (max-width: 1024px) {
-  .slider-container::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 30px;
-    height: 100px;
-    background: linear-gradient(to left, var(--surface-0), transparent);
-    pointer-events: none;
-    z-index: 10;
-  }
-}
-
-/* Slick Slider Overrides */
-.slick-slider {
   position: relative;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  display: flex;
-  touch-action: pan-y pinch-zoom;
-  cursor: default;
-  pointer-events: all !important;
+  /* Optional: nice fade masks on edges could go here */
 }
 
-.slick-slider:active {
-  cursor: grabbing;
-}
-
-.slick-list {
-  overflow: visible;
-  overflow-x: auto; /* Add horizontal scrollbar when needed */
-  margin: 0;
-  padding: 1rem 0 !important;
-  width: 100%;
-  cursor: grab;
-  touch-action: pan-x;
-  position: relative;
-  scrollbar-width: thin;
-  scrollbar-color: var(--surface-3) var(--surface-1);
-}
-
-.slick-list:active {
-  cursor: grabbing;
-}
-.slick-list::-webkit-scrollbar {
-  height: 8px;
-}
-
-.slick-list::-webkit-scrollbar-track {
-  background: var(--surface-1);
-  border-radius: 4px;
-}
-
-.slick-list::-webkit-scrollbar-thumb {
-  background: var(--surface-3);
-  border-radius: 4px;
-}
-
-.slick-list::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in srgb, var(--surface-3) 80%, black);
-}
-
-/* Enhanced mobile scrollbar styling */
-@media (max-width: 1024px) {
-  .slick-list {
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    scrollbar-width: thin;
-    scrollbar-color: var(--accent) transparent;
-    padding-bottom: 1.5rem !important; /* Add space for scrollbar */
-    scroll-behavior: smooth; /* Smooth scrolling */
-    cursor: grab;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-x: contain;
-  }
-  
-  .slick-list:active {
-    cursor: grabbing;
-  }
-  
-  /* Improve mobile drag experience */
-  .slick-list.dragging {
-    cursor: grabbing !important;
-    scroll-behavior: auto; /* Disable smooth scroll during drag for better performance */
-  }
-  
-  .slick-list::-webkit-scrollbar {
-    height: 8px; /* Slightly larger for better usability */
-  }
-  
-  .slick-list::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 4px;
-    margin: 0 1rem; /* Add margin to track */
-    box-shadow: inset 0 0 3px rgba(0, 0, 0, 0.1);
-  }
-  
-  .slick-list::-webkit-scrollbar-thumb {
-    background: linear-gradient(90deg, var(--accent), var(--accent-light));
-    border-radius: 4px;
-    transition: all var(--transition-quick);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  }
-  
-  .slick-list::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(90deg, var(--accent-light), var(--accent));
-    transform: scaleY(1.2);
-  }
-  
-  .slick-list::-webkit-scrollbar-thumb:active {
-    background: var(--accent-dark);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-  }
-  
-  /* Mobile-specific card interaction improvements */
-  .card {
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-  }
-  
-  .card--pressed {
-    transform: translateY(-1px);
-  }
-  
-  .card--dragging {
-    cursor: grabbing !important;
-    transform: translateY(0);
-  }
-  
-  /* Disable Slick positioning on mobile to prevent conflicts */
-  .slick-slider {
-    touch-action: pan-x pinch-zoom;
-  }
-  
-  .slick-track {
-    /* Remove all Slick transforms on mobile for native scrolling */
-    transform: none !important;
-    transition: none !important;
-    will-change: auto !important;
-    left: 0 !important; /* Reset any Slick positioning */
-  }
-  
-  .slick-slide {
-    transition: none !important;
-    /* Ensure slides don't have Slick transforms */
-    transform: none !important;
-  }
-}
-
-/* Even more refined scrollbar for smaller mobile screens */
-@media (max-width: 768px) {
-  .slick-list::-webkit-scrollbar {
-    height: 6px;
-  }
-  
-  .slick-list::-webkit-scrollbar-thumb:hover {
-    transform: scaleY(1.1); /* Less dramatic scaling on smaller screens */
-  }
-}
-/* Enable native carousel scrolling on mobile */
-@media (max-width: 1024px) {
-  .slick-list {
-    overflow-x: auto !important;
-    overflow-y: hidden !important;
-    cursor: grab;
-    scroll-snap-type: none !important;
-    -webkit-overflow-scrolling: touch;
-    /* Ensure scrollbar and content boundaries are respected */
-    scroll-behavior: smooth;
-    overscroll-behavior-x: contain; /* Prevent overscroll */
-  }
-  
-  .slick-list:active {
-    cursor: grabbing;
-  }
-  
-  /* Disable Slick positioning on mobile to prevent conflicts */
-  .slick-slider {
-    touch-action: pan-x pinch-zoom;
-  }
-  
-  .slick-track {
-    /* Remove all Slick transforms on mobile for native scrolling */
-    transform: none !important;
-    transition: none !important;
-    will-change: auto !important;
-    left: 0 !important; /* Reset any Slick positioning */
-  }
-  
-  .slick-slide {
-    transition: none !important;
-    /* Ensure slides don't have Slick transforms */
-    transform: none !important;
-  }
-}
-
-/* Completely disable Slick positioning conflicts on mobile */
-@media (max-width: 1024px) {
-  .slick-slider .slick-track {
-    /* Override any Slick positioning completely */
-    position: static !important;
-    transform: translate3d(0, 0, 0) !important;
-    left: auto !important;
-    top: auto !important;
-  }
-  
-  .slick-slider .slick-slide {
-    /* Ensure slides behave as normal flex items */
-    position: static !important;
-    transform: none !important;
-    left: auto !important;
-    top: auto !important;
-    opacity: 1 !important;
-  }
-  
-  /* Ensure slider container doesn't interfere with native scroll */
-  .slick-slider {
-    position: relative !important;
-    transform: none !important;
-  }
-}
-
-/* Left-align the slider */
-.slick-slider[dir="ltr"] .slick-list {
-  margin-left: 0;
-  margin-right: 0;
-  text-align: left;
-}
-
-.slick-list:active {
-  cursor: grabbing;
-}
-
-/* Better drag visual feedback */
-.slick-slider.dragging .slick-list {
-  cursor: grabbing !important;
-}
-
-.slick-slider.dragging .card {
-  pointer-events: auto;
-  user-select: none;
-}
-
-.slick-track {
-  display: flex !important;
-  gap: 1.5rem !important;
-  width: auto !important;
-  margin: 0 !important;
-  justify-content: flex-start !important;  /* Default left-justified */
-  transition: transform 0.3s ease !important;
-  align-items: stretch !important; /* Make all cards same height */
-}
-
-/* Smooth scrolling behavior on mobile */
-@media (max-width: 1024px) {
-  .slick-track {
-    transition: none !important; /* Remove transition for smooth scrolling */
-  }
-}
-
-/* Center-justify on desktop only - mobile uses left-aligned native scrolling */
-@media (min-width: 1025px) {
-  .github-projects-slider .slick-track,
-  .blog-preview-slider .slick-track {
-    justify-content: center !important;
-    margin: 0 auto !important;
-  }
-}
-
-/* Left-align on mobile for natural scrolling behavior */
-@media (max-width: 1024px) {
-  .github-projects-slider .slick-track,
-  .blog-preview-slider .slick-track {
-    justify-content: flex-start !important;
-    margin: 0 !important;
-    /* Ensure proper scroll boundaries */
-    width: max-content !important;
-    max-width: none !important;
-  }
-}
-
-.slider-item {
-  width: 340px;
-  padding: 0;  /* Remove padding since we're using gap in track */
-  pointer-events: auto; /* Allow interaction with slider items */
-  display: flex; /* Make slider item flex container */
-  flex-shrink: 0; /* Prevent shrinking */
-}
-
-/* Hide navigation arrows */
-.slick-arrow,
-.slick-prev,
-.slick-next {
-  display: none !important;
-}
-
-.slick-slide {
-  display: flex !important;
-  justify-content: center;
-  padding: 0;  /* Remove padding since we're using gap */
-  width: 340px !important;
-  pointer-events: auto !important;
-  flex-shrink: 0 !important;
-}
-
-.slick-slide > div {
-  width: 340px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-/* Slider Dots */
-/* Slider Dots - Hidden on mobile, visible on desktop */
-.slick-dots {
-  position: absolute !important;
-  bottom: -40px !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  width: auto !important;
-  padding: 0.5rem 0 !important;
-  margin: 0 !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: center !important;
-  z-index: 10;
-  list-style: none;
-}
-
-.slick-dots li {
-  margin: 0 6px !important;
-  display: inline-block !important;
-}
-
-.slick-dots li button {
-  width: 12px !important;
-  height: 12px !important;
-  padding: 0 !important;
-  border: none !important;
-  background: transparent !important;
-  cursor: pointer !important;
-}
-
-.slick-dots li button:before {
-  content: '•' !important;
-  font-size: 14px !important;
-  line-height: 12px !important;
-  color: var(--text-secondary) !important;
-  opacity: 0.4 !important;
-  width: 12px !important;
-  height: 12px !important;
-  display: block !important;
-  text-align: center !important;
-}
-
-.slick-dots li.slick-active button:before {
-  color: var(--accent) !important;
-  opacity: 1 !important;
-}
-
-.slick-dots li button:hover:before {
-  opacity: 0.8 !important;
-}
-
-/* Hide dots on mobile screens */
-@media (max-width: 1024px) {
-  .slick-dots {
-    display: none !important;
-  }
-}
+/* 
+  Note: Actual slider behavior is now native horizontal scrolling 
+  handled by local styles in `Slider.css` or specific component styles.
+*/
 /* =================================================================
    UTILITY CLASSES
    ================================================================= */
@@ -721,8 +355,13 @@ a.card:hover {
 }
 
 @keyframes simpleFade {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 /* Hover Effects */
@@ -738,7 +377,8 @@ a.card:hover {
 /* Section Utilities */
 .section-title {
   font-size: 2rem;
-  margin-bottom: 1.5rem;  /* Increased from 0.75rem for better spacing */
+  margin-bottom: 1.5rem;
+  /* Increased from 0.75rem for better spacing */
   text-align: center;
   color: var(--text-primary);
 }
@@ -746,7 +386,8 @@ a.card:hover {
 /* Desktop improvements for section titles */
 @media (min-width: 1024px) {
   .section-title {
-    font-size: 2.25rem;  /* Slightly larger on desktop */
+    font-size: 2.25rem;
+    /* Slightly larger on desktop */
     margin-bottom: 2rem;
   }
 }
@@ -781,39 +422,43 @@ a.card:hover {
     width: fit-content !important;
     min-width: 100% !important;
   }
-  
+
   .slick-list {
-    overflow-x: auto !important;  /* Enable horizontal scrolling */
+    overflow-x: auto !important;
+    /* Enable horizontal scrolling */
     overflow-y: hidden !important;
     padding-right: 1rem !important;
     /* Prevent scroll beyond content boundaries */
     scroll-snap-type: none;
     overscroll-behavior-x: contain;
   }
-  
+
   .card {
     width: 280px;
     min-height: 360px;
-    flex-shrink: 0;  /* Prevent cards from shrinking */
+    flex-shrink: 0;
+    /* Prevent cards from shrinking */
   }
-  
+
   .card--blog {
-    height: 320px; /* Fixed height for uniform blog cards on mobile */
-    min-height: 320px; /* Fallback */
+    height: 320px;
+    /* Fixed height for uniform blog cards on mobile */
+    min-height: 320px;
+    /* Fallback */
   }
-  
+
   .slider-item {
     width: 280px;
     flex-shrink: 0;
     pointer-events: auto;
   }
-  
+
   .slick-slide {
     width: 280px !important;
     flex-shrink: 0 !important;
   }
-  
-  .slick-slide > div {
+
+  .slick-slide>div {
     width: 280px;
   }
 }
@@ -824,7 +469,7 @@ a.card:hover {
     justify-content: flex-start !important;
     padding-left: 1rem !important;
   }
-  
+
   .slick-list {
     overflow-x: auto !important;
     overflow-y: hidden !important;
@@ -833,54 +478,56 @@ a.card:hover {
     overscroll-behavior-x: contain;
     scroll-snap-type: none;
   }
-  
+
   .card {
     width: 220px;
     min-height: 320px;
     flex-shrink: 0;
   }
-  
+
   .card--blog {
-    height: 290px; /* Fixed height for uniform blog cards on tablet */
-    min-height: 290px; /* Fallback */
+    height: 290px;
+    /* Fixed height for uniform blog cards on tablet */
+    min-height: 290px;
+    /* Fallback */
   }
-  
+
   .slider-item {
     width: 220px;
     padding: 0;
     flex-shrink: 0;
     pointer-events: auto;
   }
-  
+
   .slick-slide {
     width: 220px !important;
     flex-shrink: 0 !important;
   }
-  
-  .slick-slide > div {
+
+  .slick-slide>div {
     width: 220px;
   }
-  
+
   .card-content {
     padding: 1rem;
     gap: 0.6rem;
   }
-  
+
   /* Further reduce blog card padding on mobile */
   .card--blog .card-content {
     padding: 0.75rem;
     gap: 0.4rem;
   }
-  
+
   .card-title {
     font-size: 1rem;
   }
-  
+
   .card-description {
     font-size: 0.8rem;
     /* Remove line clamp on mobile too */
   }
-  
+
   .card-image {
     height: 120px;
   }
@@ -892,7 +539,7 @@ a.card:hover {
     justify-content: flex-start !important;
     padding-left: 1rem !important;
   }
-  
+
   .slick-list {
     overflow-x: auto !important;
     overflow-y: hidden !important;
@@ -901,67 +548,70 @@ a.card:hover {
     overscroll-behavior-x: contain;
     scroll-snap-type: none;
   }
-  
+
   .card {
-    width: 200px;  /* Slightly larger for better readability in carousel */
+    width: 200px;
+    /* Slightly larger for better readability in carousel */
     min-height: 300px;
     flex-shrink: 0;
   }
-  
+
   .card--blog {
-    height: 270px; /* Fixed height for uniform blog cards on small mobile */
-    min-height: 270px; /* Fallback */
+    height: 270px;
+    /* Fixed height for uniform blog cards on small mobile */
+    min-height: 270px;
+    /* Fallback */
   }
-  
+
   .slider-item {
     width: 200px;
     padding: 0;
     flex-shrink: 0;
     pointer-events: auto;
   }
-  
+
   .slick-slide {
     width: 200px !important;
     flex-shrink: 0 !important;
   }
-  
-  .slick-slide > div {
+
+  .slick-slide>div {
     width: 200px;
   }
-  
+
   .card-content {
     padding: 0.8rem;
     gap: 0.5rem;
   }
-  
+
   /* Further reduce blog card padding on smallest screens */
   .card--blog .card-content {
     padding: 0.6rem;
     gap: 0.3rem;
   }
-  
+
   .card-title {
     font-size: 0.95rem;
     line-height: 1.2;
     min-height: 2.4rem;
   }
-  
+
   .card-description {
     font-size: 0.8rem;
     /* Remove line clamp on smallest screens too */
   }
-  
+
   .card-image {
     height: 110px;
   }
-  
+
   .card-meta,
   .read-more,
   .demo-link {
     padding: 0.6rem;
     font-size: 0.8rem;
   }
-  
+
   /* Mobile read more improvements */
   .card--blog .read-more {
     padding: 0.8rem 1rem;
@@ -997,6 +647,7 @@ a.card:hover {
 .card-link:hover {
   color: inherit;
 }
+
 /* Prevent unwanted dragging while allowing interaction */
 .card-image,
 .card-image * {

@@ -38,19 +38,19 @@ const Header = () => {
       navigate('/', { state: { scrollTo: sectionId } });
       return;
     }
-    
+
     // Special handling for 'intro' section
     if (sectionId === 'intro') {
       window.scrollTo({ top: 0, behavior: 'smooth' });
       setActiveSection('intro');
       return;
     }
-    
+
     const element = document.getElementById(sectionId);
     if (element) {
       const headerOffset = 60;
       const offsetPosition = element.offsetTop - headerOffset;
-      
+
       window.scrollTo({
         top: offsetPosition,
         behavior: 'smooth'
@@ -79,19 +79,18 @@ const Header = () => {
         <ul className="nav-links">
           {navItems.map(({ id, label }) => (
             <li key={id}>
-              <button 
+              <button
                 onClick={() => scrollToSection(id)}
-                className={`nav-button ${
-                  !isAllPosts && !isBlogPost && activeSection === id ? 'active' : ''
-                }`}
+                className={`nav-button ${!isAllPosts && !isBlogPost && activeSection === id ? 'active' : ''
+                  }`}
               >
                 {label}
               </button>
             </li>
           ))}
           <li className="all-posts-item">
-            <Link 
-              to="/blog" 
+            <Link
+              to="/blog"
               className={`nav-button ${isAllPosts || isBlogPost ? 'active' : ''}`}
               onClick={handleBlogClick}
             >
@@ -99,6 +98,15 @@ const Header = () => {
             </Link>
           </li>
         </ul>
+
+        <a
+          href="https://nick-eb.dev/jfl"
+          className="jellyfin-button"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Jellyfin Legacy Player
+        </a>
       </nav>
     </header>
   );

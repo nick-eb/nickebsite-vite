@@ -1,97 +1,183 @@
 .intro {
-  min-height: max(45vh, 300px);
+  min-height: 60vh;
+  /* Reduced from 85vh */
   width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2.5rem 0.5rem 0rem;
-  /* Remove padding as it's handled by section-container */
+  padding: 4rem 1rem 1.5rem;
+  /* Reduced bottom padding by 75% (from 6rem to 1.5rem) */
+  overflow: hidden;
+  position: relative;
 }
 
 .intro-content {
   width: 90%;
-  max-width: 1100px;
+  max-width: 900px;
+  /* Constrain the overall width */
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;  /* Increased from 0.75rem */
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  /* Reduced gap slightly */
   align-items: center;
-  justify-content: center;  /* Add this */
+  text-align: center;
+  z-index: 1;
 }
 
 .intro-text {
-  padding-right: 1.5rem;  /* Reduced from 2rem */
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  /* Reduced gap */
+  align-items: center;
 }
 
-.intro-text h1 {
-  font-size: 3.5rem;  /* Further reduced from 4rem */
-  font-weight: bold;
+.intro-name {
+  font-size: clamp(3.5rem, 10vw, 5.5rem);
+  /* Increased size scale */
+  font-weight: 700;
+  /* Bolder as requested */
   margin: 0;
   color: var(--text-primary);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  font-family: 'Outfit', 'Inter', system-ui, -apple-system, sans-serif;
+  /* Removal of gradient and webkit-text-fill-color */
+  background: none;
+  -webkit-background-clip: initial;
+  background-clip: initial;
+  -webkit-text-fill-color: initial;
 }
 
-.intro-text h2 {
-  font-size: 1.75rem;  /* Further reduced from 2rem */
-  font-weight: 300;
-  color: var(--text-secondary);
-  margin: 0.25rem 0 0 0;  /* Reduced top margin */
+.intro-degree {
+  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  font-weight: 400;
+  color: var(--accent);
+  margin: 0.75rem 0 0 0;
+  line-height: 1.5;
+  font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+  /* Changed from mono */
+  opacity: 0.95;
+  letter-spacing: 0.02em;
 }
 
-.intro-logo {
+.intro-roles {
   display: flex;
-  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  justify-content: center;
+  max-width: 800px;
 }
 
-.intro-logo img {
-  width: 250px;    /* Further reduced from 300px */
-  height: 250px;   /* Further reduced from 300px */
-  border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 0 30px rgba(59, 130, 246, 0.2);
+.role-pill {
+  padding: 0.6rem 1.25rem;
+  background: var(--surface-2);
+  border: 1px solid var(--surface-3);
+  border-radius: 9999px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(12px);
 }
 
-/* Remove unused classes */
-.intro__img {
-  display: none;
-}
-
-.section__subtitle--intro {
-  display: none;
-}
-
-/* Logo styling to match Svelte version */
-.logo-container {
-  position: relative;
-  max-width: 320px; /* Control maximum size */
-  aspect-ratio: 1;
+.intro-bio {
+  font-size: 1.2rem;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  max-width: 700px;
   margin: 0 auto;
 }
 
-.logo-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 4px solid rgba(59, 130, 246, 0.3);
-  box-shadow: 0 0 25px rgba(59, 130, 246, 0.2);
+.bio-status {
+  display: block;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+  font-size: 1.25rem;
+  /* Slightly larger */
+}
+
+.intro-bio .highlight {
+  color: var(--text-primary);
+  font-weight: 600;
+  position: relative;
+  display: inline-block;
+}
+
+.intro-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.intro-button {
+  padding: 0.85rem 1.75rem;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.intro-button:first-child {
+  background: var(--surface-2);
+  color: var(--text-primary);
+  border: 1px solid var(--surface-3);
+}
+
+.intro-button:first-child:hover {
+  background: var(--surface-3);
+  border-color: var(--text-secondary);
+}
+
+.intro-button.contact {
+  background: var(--accent);
+  color: white;
+  border: 1px solid var(--accent);
+  cursor: pointer;
+  box-shadow: 0 4px 14px 0 rgba(0, 118, 255, 0.39);
+  /* Assuming accent is blue-ish */
+}
+
+.intro-button.contact:hover {
+  filter: brightness(1.1);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 118, 255, 0.23);
+}
+
+/* Logo Styles */
+.intro-logo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .logo-circle {
-  position: relative;
-  width: 400px;
-  height: 400px;
+  width: 320px;
+  height: 320px;
   border-radius: 50%;
-  padding: 12px;
-  background: var(--surface-2);
-  backdrop-filter: var(--backdrop-blur);
-  border: 2px solid var(--surface-3);
-  box-shadow: var(--shadow-md);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  padding: 10px;
+  background: linear-gradient(135deg, var(--surface-2) 0%, var(--surface-1) 100%);
+  border: 1px solid var(--surface-3);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.3);
+  position: relative;
 }
 
-.logo-circle:hover {
-  transform: scale(1.02);
-  box-shadow: var(--shadow-lg);
+.logo-circle::after {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  background: linear-gradient(45deg, var(--accent), transparent, var(--accent));
+  opacity: 0.3;
+  z-index: -1;
+  animation: spin 10s linear infinite;
 }
 
 .logo-image {
@@ -99,151 +185,72 @@
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
+  border: 4px solid var(--background);
+  transition: transform 0.3s ease;
 }
 
-/* Hover effects */
 .logo-image:hover {
-  transform: scale(1.05);
+  transform: scale(1.02);
 }
 
-@media (max-width: 768px) {
-  .intro {
-    min-height: auto;
-    /* Remove padding as it's handled by section-container */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
   }
 
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 968px) {
   .intro-content {
-    width: 95%;  /* Slightly wider on mobile */
     grid-template-columns: 1fr;
-    gap: 1.5rem;
+    text-align: center;
+    gap: 2.5rem;
   }
 
   .intro-text {
-    padding: 0;
+    align-items: center;
+    order: 2;
+    /* Content below image on mobile usually looks better or vice versa */
+  }
+
+  .intro-logo {
     order: 1;
-    text-align: center;
   }
 
-  .intro-logo {
-    justify-content: center;
-    order: 0;
-  }
-
-  .intro-buttons {
+  .intro-roles {
     justify-content: center;
   }
 
-  /* Ensure logo size is consistent */
-  .intro-logo img {
-    width: 200px;
-    height: 200px;
-  }
-
-  .logo-container {
-    max-width: 256px;
-  }
   .logo-circle {
-    width: 300px;
-    height: 300px;
-  }
-
-  .intro {
-    min-height: max(45vh, 300px);  /* Further reduced */
-    padding: 5rem 1rem 1.5rem;
-    width: 100%;  /* Full width on mobile */
-    min-height: auto;   /* Allow content to determine height */
-  }
-
-  .intro-content {
-    grid-template-columns: 1fr;
-    gap: 2rem;         /* Increase gap between elements */
-    text-align: center;
-  }
-
-  .intro-text {
-    padding-right: 0;
-    order: 1;          /* Move text below logo */
-  }
-
-  .intro-logo {
-    justify-content: center;
-    order: 0;          /* Move logo to top */
-    margin-top: 1rem;  /* Add some space at the top */
-  }
-
-  .intro-bio {
-    margin: 1rem auto 0;
-    font-size: 0.95rem;
-  }
-  
-  .intro-greeting {
-    font-size: 1.1rem;
-  }
-
-  .intro-buttons {
-    justify-content: center;
+    width: 260px;
+    height: 260px;
   }
 }
 
 @media (max-width: 480px) {
-  .logo-circle {
-    width: 250px;
-    height: 250px;
+  .intro-name {
+    font-size: 2.5rem;
   }
-}
 
-/* Add to your existing animations */
-@keyframes pulseGlow {
-  0% { box-shadow: var(--shadow-md); }
-  50% { box-shadow: var(--shadow-lg); }
-  100% { box-shadow: var(--shadow-md); }
-}
+  .intro-degree {
+    font-size: 1rem;
+  }
 
-.logo-circle {
-  animation: pulseGlow 3s infinite ease-in-out;
-}
+  .logo-circle {
+    width: 220px;
+    height: 220px;
+  }
 
-.intro-greeting {
-  font-size: 1.25rem;
-  color: var(--text-secondary);  /* Changed from var(--accent) to be more subtle */
-  display: block;
-}
+  .intro-buttons {
+    width: 100%;
+    flex-direction: column;
+  }
 
-.intro-bio {
-  font-size: 1rem;
-  color: var(--text-secondary);
-  margin-top: 1rem;
-  line-height: 1.6;
-  max-width: 500px;
-}
-
-.intro-buttons {
-  display: flex;
-  gap: 1rem;
-  margin-top: 2rem;
-}
-
-.intro-button {
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  text-decoration: none;
-  font-weight: 500;
-  transition: all var(--transition-quick);
-}
-
-.intro-button:first-child {
-  background: var(--surface-2-dark);
-  color: var(--text-primary-dark);
-}
-
-.intro-button.contact {
-  background: var(--accent);
-  color: white;
-  border: none;  /* Add this to match anchor styling */
-  cursor: pointer;  /* Add this for button element */
-}
-
-.intro-button:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-md);
+  .intro-button {
+    width: 100%;
+  }
 }

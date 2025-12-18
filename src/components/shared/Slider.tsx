@@ -1,217 +1,127 @@
-import React from 'react';
-import SlickSlider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-
-export interface SliderSettings {
-  dots?: boolean;
-  infinite?: boolean;
-  speed?: number;
-  slidesToShow?: number;
-  slidesToScroll?: number;
-  swipe?: boolean;
-  swipeToSlide?: boolean;
-  draggable?: boolean;
-  accessibility?: boolean;
-  touchThreshold?: number;
-  touchMove?: boolean;
-  useTransform?: boolean;
-  waitForAnimate?: boolean;
-  useCSS?: boolean;
-  centerMode?: boolean;
-  centerPadding?: string;
-  cssEase?: string;
-  responsive?: Array<{
-    breakpoint: number;
-    settings: Partial<SliderSettings>;
-  }>;
-  beforeChange?: (current: number, next: number) => void;
-  afterChange?: (current: number) => void;
-}
+import React, { useRef, useCallback, useState, useEffect } from 'react';
+import './Slider.css';
 
 export interface SliderProps {
   children: React.ReactNode;
   className?: string;
-  settings?: Partial<SliderSettings>;
-  onSlideChange?: (isStart: boolean, isEnd: boolean, current: number) => void;
-  isDragging?: boolean;
-  onDragStart?: () => void;
-  onDragEnd?: () => void;
-  totalSlides?: number;
 }
 
-const defaultSettings: SliderSettings = {
-  dots: true,
-  infinite: false,
-  speed: 300,
-  slidesToShow: 3,
-  slidesToScroll: 1,
-  swipe: true,
-  swipeToSlide: true,
-  draggable: true,
-  accessibility: true,
-  touchThreshold: 5,
-  touchMove: true,
-  useTransform: true,
-  waitForAnimate: false,
-  useCSS: true,
-  centerMode: false,
-  centerPadding: '0px',
-  cssEase: 'linear', // Changed to linear for smoother mobile scrolling
-  responsive: [
-    {
-      breakpoint: 1024,
-      settings: {
-        slidesToShow: 2,
-        centerMode: false,
-        centerPadding: '0px'
-      }
-    },
-    {
-      breakpoint: 768,
-      settings: {
-        slidesToShow: 1,
-        centerMode: false,
-        centerPadding: '0px'
-      }
-    },
-    {
-      breakpoint: 480,
-      settings: {
-        slidesToShow: 1,
-        centerMode: false,
-        centerPadding: '0px'
-      }
+/**
+ * A simple, bulletproof horizontal carousel slider.
+ * - Uses native horizontal scrolling
+ * - Supports click-and-drag on desktop
+ * - Shows a styled scrollbar for easy navigation
+ * - Works on touch devices natively
+ * - Centers content if it all fits without scrolling
+ */
+export const Slider: React.FC<SliderProps> = ({ children, className = '' }) => {
+  const trackRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const startX = useRef(0);
+  const scrollStart = useRef(0);
+  const hasDragged = useRef(false);
+
+  // Track whether content overflows (needs scrolling)
+  const [canScroll, setCanScroll] = useState(false);
+
+  // Check if content overflows on mount and resize
+  useEffect(() => {
+    const checkOverflow = () => {
+      const track = trackRef.current;
+      if (!track) return;
+
+      // Content overflows if scrollWidth > clientWidth
+      const hasOverflow = track.scrollWidth > track.clientWidth;
+      setCanScroll(hasOverflow);
+    };
+
+    // Check initially
+    checkOverflow();
+
+    // Re-check on window resize
+    window.addEventListener('resize', checkOverflow);
+
+    // Also use ResizeObserver for more accurate detection
+    const resizeObserver = new ResizeObserver(checkOverflow);
+    if (trackRef.current) {
+      resizeObserver.observe(trackRef.current);
     }
-  ]
-};
 
-export const Slider: React.FC<SliderProps> = ({
-  children,
-  className = '',
-  settings = {},
-  onSlideChange,
-  onDragStart,
-  onDragEnd,
-  totalSlides = 0
-}) => {
-  // Calculate proper settings based on content and screen size
-  const calculateSlidesToShow = () => {
-    const width = window.innerWidth;
-    if (width <= 480) return 1;
-    if (width <= 768) return Math.min(1, totalSlides);
-    if (width <= 1024) return Math.min(2, totalSlides);
-    return Math.min(3, totalSlides);
-  };
+    return () => {
+      window.removeEventListener('resize', checkOverflow);
+      resizeObserver.disconnect();
+    };
+  }, [children]); // Re-run when children change
 
-  // Dynamic responsive settings - disable Slick features on mobile for native scrolling
-  const getResponsiveSettings = () => {
-    return [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: Math.min(2, totalSlides),
-          dots: false, // Disable dots on mobile
-          centerMode: false,
-          centerPadding: '0px',
-          swipe: false, // Disable Slick swipe to avoid conflicts
-          swipeToSlide: false,
-          touchThreshold: 100, // High threshold to prevent accidental Slick interaction
-          touchMove: false, // Disable Slick touch handling
-          draggable: false, // Disable Slick dragging
-          variableWidth: true,
-          infinite: false,
-          arrows: false,
-          useCSS: false, // Disable CSS transforms
-          useTransform: false, // Disable transform positioning
-          speed: 0, // Instant transitions to avoid conflicts
-          waitForAnimate: false
-        }
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: Math.min(1, totalSlides),
-          dots: false,
-          centerMode: false,
-          centerPadding: '0px',
-          swipe: false,
-          swipeToSlide: false,
-          touchThreshold: 100,
-          touchMove: false,
-          draggable: false,
-          variableWidth: true,
-          infinite: false,
-          arrows: false,
-          useCSS: false,
-          useTransform: false,
-          speed: 0,
-          waitForAnimate: false
-        }
-      },
-      {
-        breakpoint: 480,
-        settings: {
-          slidesToShow: 1,
-          dots: false,
-          centerMode: false,
-          centerPadding: '0px',
-          swipe: false,
-          swipeToSlide: false,
-          touchThreshold: 100,
-          touchMove: false,
-          draggable: false,
-          variableWidth: true,
-          infinite: false,
-          arrows: false,
-          useCSS: false,
-          useTransform: false,
-          speed: 0,
-          waitForAnimate: false
-        }
-      }
-    ];
-  };
+  const handlePointerDown = useCallback((e: React.PointerEvent) => {
+    const track = trackRef.current;
+    if (!track || !canScroll) return; // Don't enable drag if no scrolling needed
 
-  const currentSlidesToShow = Math.min(settings.slidesToShow || 3, totalSlides);
-  
-  const mergedSettings: SliderSettings = {
-    ...defaultSettings,
-    ...settings,
-    slidesToShow: currentSlidesToShow,
-    // Only show dots if we have more slides than what's visible
-    dots: totalSlides > currentSlidesToShow ? (settings.dots !== false) : false,
-    responsive: getResponsiveSettings(),
-    waitForAnimate: false, // Disable animation waiting for smoother scrolling
-    useCSS: true, // Enable on desktop, disabled via responsive settings on mobile
-    useTransform: true, // Enable on desktop, disabled via responsive settings on mobile
-    beforeChange: (current: number, next: number) => {
-      onDragStart?.();
-      settings.beforeChange?.(current, next);
-    },
-    afterChange: (current: number) => {
-      setTimeout(() => onDragEnd?.(), 100);
-      
-      // Calculate if we're at start/end based on current settings
-      const currentSlidesToShow = calculateSlidesToShow();
-      const isInfinite = mergedSettings.infinite || false;
-      
-      let isStart = current === 0;
-      let isEnd = false;
-      
-      if (!isInfinite) {
-        isEnd = current >= totalSlides - currentSlidesToShow;
-      }
-      
-      onSlideChange?.(isStart, isEnd, current);
-      settings.afterChange?.(current);
+    // Only handle left mouse button or touch
+    if (e.pointerType === 'mouse' && e.button !== 0) return;
+
+    isDragging.current = true;
+    hasDragged.current = false;
+    startX.current = e.clientX;
+    scrollStart.current = track.scrollLeft;
+
+    // Capture pointer to receive events even when pointer leaves element
+    track.setPointerCapture(e.pointerId);
+    track.style.cursor = 'grabbing';
+    track.style.scrollBehavior = 'auto'; // Instant feedback while dragging
+  }, [canScroll]);
+
+  const handlePointerMove = useCallback((e: React.PointerEvent) => {
+    if (!isDragging.current || !trackRef.current) return;
+
+    const dx = e.clientX - startX.current;
+
+    // Mark as dragged if moved more than 5px (prevents accidental navigation)
+    if (Math.abs(dx) > 5) {
+      hasDragged.current = true;
     }
-  };
+
+    trackRef.current.scrollLeft = scrollStart.current - dx;
+  }, []);
+
+  const handlePointerUp = useCallback((e: React.PointerEvent) => {
+    const track = trackRef.current;
+    if (!track) return;
+
+    isDragging.current = false;
+    track.releasePointerCapture(e.pointerId);
+    track.style.cursor = canScroll ? 'grab' : 'default';
+    track.style.scrollBehavior = 'smooth'; // Restore smooth scrolling
+
+    // Keep hasDragged true for a short time to block the click event
+    // The click event fires after pointerup, so we need this delay
+    setTimeout(() => {
+      hasDragged.current = false;
+    }, 100);
+  }, [canScroll]);
+
+  // Prevent click navigation if we just finished dragging
+  const handleClickCapture = useCallback((e: React.MouseEvent) => {
+    if (hasDragged.current) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, []);
 
   return (
-    <SlickSlider {...mergedSettings} className={className}>
-      {children}
-    </SlickSlider>
+    <div className={`carousel ${className}`}>
+      <div
+        ref={trackRef}
+        className={`carousel-track ${canScroll ? 'can-scroll' : 'centered'}`}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerUp}
+        onPointerCancel={handlePointerUp}
+        onClickCapture={handleClickCapture}
+      >
+        {children}
+      </div>
+    </div>
   );
 };
 

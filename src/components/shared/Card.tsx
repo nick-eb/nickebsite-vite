@@ -1,14 +1,14 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useCardInteraction } from '../../hooks/useCardInteraction';
 
 export interface BaseCardProps {
   className?: string;
   children: React.ReactNode;
+  // Legacy props support to avoid breaking existing calls immediately
   draggable?: boolean;
-  onDragStart?: (startX: number, startY: number) => void;
-  onDrag?: (deltaX: number, deltaY: number, currentX: number, currentY: number) => void;
-  onDragEnd?: () => void;
+  onDragStart?: any;
+  onDrag?: any;
+  onDragEnd?: any;
 }
 
 export interface LinkCardProps extends BaseCardProps {
@@ -59,115 +59,79 @@ export interface CardDescriptionProps {
 export interface CardMetaProps {
   children: React.ReactNode;
 }
+
 // Main Card component
 export const Card: React.FC<CardProps> = (props) => {
-  const { className = '', children, draggable = false, onDragStart, onDrag, onDragEnd } = props;
+  const { className = '', children } = props;
   const navigate = useNavigate();
-  
+
   const cardClassName = `card ${className}`;
 
   if (props.variant === 'link') {
     const { to, onClick } = props;
-    
-    const { isDragging, isPressed, handlers } = useCardInteraction({
-      onNavigate: () => navigate(to),
-      ...(onDragStart && { onDragStart }),
-      ...(onDrag && { onDrag }),
-      ...(onDragEnd && { onDragEnd })
-    });
-    
-    const finalClassName = `${cardClassName} ${isDragging ? 'card--dragging' : ''} ${isPressed ? 'card--pressed' : ''}`;
-    
     return (
-      <div
-        className={finalClassName}
-        draggable={draggable}
-        {...handlers}
+      <a
+        className={cardClassName}
         onClick={(e) => {
-          handlers.onClick(e);
-          if (!isDragging) {
-            onClick?.(e as any);
-          }
+          e.preventDefault();
+          onClick?.(e);
+          navigate(to);
         }}
+        href={to}
+        role="link"
       >
         {children}
-      </div>
+      </a>
     );
   }
 
   if (props.variant === 'external') {
     const { href, target = '_blank', rel = 'noopener noreferrer' } = props;
-    
-    const { isDragging, isPressed, handlers } = useCardInteraction({
-      onNavigate: () => window.open(href, target, rel ? `noreferrer=${rel}` : undefined),
-      ...(onDragStart && { onDragStart }),
-      ...(onDrag && { onDrag }),
-      ...(onDragEnd && { onDragEnd })
-    });
-    
-    const finalClassName = `${cardClassName} ${isDragging ? 'card--dragging' : ''} ${isPressed ? 'card--pressed' : ''}`;
-    
     return (
-      <div
-        className={finalClassName}
-        draggable={draggable}
-        {...handlers}
+      <a
+        className={cardClassName}
+        href={href}
+        target={target}
+        rel={rel}
       >
         {children}
-      </div>
+      </a>
     );
   }
 
   if (props.variant === 'button') {
-    const { onClick } = props;
-    
-    const { isDragging, isPressed, handlers } = useCardInteraction({
-      onNavigate: () => onClick?.({} as any),
-      ...(onDragStart && { onDragStart }),
-      ...(onDrag && { onDrag }),
-      ...(onDragEnd && { onDragEnd })
-    });
-    
-    const finalClassName = `${cardClassName} ${isDragging ? 'card--dragging' : ''} ${isPressed ? 'card--pressed' : ''}`;
-    
+    const { onClick, type = 'button' } = props;
     return (
-      <div
-        className={finalClassName}
-        draggable={draggable}
-        {...handlers}
-        onClick={(e) => {
-          handlers.onClick(e);
-          if (!isDragging) {
-            onClick?.({} as any);
-          }
-        }}
+      <button
+        className={cardClassName}
+        onClick={onClick}
+        type={type}
       >
         {children}
-      </div>
+      </button>
     );
   }
 
   // Default div variant
   return (
-    <div className={cardClassName} draggable={draggable}>
+    <div className={cardClassName}>
       {children}
     </div>
   );
 };
 
 // Card sub-components
-export const CardImage: React.FC<CardImageProps> = ({ 
-  src, 
-  alt, 
-  loading = 'lazy', 
-  onError 
+export const CardImage: React.FC<CardImageProps> = ({
+  src,
+  alt,
+  loading = 'lazy',
+  onError
 }) => (
   <div className="card-image">
-    <img 
+    <img
       src={src}
       alt={alt}
       loading={loading}
-      draggable="false"
       onError={onError}
     />
   </div>
@@ -180,17 +144,10 @@ export const CardContent: React.FC<CardContentProps> = ({ children }) => (
 );
 
 export const CardTitle: React.FC<CardTitleProps> = ({ children, level = 3 }) => {
-  const headingProps = { className: "card-title" };
-  
-  switch (level) {
-    case 1: return <h1 {...headingProps}>{children}</h1>;
-    case 2: return <h2 {...headingProps}>{children}</h2>;
-    case 3: return <h3 {...headingProps}>{children}</h3>;
-    case 4: return <h4 {...headingProps}>{children}</h4>;
-    case 5: return <h5 {...headingProps}>{children}</h5>;
-    case 6: return <h6 {...headingProps}>{children}</h6>;
-    default: return <h3 {...headingProps}>{children}</h3>;
-  }
+  // Use a div purely for styling if the semantics are handled elsewhere or strict structure is needed.
+  // Although keeping standard headings is good for accessibility.
+  const Tag = `h${level}` as React.ElementType;
+  return <Tag className="card-title">{children}</Tag>;
 };
 
 export const CardDescription: React.FC<CardDescriptionProps> = ({ children }) => (
@@ -206,7 +163,6 @@ export const CardMeta: React.FC<CardMetaProps> = ({ children }) => (
 );
 
 // Blog-specific card variant
-// Blog-specific card variant
 export interface BlogCardProps {
   to: string;
   title: string;
@@ -215,9 +171,10 @@ export interface BlogCardProps {
   thumbnail?: string | undefined;
   className?: string;
   onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
-  onDragStart?: (startX: number, startY: number) => void;
-  onDrag?: (deltaX: number, deltaY: number, currentX: number, currentY: number) => void;
-  onDragEnd?: () => void;
+  // Legacy props
+  onDragStart?: any;
+  onDrag?: any;
+  onDragEnd?: any;
 }
 
 export const BlogCard: React.FC<BlogCardProps> = ({
@@ -228,24 +185,15 @@ export const BlogCard: React.FC<BlogCardProps> = ({
   thumbnail,
   onClick,
   className = '',
-  onDragStart,
-  onDrag,
-  onDragEnd,
   ...props
 }) => {
-  const cardProps = {
-    variant: 'link' as const,
-    to,
-    className: `${className} card--blog`,
-    ...(onDragStart && { onDragStart }),
-    ...(onDrag && { onDrag }),
-    ...(onDragEnd && { onDragEnd }),
-    ...props,
-    ...(onClick && { onClick })
-  };
-
   return (
-    <Card {...cardProps}>
+    <Card
+      variant="link"
+      to={to}
+      className={`${className} card--blog`}
+      onClick={onClick}
+    >
       <CardImage
         src={thumbnail || '/assets/img/logo.png'}
         alt={`${title} thumbnail`}
@@ -261,6 +209,7 @@ export const BlogCard: React.FC<BlogCardProps> = ({
     </Card>
   );
 };
+
 // Project-specific card variant
 export interface ProjectCardProps {
   href: string;
@@ -272,9 +221,9 @@ export interface ProjectCardProps {
   image?: string | undefined;
   homepage?: string | undefined;
   className?: string;
-  onDragStart?: (startX: number, startY: number) => void;
-  onDrag?: (deltaX: number, deltaY: number, currentX: number, currentY: number) => void;
-  onDragEnd?: () => void;
+  onDragStart?: any;
+  onDrag?: any;
+  onDragEnd?: any;
 }
 
 export const ProjectCard: React.FC<ProjectCardProps> = ({
@@ -287,19 +236,12 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   image,
   homepage,
   className = '',
-  onDragStart,
-  onDrag,
-  onDragEnd,
   ...props
 }) => (
   <Card
     variant="external"
     href={href}
     className={`${className} card--project`}
-    {...(onDragStart && { onDragStart })}
-    {...(onDrag && { onDrag })}
-    {...(onDragEnd && { onDragEnd })}
-    {...props}
   >
     <CardImage
       src={image || '/assets/img/github-placeholder.png'}
@@ -332,6 +274,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
         target="_blank"
         rel="noopener noreferrer"
         className="demo-link"
+        onClick={(e) => e.stopPropagation()} // Prevent card click
       >
         View Demo →
       </a>
