@@ -4,12 +4,14 @@
 
 App.cacheDOM = function () {
     this.dom = {
+        // Login elements
         loginForm: document.getElementById('login-form'),
         serverUrl: document.getElementById('server-url'),
         username: document.getElementById('username'),
         password: document.getElementById('password'),
         loginBtn: document.querySelector('#login-form button'),
 
+        // View containers
         views: {
             login: document.getElementById('view-login'),
             library: document.getElementById('view-library'),
@@ -17,17 +19,35 @@ App.cacheDOM = function () {
             player: document.getElementById('view-player')
         },
 
+        // Library elements
         libraryContent: document.getElementById('library-content'),
         logoutBtn: document.getElementById('logout-btn'),
+        tabAlbums: document.getElementById('tab-albums'),
+        tabPlaylists: document.getElementById('tab-playlists'),
 
+        // Player elements
         audio: document.getElementById('audio-element'),
         playerArt: document.getElementById('player-art'),
         playerTitle: document.getElementById('player-title'),
         playerArtist: document.getElementById('player-artist'),
         btnPlayPause: document.getElementById('btn-playpause'),
+        btnPrev: document.getElementById('btn-prev'),
+        btnNext: document.getElementById('btn-next'),
+        btnShuffle: document.getElementById('btn-shuffle'),
         seekBar: document.getElementById('seek-bar'),
         currentTime: document.getElementById('current-time'),
-        duration: document.getElementById('duration')
+        duration: document.getElementById('duration'),
+
+        // Navigation buttons
+        backToLibrary: document.getElementById('back-to-library'),
+        backToAlbums: document.getElementById('back-to-albums'),
+        playAlbumBtn: document.getElementById('play-album-btn'),
+
+        // Album detail elements
+        albumSongList: document.getElementById('album-song-list'),
+        albumDetailTitle: document.getElementById('album-detail-title'),
+        albumDetailArtist: document.getElementById('album-detail-artist'),
+        albumHeaderArt: document.getElementById('album-header-art')
     };
 
     // Inject Handle if missing
@@ -37,7 +57,9 @@ App.cacheDOM = function () {
         handle.className = 'player-handle';
         pContent.insertBefore(handle, pContent.firstChild);
     }
+    this.dom.playerContent = pContent;
 
+    // Mini player elements
     this.dom.miniPlayer = document.getElementById('mini-player');
     this.dom.miniArt = document.getElementById('mini-art');
     this.dom.miniTitle = document.getElementById('mini-title');
@@ -150,8 +172,12 @@ App.renderLibrary = function (items) {
     var container = this.dom.libraryContent;
     container.innerHTML = '';
 
-    // Store albums for shuffle
+    // Store albums for shuffle and build index map for O(1) lookups
     this.state.albums = items;
+    this.state.albumIndexMap = {};
+    for (var idx = 0; idx < items.length; idx++) {
+        this.state.albumIndexMap[items[idx].Id] = idx;
+    }
 
     // Shuffle All button
     var shuffleBtn = document.createElement('button');
@@ -164,6 +190,8 @@ App.renderLibrary = function (items) {
         self.shuffleAll();
     };
     container.appendChild(shuffleBtn);
+    // Cache reference for later use
+    this.dom.shuffleAllBtn = shuffleBtn;
 
     if (items.length === 0) {
         container.innerHTML += '<p style="padding:20px;">No music found.</p>';
@@ -180,7 +208,7 @@ App.renderLibrary = function (items) {
 
             var imgUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
             if (item.ImageTags && item.ImageTags.Primary) {
-                imgUrl = self.state.serverUrl + '/Items/' + item.Id + '/Images/Primary?maxHeight=300&maxWidth=300&quality=90';
+                imgUrl = self.getImageUrl(item.Id, 'grid');
             }
 
             // Wrapper div for aspect ratio (iOS 10 doesn't support aspect-ratio CSS)
@@ -208,17 +236,16 @@ App.showAlbumDetails = function (album) {
     var self = this;
     var userId = this.state.userId;
     var server = this.state.serverUrl;
-    var headers = { 'X-Emby-Token': this.state.accessToken };
+    var headers = this.getAuthHeaders();
 
-    // Set album header info
-    document.getElementById('album-detail-title').textContent = album.Name;
-    document.getElementById('album-detail-artist').textContent = album.AlbumArtist || 'Unknown Artist';
+    // Set album header info using cached DOM elements
+    this.dom.albumDetailTitle.textContent = album.Name;
+    this.dom.albumDetailArtist.textContent = album.AlbumArtist || 'Unknown Artist';
 
-    var artEl = document.getElementById('album-header-art');
     if (album.ImageTags && album.ImageTags.Primary) {
-        App.Cache.loadBgImage(artEl, server + '/Items/' + album.Id + '/Images/Primary?maxHeight=300&maxWidth=300&quality=90');
+        App.Cache.loadBgImage(this.dom.albumHeaderArt, this.getImageUrl(album.Id, 'grid'));
     } else {
-        artEl.style.backgroundImage = 'none';
+        this.dom.albumHeaderArt.style.backgroundImage = 'none';
     }
 
     // Fetch tracks
@@ -231,9 +258,9 @@ App.showAlbumDetails = function (album) {
 
         var tracks = data.Items || [];
         self.state.currentAlbumTracks = tracks;
-        self.state.currentAlbumId = album.Id;
+        self.state.viewingAlbumId = album.Id;
 
-        var container = document.getElementById('album-song-list');
+        var container = self.dom.albumSongList;
         container.innerHTML = '';
 
         for (var i = 0; i < tracks.length; i++) {
@@ -262,7 +289,7 @@ App.showAlbumDetails = function (album) {
                 var duration = document.createElement('div');
                 duration.className = 'song-item-duration';
                 if (track.RunTimeTicks) {
-                    duration.textContent = self.formatTime(Math.floor(track.RunTimeTicks / 10000000));
+                    duration.textContent = self.formatTime(self.ticksToSeconds(track.RunTimeTicks));
                 } else {
                     duration.textContent = '--:--';
                 }
@@ -307,7 +334,7 @@ App.renderPlaylists = function (items) {
 
             var imgUrl = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
             if (item.ImageTags && item.ImageTags.Primary) {
-                imgUrl = self.state.serverUrl + '/Items/' + item.Id + '/Images/Primary?maxHeight=300&maxWidth=300&quality=90';
+                imgUrl = self.getImageUrl(item.Id, 'grid');
             }
 
             var imgWrapper = document.createElement('div');
@@ -333,17 +360,16 @@ App.showPlaylistDetails = function (playlist) {
     var self = this;
     var userId = this.state.userId;
     var server = this.state.serverUrl;
-    var headers = { 'X-Emby-Token': this.state.accessToken };
+    var headers = this.getAuthHeaders();
 
-    // Set header info (reuse album detail view)
-    document.getElementById('album-detail-title').textContent = playlist.Name;
-    document.getElementById('album-detail-artist').textContent = 'Playlist';
+    // Set header info using cached DOM elements
+    this.dom.albumDetailTitle.textContent = playlist.Name;
+    this.dom.albumDetailArtist.textContent = 'Playlist';
 
-    var artEl = document.getElementById('album-header-art');
     if (playlist.ImageTags && playlist.ImageTags.Primary) {
-        App.Cache.loadBgImage(artEl, server + '/Items/' + playlist.Id + '/Images/Primary?maxHeight=300&maxWidth=300&quality=90');
+        App.Cache.loadBgImage(this.dom.albumHeaderArt, this.getImageUrl(playlist.Id, 'grid'));
     } else {
-        artEl.style.backgroundImage = 'none';
+        this.dom.albumHeaderArt.style.backgroundImage = 'none';
     }
 
     // Fetch playlist items
@@ -356,9 +382,9 @@ App.showPlaylistDetails = function (playlist) {
 
         var tracks = data.Items || [];
         self.state.currentAlbumTracks = tracks;
-        self.state.currentAlbumId = null; // Not an album
+        self.state.viewingAlbumId = null; // Not an album
 
-        var container = document.getElementById('album-song-list');
+        var container = self.dom.albumSongList;
         container.innerHTML = '';
 
         for (var i = 0; i < tracks.length; i++) {
@@ -387,7 +413,7 @@ App.showPlaylistDetails = function (playlist) {
                 var duration = document.createElement('div');
                 duration.className = 'song-item-duration';
                 if (track.RunTimeTicks) {
-                    duration.textContent = self.formatTime(Math.floor(track.RunTimeTicks / 10000000));
+                    duration.textContent = self.formatTime(self.ticksToSeconds(track.RunTimeTicks));
                 } else {
                     duration.textContent = '--:--';
                 }

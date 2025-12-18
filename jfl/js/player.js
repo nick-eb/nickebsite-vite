@@ -20,7 +20,7 @@ App.playAlbum = function (albumId) {
     var self = this;
     var userId = this.state.userId;
     var server = this.state.serverUrl;
-    var headers = { 'X-Emby-Token': this.state.accessToken };
+    var headers = this.getAuthHeaders();
 
     var url = server + '/Users/' + userId + '/Items?ParentId=' + albumId + '&Recursive=true&IncludeItemTypes=Audio&SortBy=ParentIndexNumber,IndexNumber';
     this.request('GET', url, headers, null, function (err, data) {
@@ -38,7 +38,7 @@ App.startPlayback = function (tracks, startIndex, albumId) {
     this.state.player.originalPlaylist = tracks.slice();
     this.state.player.playlist = tracks;
     this.state.player.shuffleEnabled = false;
-    this.state.player.currentAlbumId = albumId || null;
+    this.state.player.playingAlbumId = albumId || null;
     this.updateShuffleButton();
     this.showView('view-player');
     // Use playTrack to auto-play the selected song
@@ -47,6 +47,7 @@ App.startPlayback = function (tracks, startIndex, albumId) {
 
 App.toggleShuffle = function () {
     var player = this.state.player;
+    var self = this;
 
     // Safety checks
     if (!player.playlist || player.playlist.length === 0) {
@@ -72,7 +73,6 @@ App.toggleShuffle = function () {
 
     if (player.shuffleEnabled) {
         // Shuffle ON - Use CONTEXT (album/playlist) first
-        var self = this;
 
         // Use originalPlaylist (the album/playlist the user started from)
         var contextTracks = player.originalPlaylist && player.originalPlaylist.length > 0
@@ -90,8 +90,8 @@ App.toggleShuffle = function () {
         var shuffled = self.shuffleArray(remaining);
         player.playlist = [currentTrack].concat(shuffled);
         player.currentTrack = 0;
-        // Keep currentAlbumId so we know the context
-        // player.currentAlbumId = null; // Don't clear - we want to track context
+        // Keep playingAlbumId so we know the context
+        // player.playingAlbumId = null; // Don't clear - we want to track context
 
         self.log('Shuffle ON (context-aware) - ' + player.playlist.length + ' tracks from album/playlist');
     } else {
@@ -101,16 +101,15 @@ App.toggleShuffle = function () {
             // No album context, just keep current track playing
             player.playlist = [currentTrack];
             player.currentTrack = 0;
-            player.currentAlbumId = null;
+            player.playingAlbumId = null;
             this.log('Shuffle OFF - no album context, single track mode');
             return;
         }
 
         // Fetch the album's tracks
-        var self = this;
         var userId = this.state.userId;
         var server = this.state.serverUrl;
-        var headers = { 'X-Emby-Token': this.state.accessToken };
+        var headers = self.getAuthHeaders();
 
         var url = server + '/Users/' + userId + '/Items?ParentId=' + albumId + '&Recursive=true&IncludeItemTypes=Audio&SortBy=ParentIndexNumber,IndexNumber';
         this.log('Shuffle OFF - fetching album tracks...');
@@ -144,7 +143,7 @@ App.toggleShuffle = function () {
             player.originalPlaylist = albumTracks.slice();
             player.playlist = albumTracks;
             player.currentTrack = trackPosition;
-            player.currentAlbumId = albumId;
+            player.playingAlbumId = albumId;
 
             self.log('Shuffle OFF - now playing album, track ' + (trackPosition + 1) + '/' + albumTracks.length);
         });
@@ -190,7 +189,7 @@ App.updateShuffleQueueSilently = function (allTracks) {
 };
 
 App.updateShuffleButton = function () {
-    var btn = document.getElementById('btn-shuffle');
+    var btn = this.dom.btnShuffle;
     if (btn) {
         if (this.state.player.shuffleEnabled) {
             btn.classList.add('active');
@@ -204,7 +203,7 @@ App.shuffleAll = function () {
     var self = this;
 
     // Immediate visual feedback
-    var shuffleBtn = document.getElementById('shuffle-all-btn');
+    var shuffleBtn = this.dom.shuffleAllBtn;
     if (shuffleBtn) {
         shuffleBtn.textContent = 'Shuffling...';
         shuffleBtn.disabled = true;
@@ -224,7 +223,7 @@ App.shuffleAll = function () {
         self.state.player.originalPlaylist = tracks.slice();
         self.state.player.playlist = shuffled;
         self.state.player.shuffleEnabled = true;
-        self.state.player.currentAlbumId = null;
+        self.state.player.playingAlbumId = null;
         self.updateShuffleButton();
         self.showView('view-player');
         self.playTrack(0);
@@ -250,7 +249,7 @@ App.shuffleAll = function () {
 };
 
 App.resetShuffleBtn = function () {
-    var shuffleBtn = document.getElementById('shuffle-all-btn');
+    var shuffleBtn = this.dom.shuffleAllBtn;
     if (shuffleBtn) {
         shuffleBtn.textContent = 'Shuffle All';
         shuffleBtn.disabled = false;
@@ -276,7 +275,7 @@ App.loadTrack = function (index) {
     // Set duration from metadata if available (ticks -> seconds)
     // Store this so timeupdate/loadedmetadata don't overwrite with bad values
     if (track.RunTimeTicks) {
-        var durationSec = Math.floor(track.RunTimeTicks / 10000000);
+        var durationSec = this.ticksToSeconds(track.RunTimeTicks);
         this.state.player.metadataDuration = durationSec;
         this.dom.seekBar.max = durationSec;
         this.dom.duration.textContent = this.formatTime(durationSec);
@@ -291,26 +290,27 @@ App.loadTrack = function (index) {
     // (User asked for marquee on long text earlier, maybe implement later if requested)
     this.dom.miniArtist.textContent = artist;
 
-    // Use same image logic
+    // Progressive image loading: LQ first (fast), then HQ swap
     if (track.AlbumId) {
-        // High Quality for Main Player (512x512 matches Media Session artwork)
-        var hdUrl = this.state.serverUrl + '/Items/' + track.AlbumId + '/Images/Primary?maxHeight=512&maxWidth=512&quality=90';
-        App.Cache.loadBgImage(this.dom.playerArt, hdUrl);
+        // URLs for different sizes using utility function
+        var lqUrl = this.getImageUrl(track.AlbumId, 'lq');
+        var hdUrl = this.getImageUrl(track.AlbumId, 'hq');
 
-        // Low Quality for Mini Player (120x120)
-        var lqUrl = this.state.serverUrl + '/Items/' + track.AlbumId + '/Images/Primary?maxHeight=120&maxWidth=120&quality=70';
+        // Progressive loading for main player: Load LQ immediately, swap to HQ when ready
+        App.Cache.loadBgImageProgressive(this.dom.playerArt, lqUrl, hdUrl);
+
+        // Mini player just uses LQ
         App.Cache.loadBgImage(this.dom.miniArt, lqUrl);
     } else {
         this.dom.playerArt.style.backgroundImage = 'none';
         this.dom.miniArt.style.backgroundImage = 'none';
     }
-    // Use /universal endpoint for automatic transcoding, or force transcode
-    // Remove static=true, add AudioCodec=aac to force server-side transcoding for FLAC/etc
-    var streamUrl = this.state.serverUrl + '/Audio/' + track.Id + '/universal?UserId=' + this.state.userId + '&AudioCodec=aac&TranscodingContainer=ts&TranscodingProtocol=hls&MaxStreamingBitrate=320000&api_key=' + this.state.accessToken;
 
-    // Fallback: simple stream with transcoding
-    // Some Jellyfin versions prefer this simpler approach
-    streamUrl = this.state.serverUrl + '/Audio/' + track.Id + '/stream?AudioCodec=aac&MaxStreamingBitrate=320000&api_key=' + this.state.accessToken;
+    // Prefetch album art for next 3 tracks in background
+    this.prefetchUpcomingArt(index);
+
+    // Stream URL with transcoding for legacy device compatibility
+    var streamUrl = this.state.serverUrl + '/Audio/' + track.Id + '/stream?AudioCodec=aac&MaxStreamingBitrate=320000&api_key=' + this.state.accessToken;
 
     this.log('Stream URL: ' + streamUrl);
     this.dom.audio.src = streamUrl;
@@ -327,8 +327,7 @@ App.loadTrack = function (index) {
     if ('mediaSession' in navigator) {
         var self = this;
         try {
-            var artworkUrl = track.AlbumId ?
-                this.state.serverUrl + '/Items/' + track.AlbumId + '/Images/Primary?maxHeight=512&maxWidth=512' : '';
+            var artworkUrl = track.AlbumId ? this.getImageUrl(track.AlbumId, 'hq') : '';
             navigator.mediaSession.metadata = new MediaMetadata({
                 title: track.Name,
                 artist: track.AlbumArtist || (track.Artists && track.Artists[0]) || 'Unknown',
@@ -380,7 +379,7 @@ App.playTrack = function (index) {
     // If we've gone past end of playlist
     if (index >= this.state.player.playlist.length) {
         // If shuffle is off, try to play next album
-        if (!this.state.player.shuffleEnabled && this.state.player.currentAlbumId) {
+        if (!this.state.player.shuffleEnabled && this.state.player.playingAlbumId) {
             this.playNextAlbum();
             return;
         }
@@ -392,32 +391,42 @@ App.playTrack = function (index) {
     // Try to play - user already interacted once
     var self = this;
     var playPromise = this.dom.audio.play();
-    // Handle both Promise and non-Promise returns (iOS 10 may not return promise)
-    if (playPromise !== undefined) {
-        // nothing, but we can't use .then
+    // Handle play() promise rejection (ES5 compatible - check for promise first)
+    if (playPromise !== undefined && typeof playPromise.then === 'function') {
+        playPromise.then(function () {
+            // Playback started successfully - NOW update state
+            self.state.player.isPlaying = true;
+            self.dom.btnPlayPause.textContent = '⏸';
+            if (self.dom.miniBtnPlayPause) self.dom.miniBtnPlayPause.textContent = '⏸';
+        }).catch(function (error) {
+            self.log('Play failed: ' + error.message);
+            // Reset UI state since playback didn't actually start
+            self.state.player.isPlaying = false;
+            self.dom.btnPlayPause.textContent = '▶';
+            if (self.dom.miniBtnPlayPause) self.dom.miniBtnPlayPause.textContent = '▶';
+        });
+    } else {
+        // Legacy browsers without Promise support - update state immediately
+        this.state.player.isPlaying = true;
+        this.dom.btnPlayPause.textContent = '⏸';
+        if (this.dom.miniBtnPlayPause) this.dom.miniBtnPlayPause.textContent = '⏸';
     }
-    this.state.player.isPlaying = true;
-    this.dom.btnPlayPause.textContent = '⏸';
-    if (this.dom.miniBtnPlayPause) this.dom.miniBtnPlayPause.textContent = '⏸';
 };
 
 App.playNextAlbum = function () {
     var self = this;
     var albums = this.state.albums || [];
-    var currentAlbumId = this.state.player.currentAlbumId;
+    var playingAlbumId = this.state.player.playingAlbumId;
 
-    if (albums.length === 0 || !currentAlbumId) {
+    if (albums.length === 0 || !playingAlbumId) {
         this.log('No albums to continue to');
         return;
     }
 
-    // Find current album index
-    var currentIndex = -1;
-    for (var i = 0; i < albums.length; i++) {
-        if (albums[i].Id === currentAlbumId) {
-            currentIndex = i;
-            break;
-        }
+    // O(1) lookup using index map
+    var currentIndex = this.state.albumIndexMap[playingAlbumId];
+    if (currentIndex === undefined) {
+        currentIndex = -1;
     }
 
     // Get next album (wrap around to first if at end)
@@ -429,7 +438,7 @@ App.playNextAlbum = function () {
     // Fetch and play next album
     var userId = this.state.userId;
     var server = this.state.serverUrl;
-    var headers = { 'X-Emby-Token': this.state.accessToken };
+    var headers = this.getAuthHeaders();
 
     var url = server + '/Users/' + userId + '/Items?ParentId=' + nextAlbum.Id + '&Recursive=true&IncludeItemTypes=Audio&SortBy=ParentIndexNumber,IndexNumber';
     this.request('GET', url, headers, null, function (err, data) {
@@ -438,10 +447,48 @@ App.playNextAlbum = function () {
             return;
         }
         if (data.Items && data.Items.length > 0) {
-            self.state.player.currentAlbumId = nextAlbum.Id;
+            self.state.player.playingAlbumId = nextAlbum.Id;
             self.state.player.originalPlaylist = data.Items.slice();
             self.state.player.playlist = data.Items;
             self.playTrack(0);
         }
     });
+};
+
+/**
+ * Prefetch album art for upcoming tracks in the playlist
+ * This ensures images are cached before the user skips to them
+ */
+App.prefetchUpcomingArt = function (currentIndex) {
+    var self = this;
+    var playlist = this.state.player.playlist;
+    var prefetchCount = this.constants.PREFETCH_COUNT;
+    var prefetchedAlbums = {}; // Track which albums we've already queued
+
+    // Use setTimeout to avoid blocking current track's image load
+    setTimeout(function () {
+        for (var i = 1; i <= prefetchCount; i++) {
+            var nextIndex = currentIndex + i;
+
+            // Wrap around if needed (for looping playlists)
+            if (nextIndex >= playlist.length) {
+                nextIndex = nextIndex % playlist.length;
+            }
+
+            var track = playlist[nextIndex];
+            if (!track || !track.AlbumId) continue;
+
+            // Skip if we already prefetched this album
+            if (prefetchedAlbums[track.AlbumId]) continue;
+            prefetchedAlbums[track.AlbumId] = true;
+
+            // Prefetch both sizes used by the player
+            var hdUrl = self.getImageUrl(track.AlbumId, 'hq');
+            var lqUrl = self.getImageUrl(track.AlbumId, 'lq');
+
+            // Prefetch into cache (no DOM element, just cache)
+            App.Cache.prefetch(hdUrl);
+            App.Cache.prefetch(lqUrl);
+        }
+    }, 100); // Small delay to let current image start loading first
 };

@@ -16,13 +16,16 @@ var App = {
             isPlaying: false,
             shuffleEnabled: false,
             metadataDuration: null,
-            currentAlbumId: null
+            playingAlbumId: null
         },
         allLibraryTracks: null, // Cache for all tracks
-        musicViewId: null,      // Store music view ID
         albums: [],             // Store albums for shuffle
+        albumIndexMap: {},      // Map of album ID -> array index for O(1) lookups
         playlists: [],
         currentLibraryTab: 'albums', // 'albums' or 'playlists'
+        // Album detail view state (separate from player.playingAlbumId which tracks playing album)
+        viewingAlbumId: null,      // Album being viewed in detail view
+        currentAlbumTracks: []     // Tracks of album being viewed
     },
 
     dom: {}

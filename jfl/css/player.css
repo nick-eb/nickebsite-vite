@@ -139,7 +139,6 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    text-overflow: ellipsis;
     width: 100%;
     /* Ensure font-size changes work smoothly */
     transition: font-size 0.2s;

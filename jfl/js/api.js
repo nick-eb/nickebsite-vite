@@ -95,7 +95,20 @@ App.handleLogin = function () {
 };
 
 App.handleLogout = function () {
-    localStorage.clear();
+    // Only clear JFL-specific keys, not all localStorage
+    var jflKeys = [
+        'jf_server_url',
+        'jf_access_token',
+        'jf_user_id',
+        'jf_user_name',
+        'jf_music_view_id',
+        'jf_library_cache',
+        'jf_albums_cache',
+        'jf_playlists_cache'
+    ];
+    for (var i = 0; i < jflKeys.length; i++) {
+        localStorage.removeItem(jflKeys[i]);
+    }
     location.reload();
 };
 
@@ -103,7 +116,7 @@ App.getMusicLibrary = function () {
     var self = this;
     var userId = this.state.userId;
     var server = this.state.serverUrl;
-    var headers = { 'X-Emby-Token': this.state.accessToken };
+    var headers = this.getAuthHeaders();
 
     this.log('Getting music library...');
 
@@ -135,7 +148,7 @@ App.getMusicLibrary = function () {
         // Trigger background sync to keep track cache fresh
         setTimeout(function () {
             self.syncLibrary();
-        }, 500);
+        }, self.constants.SYNC_DELAY_MS);
     };
 
     // FAST PATH: If we have cached View ID
@@ -179,7 +192,7 @@ App.getPlaylists = function (callback) {
     var self = this;
     var userId = this.state.userId;
     var server = this.state.serverUrl;
-    var headers = { 'X-Emby-Token': this.state.accessToken };
+    var headers = this.getAuthHeaders();
 
     this.log('Getting playlists...');
 
