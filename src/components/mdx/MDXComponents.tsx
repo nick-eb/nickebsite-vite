@@ -16,11 +16,7 @@ interface HTMLTableCellProps extends React.TdHTMLAttributes<HTMLTableDataCellEle
 interface HTMLTableHeaderProps extends React.ThHTMLAttributes<HTMLTableHeaderCellElement> { }
 
 // Custom CodeBlock component with syntax highlighting
-export const CodeBlock: React.FC<{
-  children: React.ReactNode;
-  className?: string;
-  title?: string;
-}> = ({ children, className, title }) => {
+export const CodeBlock: React.FC<HTMLElementProps> = ({ children, className, title }) => {
   const isInline = !className;
 
   if (isInline) {

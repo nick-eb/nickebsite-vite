@@ -233,11 +233,15 @@
 
 @media (max-width: 480px) {
   .intro-name {
-    font-size: 2.5rem;
+    font-size: 3rem;
+    /* Increased from 2.5rem */
+    line-height: 1.1;
   }
 
   .intro-degree {
     font-size: 1rem;
+    padding: 0 1rem;
+    /* Prevent edge touching */
   }
 
   .logo-circle {
@@ -245,12 +249,38 @@
     height: 220px;
   }
 
+  /* Side-by-side buttons on mobile */
   .intro-buttons {
     width: 100%;
-    flex-direction: column;
+    flex-direction: row;
+    /* Force row */
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
   }
 
   .intro-button {
-    width: 100%;
+    width: auto;
+    /* Allow natural width */
+    flex: 1;
+    /* Grow to fill space equally */
+    padding: 0.75rem 0.5rem;
+    /* Slightly tighter padding */
+    font-size: 0.9rem;
+    /* Slightly smaller text to fit */
+    white-space: nowrap;
+  }
+
+  /* Compact roles for mobile */
+  .role-pill {
+    padding: 0.4rem 0.85rem;
+    font-size: 0.8rem;
+    border-radius: 8px;
+    /* Slightly less round to save space visually? No, pill is better. */
+  }
+
+  .intro-roles {
+    gap: 0.5rem;
+    /* Tighter gap */
   }
 }
