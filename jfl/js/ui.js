@@ -216,7 +216,7 @@ App.showAlbumDetails = function (album) {
 
     var artEl = document.getElementById('album-header-art');
     if (album.ImageTags && album.ImageTags.Primary) {
-        App.Cache.loadBgImage(artEl, server + '/Items/' + album.Id + '/Images/Primary?maxHeight=200&maxWidth=200');
+        App.Cache.loadBgImage(artEl, server + '/Items/' + album.Id + '/Images/Primary?maxHeight=300&maxWidth=300&quality=90');
     } else {
         artEl.style.backgroundImage = 'none';
     }
@@ -341,7 +341,7 @@ App.showPlaylistDetails = function (playlist) {
 
     var artEl = document.getElementById('album-header-art');
     if (playlist.ImageTags && playlist.ImageTags.Primary) {
-        App.Cache.loadBgImage(artEl, server + '/Items/' + playlist.Id + '/Images/Primary?maxHeight=200&maxWidth=200');
+        App.Cache.loadBgImage(artEl, server + '/Items/' + playlist.Id + '/Images/Primary?maxHeight=300&maxWidth=300&quality=90');
     } else {
         artEl.style.backgroundImage = 'none';
     }
