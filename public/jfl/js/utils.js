@@ -39,6 +39,67 @@ App.formatTime = function (seconds) {
     return min + ':' + sec;
 };
 
+// Constants to eliminate magic numbers
+App.constants = {
+    TICKS_PER_SECOND: 10000000,
+    SYNC_DELAY_MS: 500,
+    SWIPE_THRESHOLD_PX: 150,
+    PREFETCH_COUNT: 3,
+    CACHE_EXPIRY_DAYS: 7,
+    IMAGE_SIZE_LQ: 120,
+    IMAGE_SIZE_HQ: 512,
+    IMAGE_SIZE_GRID: 300,
+    IMAGE_QUALITY_LQ: 70,
+    IMAGE_QUALITY_HQ: 90
+};
+
+/**
+ * Convert Jellyfin ticks to seconds
+ * @param {number} ticks - Duration in ticks (100-nanosecond intervals)
+ * @returns {number} Duration in seconds
+ */
+App.ticksToSeconds = function (ticks) {
+    if (!ticks || isNaN(ticks)) return 0;
+    return Math.floor(ticks / this.constants.TICKS_PER_SECOND);
+};
+
+/**
+ * Generate an image URL for a Jellyfin item
+ * @param {string} itemId - The item ID
+ * @param {string} size - Size preset: 'lq', 'hq', or 'grid'
+ * @returns {string} The full image URL
+ */
+App.getImageUrl = function (itemId, size) {
+    if (!itemId || !this.state.serverUrl) return '';
+
+    var maxSize, quality;
+    switch (size) {
+        case 'lq':
+            maxSize = this.constants.IMAGE_SIZE_LQ;
+            quality = this.constants.IMAGE_QUALITY_LQ;
+            break;
+        case 'hq':
+            maxSize = this.constants.IMAGE_SIZE_HQ;
+            quality = this.constants.IMAGE_QUALITY_HQ;
+            break;
+        case 'grid':
+        default:
+            maxSize = this.constants.IMAGE_SIZE_GRID;
+            quality = this.constants.IMAGE_QUALITY_HQ;
+            break;
+    }
+
+    return this.state.serverUrl + '/Items/' + itemId + '/Images/Primary?maxHeight=' + maxSize + '&maxWidth=' + maxSize + '&quality=' + quality;
+};
+
+/**
+ * Get authentication headers for API requests
+ * @returns {Object} Headers object with auth token
+ */
+App.getAuthHeaders = function () {
+    return { 'X-Emby-Token': this.state.accessToken };
+};
+
 App.setMarqueeText = function (el, text) {
     // Safe reset: remove marquee classes and structure
     el.classList.remove('marquee-container');

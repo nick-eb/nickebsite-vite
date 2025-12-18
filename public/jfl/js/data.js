@@ -45,7 +45,7 @@ App.syncLibrary = function (callback) {
     var self = this;
     var userId = this.state.userId;
     var server = this.state.serverUrl;
-    var headers = { 'X-Emby-Token': this.state.accessToken };
+    var headers = this.getAuthHeaders();
 
     if (!userId || !server) return;
 

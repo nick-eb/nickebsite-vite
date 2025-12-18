@@ -17,17 +17,7 @@ App.bindEvents = function () {
     if (this.dom.miniBtnPlayPause) {
         this.dom.miniBtnPlayPause.addEventListener('click', function (e) {
             e.stopPropagation(); // Don't open player
-            if (self.state.player.isPlaying) {
-                self.dom.audio.pause();
-                self.state.player.isPlaying = false;
-                self.dom.btnPlayPause.textContent = '▶';
-                this.textContent = '▶';
-            } else {
-                self.dom.audio.play();
-                self.state.player.isPlaying = true;
-                self.dom.btnPlayPause.textContent = '⏸';
-                this.textContent = '⏸';
-            }
+            self.togglePlay();
         });
     }
     if (this.dom.miniBtnNext) {
@@ -47,23 +37,20 @@ App.bindEvents = function () {
         self.handleLogout();
     });
 
-    // Tab Buttons
-    var tabAlbums = document.getElementById('tab-albums');
-    var tabPlaylists = document.getElementById('tab-playlists');
-
-    if (tabAlbums) {
-        tabAlbums.addEventListener('click', function () {
-            tabAlbums.classList.add('active');
-            tabPlaylists.classList.remove('active');
+    // Tab Buttons - use cached references
+    if (this.dom.tabAlbums) {
+        this.dom.tabAlbums.addEventListener('click', function () {
+            self.dom.tabAlbums.classList.add('active');
+            self.dom.tabPlaylists.classList.remove('active');
             self.state.currentLibraryTab = 'albums';
             self.getMusicLibrary();
         });
     }
 
-    if (tabPlaylists) {
-        tabPlaylists.addEventListener('click', function () {
-            tabPlaylists.classList.add('active');
-            tabAlbums.classList.remove('active');
+    if (this.dom.tabPlaylists) {
+        this.dom.tabPlaylists.addEventListener('click', function () {
+            self.dom.tabPlaylists.classList.add('active');
+            self.dom.tabAlbums.classList.remove('active');
             self.state.currentLibraryTab = 'playlists';
             self.getPlaylists(function (items) {
                 self.renderPlaylists(items);
@@ -75,11 +62,11 @@ App.bindEvents = function () {
         self.togglePlay();
     });
 
-    document.getElementById('btn-prev').addEventListener('click', function () {
+    this.dom.btnPrev.addEventListener('click', function () {
         self.playTrack(self.state.player.currentTrack - 1);
     });
 
-    document.getElementById('btn-next').addEventListener('click', function () {
+    this.dom.btnNext.addEventListener('click', function () {
         self.playTrack(self.state.player.currentTrack + 1);
     });
 
@@ -88,21 +75,21 @@ App.bindEvents = function () {
     });
 
     // Unified Back Behavior: Minimize player (overlay)
-    document.getElementById('back-to-library').addEventListener('click', function () {
+    this.dom.backToLibrary.addEventListener('click', function () {
         self.minimizePlayer();
     });
 
-    document.getElementById('back-to-albums').addEventListener('click', function () {
+    this.dom.backToAlbums.addEventListener('click', function () {
         self.showView('view-library');
     });
 
-    document.getElementById('play-album-btn').addEventListener('click', function () {
+    this.dom.playAlbumBtn.addEventListener('click', function () {
         if (self.state.currentAlbumTracks && self.state.currentAlbumTracks.length > 0) {
-            self.startPlayback(self.state.currentAlbumTracks, 0, self.state.currentAlbumId);
+            self.startPlayback(self.state.currentAlbumTracks, 0, self.state.viewingAlbumId);
         }
     });
 
-    document.getElementById('btn-shuffle').addEventListener('click', function () {
+    this.dom.btnShuffle.addEventListener('click', function () {
         self.toggleShuffle();
     });
 
@@ -149,8 +136,8 @@ App.bindEvents = function () {
 
 App.initSwipeGestures = function () {
     var self = this;
-    var playerView = document.getElementById('view-player');
-    var playerContent = document.querySelector('.player-content');
+    var playerView = this.dom.views.player;
+    var playerContent = this.dom.playerContent;
 
     var startY = 0;
     var currentY = 0;
@@ -199,8 +186,8 @@ App.initSwipeGestures = function () {
         playerView.classList.remove('dragging');
 
         if (isDragging) {
-            // Threshold to minimize: 150px
-            if (currentY > 150) {
+            // Threshold to minimize using constant
+            if (currentY > self.constants.SWIPE_THRESHOLD_PX) {
                 // Minimize
                 // We use style to animate, but switch to class logic handled in minimizePlayer
                 // First clear manual style so class takes over (or set it to 100% to match)

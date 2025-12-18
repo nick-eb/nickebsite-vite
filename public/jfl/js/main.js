@@ -3,13 +3,9 @@
  */
 
 App.init = function () {
-    // initDebug is effectively empty or not needed if doing inline below
-    // this.initDebug();
-
-    // Debug console is toggled via floating button in HTML, but we can ensure it's hidden here if needed
     this.log('App Initializing...');
 
-    // Initialize Cache
+    // Initialize image cache (IndexedDB)
     App.Cache.init();
 
     this.cacheDOM();

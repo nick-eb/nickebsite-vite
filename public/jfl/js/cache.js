@@ -249,13 +249,7 @@ App.Cache = {
      * Touch entry in LRU cache (move to end = most recently used)
      */
     touchMemoryCache: function (url) {
-        var idx = -1;
-        for (var i = 0; i < this.memoryCacheOrder.length; i++) {
-            if (this.memoryCacheOrder[i] === url) {
-                idx = i;
-                break;
-            }
-        }
+        var idx = this.memoryCacheOrder.indexOf(url);
         if (idx > -1) {
             this.memoryCacheOrder.splice(idx, 1);
             this.memoryCacheOrder.push(url);
@@ -343,6 +337,57 @@ App.Cache = {
     },
 
     /**
+     * Progressive background image loading: show LQ placeholder, then swap to HQ
+     * This provides instant visual feedback while high-quality loads
+     */
+    loadBgImageProgressive: function (element, lqUrl, hqUrl) {
+        var self = this;
+
+        if (!lqUrl && !hqUrl) {
+            this.cleanupElement(element);
+            element.style.backgroundImage = 'none';
+            return;
+        }
+
+        // Track which load request this is (to prevent stale swaps on fast skipping)
+        var loadVersion = (element._cacheLoadVersion || 0) + 1;
+        element._cacheLoadVersion = loadVersion;
+
+        // Start loading HQ immediately (in parallel)
+        var hqLoaded = false;
+        if (hqUrl) {
+            this.getImage(hqUrl, function (finalHqUrl) {
+                // Only swap if this is still the current request
+                if (element._cacheLoadVersion !== loadVersion) return;
+
+                hqLoaded = true;
+                self.cleanupElement(element);
+                element.style.backgroundImage = 'url(' + finalHqUrl + ')';
+
+                if (self.blobUrlMap && finalHqUrl.indexOf('blob:') === 0) {
+                    self.blobUrlMap.set(element, finalHqUrl);
+                }
+            });
+        }
+
+        // Load LQ and display immediately (unless HQ already loaded)
+        if (lqUrl) {
+            this.getImage(lqUrl, function (finalLqUrl) {
+                // Only show LQ if this is still current AND HQ hasn't loaded yet
+                if (element._cacheLoadVersion !== loadVersion) return;
+                if (hqLoaded) return;
+
+                self.cleanupElement(element);
+                element.style.backgroundImage = 'url(' + finalLqUrl + ')';
+
+                if (self.blobUrlMap && finalLqUrl.indexOf('blob:') === 0) {
+                    self.blobUrlMap.set(element, finalLqUrl);
+                }
+            });
+        }
+    },
+
+    /**
      * Cleanup blob URL associated with an element
      * Note: We don't revoke here because the blob URL may be in memory cache
      * The memory cache LRU eviction handles revocation
@@ -352,6 +397,25 @@ App.Cache = {
             // Just remove the tracking, don't revoke (memory cache manages lifecycle)
             this.blobUrlMap.delete(element);
         }
+    },
+
+    /**
+     * Prefetch an image into cache without displaying it
+     * Used for background preloading of upcoming track artwork
+     */
+    prefetch: function (url) {
+        if (!url) return;
+
+        // Already in memory cache - nothing to do
+        if (this.memoryCache[url]) return;
+
+        // Already fetching - nothing to do
+        if (this.pendingFetches[url]) return;
+
+        // Trigger fetch and cache (callback just ignores the result)
+        this.getImage(url, function () {
+            // Prefetch complete - image is now in cache
+        });
     },
 
     /**
