@@ -15,9 +15,10 @@
     transform: translate3d(0, 0, 0);
     /* Default open state */
     transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-    will-change: transform;
     /* Disable scrolling on the main container */
     overflow: hidden;
+    /* CSS containment - isolates layout/style/paint from other elements */
+    contain: layout style;
 }
 
 #view-player.minimized {
@@ -26,9 +27,11 @@
     /* Let clicks pass through when hidden */
 }
 
-/* While dragging, disable transition for 1:1 movement */
+/* While dragging, disable transition for 1:1 movement and add will-change hint */
 #view-player.dragging {
     transition: none;
+    will-change: transform;
+    /* Only apply during active drag for GPU optimization */
 }
 
 .player-content {

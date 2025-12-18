@@ -24,6 +24,10 @@ App.Cache = {
     // In-flight request deduplication
     pendingFetches: {}, // url -> [callback, callback, ...]
 
+    // Failed URL cache - avoid retrying 404s repeatedly
+    failedUrls: {},       // url -> timestamp of failure
+    failedUrlExpiry: 5 * 60 * 1000, // Cache failures for 5 minutes
+
     // Cache expiration (7 days in ms)
     maxAgeMs: 7 * 24 * 60 * 60 * 1000,
 
@@ -97,7 +101,7 @@ App.Cache = {
         var request = objectStore.get(url);
 
         request.onerror = function (event) {
-            App.log('Cache miss (error) for: ' + url);
+            // Silently fall back to fetch
             self.fetchAndCache(url, callback);
         };
 
@@ -135,6 +139,18 @@ App.Cache = {
     fetchAndCache: function (url, callback) {
         var self = this;
 
+        // Check if this URL recently failed (e.g., 404) - don't retry immediately
+        if (this.failedUrls[url]) {
+            if (Date.now() - this.failedUrls[url] < this.failedUrlExpiry) {
+                // Still in cooldown - return original URL without fetching
+                callback(url);
+                return;
+            } else {
+                // Expired - remove from failed cache and try again
+                delete this.failedUrls[url];
+            }
+        }
+
         // Initialize pending fetch queue for this URL
         if (!this.pendingFetches[url]) {
             this.pendingFetches[url] = [];
@@ -170,7 +186,10 @@ App.Cache = {
                     callbacks[i](blobUrl);
                 }
             } else {
-                // Failed - return original URL for all callbacks
+                // Failed (404, etc.) - mark as failed to avoid retrying
+                self.failedUrls[url] = Date.now();
+
+                // Return original URL for all callbacks (browser will show nothing or fallback)
                 for (var j = 0; j < callbacks.length; j++) {
                     callbacks[j](url);
                 }
@@ -180,6 +199,9 @@ App.Cache = {
         xhr.onerror = function () {
             var callbacks = self.pendingFetches[url] || [];
             delete self.pendingFetches[url];
+
+            // Network error - mark as failed
+            self.failedUrls[url] = Date.now();
 
             // Return original URL for all callbacks
             for (var i = 0; i < callbacks.length; i++) {
@@ -196,17 +218,29 @@ App.Cache = {
     storeInDb: function (url, blob) {
         if (!this.db) return;
 
-        var transaction = this.db.transaction([this.storeName], 'readwrite');
-        var objectStore = transaction.objectStore(this.storeName);
-        var request = objectStore.put({
-            url: url,
-            blob: blob,
-            timestamp: Date.now()
-        });
+        try {
+            var transaction = this.db.transaction([this.storeName], 'readwrite');
+            var objectStore = transaction.objectStore(this.storeName);
+            var request = objectStore.put({
+                url: url,
+                blob: blob,
+                timestamp: Date.now()
+            });
 
-        request.onerror = function (event) {
-            App.logError('Failed to cache: ' + url);
-        };
+            request.onerror = function (event) {
+                // Quota exceeded is common and not a real error - just log quietly
+                var error = event.target.error;
+                if (error && error.name === 'QuotaExceededError') {
+                    App.log('Cache full, skipping: ' + url.substring(url.lastIndexOf('/') + 1));
+                } else {
+                    // Only log as error for unexpected failures
+                    App.log('Cache write skipped: ' + (error ? error.name : 'unknown'));
+                }
+            };
+        } catch (e) {
+            // Transaction errors - silently ignore
+            App.log('Cache unavailable');
+        }
     },
 
     /**

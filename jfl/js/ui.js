@@ -198,6 +198,9 @@ App.renderLibrary = function (items) {
         return;
     }
 
+    // Use DocumentFragment for batch DOM insertion (fewer reflows)
+    var fragment = document.createDocumentFragment();
+
     for (var i = 0; i < items.length; i++) {
         (function (item) {
             var card = document.createElement('div');
@@ -227,9 +230,12 @@ App.renderLibrary = function (items) {
 
             card.appendChild(imgWrapper);
             card.appendChild(title);
-            container.appendChild(card);
+            fragment.appendChild(card);
         })(items[i]);
     }
+
+    // Single DOM insertion for all cards
+    container.appendChild(fragment);
 };
 
 App.showAlbumDetails = function (album) {
@@ -324,6 +330,9 @@ App.renderPlaylists = function (items) {
         return;
     }
 
+    // Use DocumentFragment for batch DOM insertion
+    var fragment = document.createDocumentFragment();
+
     for (var i = 0; i < items.length; i++) {
         (function (item) {
             var card = document.createElement('div');
@@ -351,9 +360,12 @@ App.renderPlaylists = function (items) {
 
             card.appendChild(imgWrapper);
             card.appendChild(title);
-            container.appendChild(card);
+            fragment.appendChild(card);
         })(items[i]);
     }
+
+    // Single DOM insertion
+    container.appendChild(fragment);
 };
 
 App.showPlaylistDetails = function (playlist) {
