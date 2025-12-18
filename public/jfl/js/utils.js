@@ -20,6 +20,71 @@ App.logError = function (msg) {
     }
 };
 
+/**
+ * Standardized error handler
+ * @param {Error|string} error - The error object or message
+ * @param {string} userMessage - Optional user-friendly message to show
+ * @param {boolean} showAlert - Whether to show an alert to the user
+ */
+App.handleError = function (error, userMessage, showAlert) {
+    var errorMsg = error && error.message ? error.message : String(error);
+    this.logError(errorMsg);
+
+    if (showAlert && userMessage) {
+        alert(userMessage);
+    }
+
+    return errorMsg;
+};
+
+/**
+ * Safe function wrapper - catches errors and handles them gracefully
+ * @param {Function} fn - Function to execute
+ * @param {string} context - Context description for error logging
+ * @returns {*} Result of function or undefined on error
+ */
+App.safeExecute = function (fn, context) {
+    try {
+        return fn();
+    } catch (e) {
+        this.handleError(e, null, false);
+        this.logError('Error in ' + (context || 'unknown context') + ': ' + e.message);
+        return undefined;
+    }
+};
+
+/**
+ * Show loading state on an element
+ * @param {HTMLElement} element - Element to show loading on
+ * @param {string} message - Optional loading message
+ */
+App.showLoading = function (element, message) {
+    if (!element) return;
+    element._originalContent = element.innerHTML;
+    element._originalDisabled = element.disabled;
+    element.innerHTML = message || 'Loading...';
+    if (element.tagName === 'BUTTON') {
+        element.disabled = true;
+    }
+    element.classList.add('loading');
+};
+
+/**
+ * Hide loading state on an element
+ * @param {HTMLElement} element - Element to restore
+ */
+App.hideLoading = function (element) {
+    if (!element) return;
+    if (element._originalContent !== undefined) {
+        element.innerHTML = element._originalContent;
+        delete element._originalContent;
+    }
+    if (element._originalDisabled !== undefined) {
+        element.disabled = element._originalDisabled;
+        delete element._originalDisabled;
+    }
+    element.classList.remove('loading');
+};
 App.shuffleArray = function (arr) {
     var shuffled = arr.slice();
     for (var i = shuffled.length - 1; i > 0; i--) {

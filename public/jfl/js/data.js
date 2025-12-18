@@ -81,19 +81,12 @@ App.syncLibrary = function (callback) {
 
         // Check for updates
         var currentCount = self.state.allLibraryTracks ? self.state.allLibraryTracks.length : 0;
+        var hasChanges = remoteTracks.length !== currentCount;
 
-        // Allow callback if provided (force mode)
-        if (callback) {
-            self.state.allLibraryTracks = remoteTracks;
-            self.saveLibraryCache(remoteTracks);
-            callback(remoteTracks);
-            // Continue to check for silent shuffle update
-        }
-
-        if (remoteTracks.length !== currentCount) {
+        if (hasChanges) {
             self.log('Library update detected (Old: ' + currentCount + ', New: ' + remoteTracks.length + ')');
 
-            // Update Cache
+            // Update Cache only when there are changes
             self.state.allLibraryTracks = remoteTracks;
             self.saveLibraryCache(remoteTracks);
 
@@ -102,7 +95,14 @@ App.syncLibrary = function (callback) {
                 self.updateShuffleQueueSilently(remoteTracks);
             }
         } else {
-            self.log('Library is up to date.');
+            self.log('Library is up to date, no save needed.');
+            // Still update in-memory state without saving
+            self.state.allLibraryTracks = remoteTracks;
+        }
+
+        // Callback with current data regardless of changes
+        if (callback) {
+            callback(remoteTracks);
         }
     });
 };

@@ -137,11 +137,13 @@ App.getMusicLibrary = function () {
             }
             self.log('Got ' + data2.Items.length + ' albums from server');
             self.state.albums = data2.Items;
-            self.saveAlbumsCache(data2.Items);
 
-            // Only re-render if we didn't have cache or if count changed
+            // Only save cache if count changed (avoid unnecessary writes)
             if (!cachedAlbums || cachedAlbums.length !== data2.Items.length) {
+                self.saveAlbumsCache(data2.Items);
                 self.renderLibrary(data2.Items);
+            } else {
+                self.log('Album cache is up to date, no save needed');
             }
         });
 
@@ -214,11 +216,13 @@ App.getPlaylists = function (callback) {
         }
         self.log('Got ' + data.Items.length + ' playlists from server');
         self.state.playlists = data.Items;
-        self.savePlaylistsCache(data.Items);
 
-        // Only call callback if we didn't have cache or if count changed
+        // Only save cache and callback if count changed (avoid unnecessary writes)
         if (!cachedPlaylists || cachedPlaylists.length !== data.Items.length) {
+            self.savePlaylistsCache(data.Items);
             if (callback) callback(data.Items);
+        } else {
+            self.log('Playlist cache is up to date, no save needed');
         }
     });
 };

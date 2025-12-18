@@ -13,6 +13,7 @@ var App = {
             currentTrack: null,
             playlist: [],
             originalPlaylist: [],
+            playlistTrackIds: {},  // Track ID -> true for O(1) lookup
             isPlaying: false,
             shuffleEnabled: false,
             metadataDuration: null,

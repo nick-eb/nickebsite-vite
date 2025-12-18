@@ -61,4 +61,6 @@
     justify-content: space-between;
     margin: 0 -6px;
     /* Negative margin to offset card margins */
+    /* Containment for scroll performance */
+    contain: layout style;
 }

@@ -39,6 +39,13 @@ App.startPlayback = function (tracks, startIndex, albumId) {
     this.state.player.playlist = tracks;
     this.state.player.shuffleEnabled = false;
     this.state.player.playingAlbumId = albumId || null;
+
+    // Build track ID map for O(1) lookups
+    this.state.player.playlistTrackIds = {};
+    for (var i = 0; i < tracks.length; i++) {
+        this.state.player.playlistTrackIds[tracks[i].Id] = true;
+    }
+
     this.updateShuffleButton();
     this.showView('view-player');
     // Use playTrack to auto-play the selected song
@@ -151,13 +158,11 @@ App.toggleShuffle = function () {
 };
 
 App.updateShuffleQueueSilently = function (allTracks) {
-    // Find tracks that are NOT in the current playlist
-    // This is a naive diff based on ID
+    // Find tracks that are NOT in the current playlist using O(1) lookup
     var player = this.state.player;
-    var currentIds = {};
-    for (var i = 0; i < player.originalPlaylist.length; i++) {
-        currentIds[player.originalPlaylist[i].Id] = true;
-    }
+
+    // Use persistent track ID map for O(1) lookups
+    var currentIds = player.playlistTrackIds;
 
     var newTracks = [];
     for (var j = 0; j < allTracks.length; j++) {
@@ -169,8 +174,11 @@ App.updateShuffleQueueSilently = function (allTracks) {
     if (newTracks.length > 0) {
         this.log('Adding ' + newTracks.length + ' new tracks to shuffle queue');
 
-        // Add to original playlist
-        player.originalPlaylist = player.originalPlaylist.concat(newTracks);
+        // Add to original playlist and update track ID map
+        for (var k = 0; k < newTracks.length; k++) {
+            player.originalPlaylist.push(newTracks[k]);
+            player.playlistTrackIds[newTracks[k].Id] = true;
+        }
 
         // Shuffle new tracks and insert randomly into current playlist (after current track)
         var shuffledNew = this.shuffleArray(newTracks);
@@ -184,7 +192,6 @@ App.updateShuffleQueueSilently = function (allTracks) {
         var after = player.playlist.slice(insertIndex);
 
         player.playlist = before.concat(shuffledNew).concat(after);
-
     }
 };
 
@@ -262,6 +269,13 @@ App.loadTrack = function (index) {
     if (index < 0 || index >= this.state.player.playlist.length) return;
 
     var track = this.state.player.playlist[index];
+
+    // Safety check for valid track object
+    if (!track || !track.Id) {
+        this.logError('Invalid track at index ' + index);
+        return;
+    }
+
     this.state.player.currentTrack = index;
 
     this.setMarqueeText(this.dom.playerTitle, track.Name);
