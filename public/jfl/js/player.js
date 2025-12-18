@@ -293,11 +293,11 @@ App.loadTrack = function (index) {
 
     // Use same image logic
     if (track.AlbumId) {
-        // High Quality for Main Player (optimized: 800->500 for speed)
-        var hdUrl = this.state.serverUrl + '/Items/' + track.AlbumId + '/Images/Primary?maxHeight=500&maxWidth=500&quality=80';
+        // High Quality for Main Player (512x512 matches Media Session artwork)
+        var hdUrl = this.state.serverUrl + '/Items/' + track.AlbumId + '/Images/Primary?maxHeight=512&maxWidth=512&quality=90';
         App.Cache.loadBgImage(this.dom.playerArt, hdUrl);
 
-        // Low Quality for Mini Player
+        // Low Quality for Mini Player (120x120)
         var lqUrl = this.state.serverUrl + '/Items/' + track.AlbumId + '/Images/Primary?maxHeight=120&maxWidth=120&quality=70';
         App.Cache.loadBgImage(this.dom.miniArt, lqUrl);
     } else {
