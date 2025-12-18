@@ -51,7 +51,10 @@
         <!-- Library View -->
         <div id="view-library" class="view hidden">
             <header class="top-bar">
-                <h2>Library</h2>
+                <div class="header-tabs">
+                    <button id="tab-albums" class="tab-btn-inline active">Albums</button>
+                    <button id="tab-playlists" class="tab-btn-inline">Playlists</button>
+                </div>
                 <button id="logout-btn" class="btn text">Logout</button>
             </header>
             <div id="library-content" class="grid-container">
@@ -78,12 +81,13 @@
             </div>
         </div>
 
-        <!-- Player View -->
-        <div id="view-player" class="view hidden">
-            <header class="top-bar">
+        <!-- Player View (Overlay) -->
+        <div id="view-player" class="view minimized">
+            <div class="player-header-row">
                 <button id="back-to-library" class="btn text">&lt; Back</button>
-                <h2>Now Playing</h2>
-            </header>
+                <div class="player-handle"></div>
+                <span class="player-header-title">Now Playing</span>
+            </div>
             <div class="player-content">
                 <div class="album-art-large" id="player-art"></div>
                 <div class="track-info">
@@ -168,7 +172,15 @@
             });
         });
     </script>
-    <script src="app.js?v=17"></script>
+    <script src="js/state.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/cache.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/events.js"></script>
+    <script src="js/main.js"></script>
 </body>
 
 </html>

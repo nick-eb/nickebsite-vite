@@ -1,0 +1,57 @@
+/* ========== DEBUG CONSOLE ========== */
+#debug-console {
+    position: fixed;
+    bottom: 60px;
+    left: 10px;
+    right: 10px;
+    height: 180px;
+    background: rgba(0, 0, 0, 0.85);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    color: #00ff00;
+    padding: 12px;
+    font-family: 'SF Mono', 'Menlo', monospace;
+    font-size: 11px;
+    overflow-y: auto;
+    border-radius: var(--border-radius);
+    border: 1px solid rgba(0, 255, 0, 0.2);
+    z-index: 999;
+    display: none;
+}
+
+#debug-console div {
+    padding: 2px 0;
+    border-bottom: 1px solid rgba(0, 255, 0, 0.1);
+}
+
+/* Floating Debug Toggle Button */
+#debug-toggle {
+    position: fixed;
+    bottom: 80px;
+    /* Raised from 16px to avoid cutoff on small screens */
+    right: 16px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    font-size: 18px;
+    line-height: 44px;
+    text-align: center;
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+#debug-toggle:active {
+    transform: scale(0.9);
+}
+
+#debug-toggle.active {
+    background: rgba(0, 255, 0, 0.3);
+    border-color: rgba(0, 255, 0, 0.5);
+}

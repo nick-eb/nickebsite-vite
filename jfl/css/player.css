@@ -1,0 +1,442 @@
+/* ========== PLAYER VIEW ========== */
+/* Specific padding for player container to prevent overlap */
+#view-player {
+    padding: 0;
+    /* Remove padding from container, let content handle it */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    /* Solid background to prevent see-through */
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    /* Ensure it has background */
+    transform: translate3d(0, 0, 0);
+    /* Default open state */
+    transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    will-change: transform;
+    /* Disable scrolling on the main container */
+    overflow: hidden;
+}
+
+#view-player.minimized {
+    transform: translate3d(0, 100%, 0);
+    pointer-events: none;
+    /* Let clicks pass through when hidden */
+}
+
+/* While dragging, disable transition for 1:1 movement */
+#view-player.dragging {
+    transition: none;
+}
+
+.player-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    /* Changed from center to prevent top alignment/clipping issues */
+    flex: 1;
+    padding: 22px 16px 60px 16px;
+    /* Moved padding here. Top padding for status bar/handle */
+    /* Reduced top padding, kept bottom padding for safe area */
+    overflow-y: hidden;
+    /* Disable scrolling as requested */
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    position: relative;
+    /* Context for absolute handle if needed, but flex works */
+}
+
+/* Player Header Row - Back, Handle, Title on same line */
+.player-header-row {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-align-items: center;
+    justify-content: space-between;
+    -webkit-justify-content: space-between;
+    padding: 12px 16px;
+    flex-shrink: 0;
+    -webkit-flex-shrink: 0;
+}
+
+.player-header-row .player-handle {
+    width: 40px;
+    height: 5px;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 3px;
+    margin: 0;
+    /* Reset margins for inline */
+    flex-shrink: 0;
+}
+
+.player-header-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-muted);
+}
+
+/* Original handle styles (for content area if still needed) */
+.player-content .player-handle {
+    display: none;
+    /* Hide the one in content area since we moved it */
+}
+
+.album-art-large {
+    width: 60vw;
+    /* Slightly reduced */
+    height: 60vw;
+    max-width: 260px;
+    max-height: 260px;
+    min-width: 180px;
+    /* Prevent it from disappearing */
+    min-height: 180px;
+    background: var(--glass-bg);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    margin: 10px 0;
+    /* Balanced margin */
+    border-radius: 16px;
+    background-size: cover;
+    background-position: center;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+    flex-shrink: 0;
+    /* Prevent squashing - keep it square */
+}
+
+/* Ensure top bar has padding */
+#view-player .top-bar {
+    padding: 12px 16px;
+    /* Restore padding removed from container */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.track-info {
+    text-align: center;
+    margin-bottom: 10px;
+    /* Further reduced from 20px for tightness */
+    max-width: 100%;
+    padding: 0 20px;
+    /* Fixed height to prevent jumps when font resizes */
+    height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.track-info h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    width: 100%;
+    /* Ensure font-size changes work smoothly */
+    transition: font-size 0.2s;
+}
+
+.track-info h3 {
+    color: var(--text-muted);
+    font-size: 16px;
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
+/* Seek Bar */
+.seek-container {
+    width: 100%;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-align-items: center;
+    margin-bottom: 9px;
+    /* Reduced by 25% from 12px */
+    margin-top: 3px;
+    /* Reduced by 50% from 6px */
+    padding: 0 10px;
+    flex-shrink: 0;
+}
+
+.seek-container span {
+    font-size: 12px;
+    color: var(--text-muted);
+    min-width: 35px;
+    text-align: center;
+}
+
+#seek-bar {
+    flex: 1;
+    -webkit-flex: 1;
+    margin: 0 10px;
+    -webkit-appearance: none;
+    appearance: none;
+    /* Fix lint: standard property */
+    background: transparent;
+}
+
+#seek-bar:focus {
+    outline: none;
+}
+
+/* Range Slider Styling - WebKit */
+#seek-bar::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 4px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+}
+
+#seek-bar::-webkit-slider-thumb {
+    height: 16px;
+    width: 16px;
+    border-radius: 50%;
+    background: #ffffff;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    margin-top: -6px;
+    /* center on track */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Player Controls */
+.controls {
+    display: table;
+    margin: 0 auto;
+}
+
+.btn.control {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    background: transparent;
+    color: white;
+    font-size: 28px;
+    padding: 12px 20px;
+    min-width: 48px;
+    min-height: 48px;
+    line-height: 48px;
+}
+
+.btn.control.large {
+    background: var(--primary-gradient);
+    border-radius: 50%;
+    width: 72px;
+    height: 72px;
+    padding: 0;
+    line-height: 72px;
+    font-size: 28px;
+    box-shadow: 0 8px 25px rgba(88, 86, 214, 0.5);
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+}
+
+.btn.control.large:active {
+    transform: scale(0.95);
+}
+
+/* Shuffle button active state */
+.btn.control.active {
+    color: #ffffff;
+    background: var(--primary-gradient);
+    border-radius: 50%;
+    box-shadow: 0 4px 15px rgba(88, 86, 214, 0.5);
+}
+
+/* Shuffle row - centered below main controls */
+.shuffle-row {
+    text-align: center;
+    margin-top: 12px;
+}
+
+/* Small control button (50% size) */
+.btn.control.small {
+    font-size: 14px;
+    padding: 6px 10px;
+    min-width: 24px;
+    min-height: 24px;
+    line-height: 24px;
+}
+
+.btn.control.small.active {
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+    line-height: 36px;
+    padding: 0;
+}
+
+/* ========== MARQUEE ANIMATION ========== */
+.marquee-container {
+    overflow: hidden !important;
+    white-space: nowrap;
+    text-overflow: clip !important;
+    /* Disable ellipsis for marquee */
+    position: relative;
+    display: block;
+}
+
+.marquee-content {
+    display: inline-block;
+    padding-left: 0;
+    /* 
+     * iOS Style Animation:
+     * 1. Start at 0 (visible)
+     * 2. Hold for 3s (25% of 12s)
+     * 3. Scroll to -50% (start of duplicate text)
+     * 4. Seamless loop back to 0
+     * Total duration: 12s per loop usually good
+     */
+    animation: marquee 12s linear infinite;
+    /* Use translate3d for hardware acceleration */
+    will-change: transform;
+}
+
+@keyframes marquee {
+    0% {
+        transform: translate3d(0, 0, 0);
+    }
+
+    25% {
+        /* Hold still for first 25% of time (approx 3s) */
+        transform: translate3d(0, 0, 0);
+    }
+
+    100% {
+        /* Move to -50% where 2nd text starts */
+        transform: translate3d(-50%, 0, 0);
+    }
+}
+
+/* ========== MINI PLAYER ========== */
+.mini-player {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: var(--glass-bg);
+    /* Use same glass effect */
+    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--glass-border);
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-flex-direction: column;
+    z-index: 900;
+    /* Above library content, below modals */
+    transition: transform 0.3s cubic-bezier(0.4, 0.0, 0.2, 1);
+    transform: translate3d(0, 0, 0);
+    /* Visible state */
+}
+
+/* Hidden state for mini player (slide down) */
+.mini-player.hidden {
+    transform: translate3d(0, 100%, 0);
+    display: flex !important;
+    /* Override generic .hidden display:none */
+    display: -webkit-flex !important;
+}
+
+.mini-progress-bar {
+    width: 100%;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.1);
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.mini-progress-fill {
+    height: 100%;
+    background: var(--accent-color);
+    width: 0%;
+    transition: width 0.3s linear;
+}
+
+.mini-content {
+    flex: 1;
+    -webkit-flex: 1;
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-align-items: center;
+    padding: 0 12px;
+}
+
+.mini-art {
+    width: 44px;
+    height: 44px;
+    border-radius: 6px;
+    background-color: var(--card-bg);
+    background-size: cover;
+    background-position: center;
+    flex-shrink: 0;
+    -webkit-flex-shrink: 0;
+    margin-right: 12px;
+}
+
+.mini-info {
+    flex: 1;
+    -webkit-flex: 1;
+    min-width: 0;
+    /* Enable truncation */
+    display: flex;
+    display: -webkit-flex;
+    flex-direction: column;
+    -webkit-flex-direction: column;
+    justify-content: center;
+    -webkit-justify-content: center;
+    cursor: pointer;
+    /* Indicate clickable */
+}
+
+.mini-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-color);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mini-artist {
+    font-size: 12px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.mini-controls {
+    display: flex;
+    display: -webkit-flex;
+    align-items: center;
+    -webkit-align-items: center;
+    margin-left: 12px;
+}
+
+.btn.mini-btn {
+    background: transparent;
+    padding: 8px 12px;
+    font-size: 20px;
+    margin: 0;
+    width: auto;
+    color: var(--text-color);
+}
