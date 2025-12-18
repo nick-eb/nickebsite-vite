@@ -6,24 +6,24 @@ import './Contact.css';
 
 const Contact = () => {
   const socialLinks = [
-    { 
-      href: 'https://github.com/hadobedo/', 
-      icon: faGithub, 
+    {
+      href: 'https://github.com/hadobedo/',
+      icon: faGithub,
       label: 'GitHub'
     },
-    { 
-      href: 'https://www.linkedin.com/in/nicholas-bonello-642a73333/', 
-      icon: faLinkedin, 
+    {
+      href: 'https://www.linkedin.com/in/nicholas-bonello-642a73333/',
+      icon: faLinkedin,
       label: 'LinkedIn'
     },
-    { 
-      href: 'https://twitter.com/NicksWorkslol/', 
-      icon: faTwitter, 
-      label: 'Twitter'
+    {
+      href: 'https://x.com/_nickeb_',
+      icon: faTwitter,
+      label: 'Twitter/X'
     },
-    { 
-      href: 'https://instagram.com/nick__eb', 
-      icon: faInstagram, 
+    {
+      href: 'https://instagram.com/nick__eb',
+      icon: faInstagram,
       label: 'Instagram'
     }
   ];
@@ -31,18 +31,18 @@ const Contact = () => {
   return (
     <section id="contact" className="contact-section">
       <div className="content-container">
-        <motion.div 
+        <motion.div
           className="contact-content"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
           <h2 className="section-title">Contact Me</h2>
-          
+
           <div className="contact-card">
             <div className="contact-info">
               <FontAwesomeIcon icon={faEnvelope} className="email-icon" />
-              <a 
+              <a
                 href="mailto:nicholas.e.bonello@gmail.com"
                 className="email-link"
               >

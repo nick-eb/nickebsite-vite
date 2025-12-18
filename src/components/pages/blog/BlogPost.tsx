@@ -24,15 +24,15 @@ export default function BlogPost() {
         setLoading(true);
         setError(null);
         console.log(`Loading post with slug: ${slug}`);
-        
+
         const blogPost = await getPostBySlug(slug);
         console.log('Loaded post:', blogPost);
-        
+
         if (!blogPost) {
           setError('Post not found');
           return;
         }
-        
+
         setPost(blogPost);
       } catch (err) {
         console.error('Error loading blog post:', err);
@@ -79,7 +79,7 @@ export default function BlogPost() {
   }
 
   return (
-    <motion.section 
+    <motion.section
       className="blog-post-section"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -116,12 +116,12 @@ export default function BlogPost() {
                     try {
                       const Content = post.content as React.ComponentType;
                       console.log('Rendering MDX content:', Content);
-                      
+
                       // Ensure Content is a valid React component
                       if (typeof Content !== 'function') {
                         throw new Error('MDX content is not a valid React component');
                       }
-                      
+
                       return <Content />;
                     } catch (err) {
                       console.error('Error rendering MDX content:', err);

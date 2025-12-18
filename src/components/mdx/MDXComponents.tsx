@@ -1,28 +1,28 @@
 import React from 'react';
 
 // Define proper interfaces for HTML element props
-interface HTMLElementProps extends React.HTMLAttributes<HTMLElement> {}
-interface HTMLHeadingProps extends React.HTMLAttributes<HTMLHeadingElement> {}
-interface HTMLParagraphProps extends React.HTMLAttributes<HTMLParagraphElement> {}
-interface HTMLAnchorProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> {}
-interface HTMLListProps extends React.HTMLAttributes<HTMLUListElement | HTMLOListElement> {}
-interface HTMLListItemProps extends React.LiHTMLAttributes<HTMLLIElement> {}
-interface HTMLBlockquoteProps extends React.BlockquoteHTMLAttributes<HTMLQuoteElement> {}
-interface HTMLImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {}
-interface HTMLTableProps extends React.TableHTMLAttributes<HTMLTableElement> {}
-interface HTMLTableSectionProps extends React.HTMLAttributes<HTMLTableSectionElement> {}
-interface HTMLTableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {}
-interface HTMLTableCellProps extends React.TdHTMLAttributes<HTMLTableDataCellElement> {}
-interface HTMLTableHeaderProps extends React.ThHTMLAttributes<HTMLTableHeaderCellElement> {}
+interface HTMLElementProps extends React.HTMLAttributes<HTMLElement> { }
+interface HTMLHeadingProps extends React.HTMLAttributes<HTMLHeadingElement> { }
+interface HTMLParagraphProps extends React.HTMLAttributes<HTMLParagraphElement> { }
+interface HTMLAnchorProps extends React.AnchorHTMLAttributes<HTMLAnchorElement> { }
+interface HTMLListProps extends React.HTMLAttributes<HTMLUListElement | HTMLOListElement> { }
+interface HTMLListItemProps extends React.LiHTMLAttributes<HTMLLIElement> { }
+interface HTMLBlockquoteProps extends React.BlockquoteHTMLAttributes<HTMLQuoteElement> { }
+interface HTMLImageProps extends React.ImgHTMLAttributes<HTMLImageElement> { }
+interface HTMLTableProps extends React.TableHTMLAttributes<HTMLTableElement> { }
+interface HTMLTableSectionProps extends React.HTMLAttributes<HTMLTableSectionElement> { }
+interface HTMLTableRowProps extends React.HTMLAttributes<HTMLTableRowElement> { }
+interface HTMLTableCellProps extends React.TdHTMLAttributes<HTMLTableDataCellElement> { }
+interface HTMLTableHeaderProps extends React.ThHTMLAttributes<HTMLTableHeaderCellElement> { }
 
 // Custom CodeBlock component with syntax highlighting
-export const CodeBlock: React.FC<{ 
-  children: React.ReactNode; 
+export const CodeBlock: React.FC<{
+  children: React.ReactNode;
   className?: string;
   title?: string;
 }> = ({ children, className, title }) => {
   const isInline = !className;
-  
+
   if (isInline) {
     return (
       <code className="inline-code">
@@ -32,7 +32,7 @@ export const CodeBlock: React.FC<{
   }
 
   // const language = className?.replace('language-', '') || '';
-  
+
   return (
     <div className="code-block-container">
       {title && (
@@ -86,7 +86,7 @@ export const PongGame: React.FC = () => {
     rallies: 0, // Track number of paddle hits for speed progression
     baseSpeed: 2 // Starting ball speed
   });
-  
+
   const animationFrameRef = React.useRef<number | null>(null);
   const [gameStarted, setGameStarted] = React.useState(false);
   const [gameRunning, setGameRunning] = React.useState(false);
@@ -125,7 +125,7 @@ export const PongGame: React.FC = () => {
     const paddleCenterY = rightPaddle.y + rightPaddle.height / 2;
     const aiSpeed = PADDLE_SPEED * 0.7; // Make AI slightly slower than player
     const aiReactionZone = CANVAS_WIDTH * 0.6; // AI only reacts when ball is past 60% of screen
-    
+
     if (ball.x > aiReactionZone && ball.dx > 0) { // Only move when ball is coming towards AI
       if (ballCenterY < paddleCenterY - 10) { // Add some dead zone to make AI less perfect
         rightPaddle.y = Math.max(0, rightPaddle.y - aiSpeed);
@@ -145,15 +145,15 @@ export const PongGame: React.FC = () => {
 
     // Ball collision with paddles
     if (ball.x - ball.radius <= leftPaddle.x + leftPaddle.width &&
-        ball.y >= leftPaddle.y && ball.y <= leftPaddle.y + leftPaddle.height) {
+      ball.y >= leftPaddle.y && ball.y <= leftPaddle.y + leftPaddle.height) {
       ball.dx = Math.abs(ball.dx);
       ball.dy += (ball.y - (leftPaddle.y + leftPaddle.height / 2)) * 0.1;
-      
+
       // Increase speed after paddle hit
       game.rallies++;
       const speedMultiplier = 1 + (game.rallies * 0.05); // Increase by 5% per rally
       const maxSpeed = game.baseSpeed * 2.5; // Cap at 2.5x base speed
-      
+
       ball.dx = Math.min(Math.abs(ball.dx) * speedMultiplier, maxSpeed) * Math.sign(ball.dx);
       ball.dy = ball.dy * speedMultiplier;
       if (Math.abs(ball.dy) > maxSpeed) {
@@ -162,15 +162,15 @@ export const PongGame: React.FC = () => {
     }
 
     if (ball.x + ball.radius >= rightPaddle.x &&
-        ball.y >= rightPaddle.y && ball.y <= rightPaddle.y + rightPaddle.height) {
+      ball.y >= rightPaddle.y && ball.y <= rightPaddle.y + rightPaddle.height) {
       ball.dx = -Math.abs(ball.dx);
       ball.dy += (ball.y - (rightPaddle.y + rightPaddle.height / 2)) * 0.1;
-      
+
       // Increase speed after paddle hit
       game.rallies++;
       const speedMultiplier = 1 + (game.rallies * 0.05); // Increase by 5% per rally
       const maxSpeed = game.baseSpeed * 2.5; // Cap at 2.5x base speed
-      
+
       ball.dx = -Math.min(Math.abs(ball.dx) * speedMultiplier, maxSpeed);
       ball.dy = ball.dy * speedMultiplier;
       if (Math.abs(ball.dy) > maxSpeed) {
@@ -283,11 +283,11 @@ export const PongGame: React.FC = () => {
     const handleKeyDown = (e: KeyboardEvent) => {
       const game = gameStateRef.current;
       const key = e.key.toLowerCase();
-      
+
       // Only handle game keys when game is started
       if (gameStarted && ['w', 's', 'arrowup', 'arrowdown'].includes(key)) {
         e.preventDefault(); // Prevent page scroll when playing
-        
+
         switch (key) {
           case 'w': game.keys.w = true; break;
           case 's': game.keys.s = true; break;
@@ -300,11 +300,11 @@ export const PongGame: React.FC = () => {
     const handleKeyUp = (e: KeyboardEvent) => {
       const game = gameStateRef.current;
       const key = e.key.toLowerCase();
-      
+
       // Only handle game keys when game is started
       if (gameStarted && ['w', 's', 'arrowup', 'arrowdown'].includes(key)) {
         e.preventDefault(); // Prevent page scroll when playing
-        
+
         switch (key) {
           case 'w': game.keys.w = false; break;
           case 's': game.keys.s = false; break;
@@ -335,7 +335,7 @@ export const PongGame: React.FC = () => {
     for (let i = 0; i < e.touches.length; i++) {
       const touch = e.touches[i];
       if (!touch) continue;
-      
+
       const y = (touch.clientY - rect.top) * scaleY;
 
       // Allow touch control anywhere on the canvas (entire game window is draggable)
@@ -370,7 +370,7 @@ export const PongGame: React.FC = () => {
           Player: {score.left} | AI: {score.right}
         </div>
       </div>
-      
+
       <canvas
         ref={canvasRef}
         width={CANVAS_WIDTH}
@@ -380,7 +380,7 @@ export const PongGame: React.FC = () => {
         onTouchEnd={handleTouchEnd}
         onTouchStart={handleTouchMove}
       />
-      
+
       <div className="pong-controls">
         <div className="pong-buttons">
           {!gameStarted ? (
@@ -396,7 +396,7 @@ export const PongGame: React.FC = () => {
             Reset
           </button>
         </div>
-        
+
         <div className="pong-instructions">
           <div className="desktop-controls">
             <strong>Desktop:</strong> Use W/S keys or ↑/↓ arrow keys to move your paddle
@@ -447,18 +447,18 @@ export const ImageCarousel: React.FC<{
             </div>
           ))}
         </div>
-        
+
         {images.length > 1 && (
           <>
-            <button 
-              className="carousel-button prev" 
+            <button
+              className="carousel-button prev"
               onClick={prevImage}
               aria-label="Previous image"
             >
               ←
             </button>
-            <button 
-              className="carousel-button next" 
+            <button
+              className="carousel-button next"
               onClick={nextImage}
               aria-label="Next image"
             >
@@ -467,13 +467,13 @@ export const ImageCarousel: React.FC<{
           </>
         )}
       </div>
-      
+
       {images[currentIndex]?.caption && (
         <div className="image-caption">
           {images[currentIndex].caption}
         </div>
       )}
-      
+
       {images.length > 1 && (
         <div className="carousel-indicators">
           {images.map((_, index) => (
@@ -514,7 +514,7 @@ export const mdxComponents = {
   td: (props: HTMLTableCellProps) => <td className="mdx-table-cell" {...props} />,
   code: CodeBlock,
   pre: (props: HTMLElementProps) => <div {...props} />, // Pre is handled by CodeBlock
-  
+
   // Custom components
   Alert,
   ImageCarousel,
