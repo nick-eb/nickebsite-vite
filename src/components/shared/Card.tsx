@@ -14,7 +14,7 @@ export interface BaseCardProps {
 export interface LinkCardProps extends BaseCardProps {
   variant: 'link';
   to: string;
-  onClick?: (e: React.MouseEvent<HTMLAnchorElement>) => void;
+  onClick?: ((e: React.MouseEvent<HTMLAnchorElement>) => void) | undefined;
 }
 
 export interface ExternalLinkCardProps extends BaseCardProps {
@@ -185,7 +185,6 @@ export const BlogCard: React.FC<BlogCardProps> = ({
   thumbnail,
   onClick,
   className = '',
-  ...props
 }) => {
   return (
     <Card
@@ -236,7 +235,6 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   image,
   homepage,
   className = '',
-  ...props
 }) => (
   <Card
     variant="external"

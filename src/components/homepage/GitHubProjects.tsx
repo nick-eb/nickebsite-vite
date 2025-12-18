@@ -15,8 +15,9 @@ const GitHubProjects: React.FC = () => {
       const uniqueRepos = Array.from(new Set(PROJECTS.map(p => `${p.owner}/${p.repo}`)))
         .map(str => {
           const parts = str.split('/');
-          return { owner: parts[0], repo: parts[1] as string };
-        });
+          return { owner: parts[0], repo: parts[1] };
+        })
+        .filter((item): item is { owner: string; repo: string } => !!item.repo);
 
       const repoResults = await Promise.all(
         uniqueRepos.map(({ owner, repo }) => getRepository(owner, repo))

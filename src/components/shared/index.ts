@@ -7,4 +7,4 @@ export type {
   BlogCardProps,
   ProjectCardProps
 } from './Card';
-export type { SliderProps, SliderSettings } from './Slider';
+export type { SliderProps } from './Slider';
