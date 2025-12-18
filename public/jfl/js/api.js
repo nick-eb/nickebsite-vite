@@ -1,0 +1,211 @@
+/**
+ * Jellyfin Legacy Player - API & Networking
+ */
+
+// --- XMLHttpRequest wrapper ---
+App.request = function (method, url, headers, body, callback) {
+    var self = this;
+    var xhr = new XMLHttpRequest();
+    xhr.open(method, url, true);
+
+    for (var key in headers) {
+        if (headers.hasOwnProperty(key)) {
+            xhr.setRequestHeader(key, headers[key]);
+        }
+    }
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                try {
+                    var data = JSON.parse(xhr.responseText);
+                    callback(null, data);
+                } catch (e) {
+                    callback('JSON parse error: ' + e.message, null);
+                }
+            } else {
+                callback('HTTP ' + xhr.status + ': ' + xhr.statusText, null);
+            }
+        }
+    };
+
+    xhr.onerror = function () {
+        callback('Network error (CORS or offline?)', null);
+    };
+
+    if (body) {
+        xhr.send(body);
+    } else {
+        xhr.send();
+    }
+};
+
+App.handleLogin = function () {
+    var self = this;
+    var url = this.dom.serverUrl.value.replace(/\/$/, '');
+    var username = this.dom.username.value;
+    var password = this.dom.password.value;
+
+    this.log('handleLogin called');
+    this.log('URL: ' + url);
+
+    if (!url) {
+        alert('Server URL is required');
+        return;
+    }
+
+    var btn = this.dom.loginBtn;
+    var origText = btn.textContent;
+    btn.textContent = 'Connecting...';
+    btn.disabled = true;
+
+    var headers = {
+        'Content-Type': 'application/json',
+        'X-Emby-Authorization': 'MediaBrowser Client="Jellyfin Legacy", Device="Web", DeviceId="' + Date.now() + '", Version="1.0.0"'
+    };
+
+    var body = JSON.stringify({
+        Username: username,
+        Pw: password
+    });
+
+    this.request('POST', url + '/Users/AuthenticateByName', headers, body, function (err, data) {
+        if (err) {
+            self.logError('Login failed: ' + err);
+            alert('Login Failed: ' + err);
+            btn.textContent = origText;
+            btn.disabled = false;
+            return;
+        }
+
+        self.log('Login success!');
+        self.state.serverUrl = url;
+        self.state.accessToken = data.AccessToken;
+        self.state.userId = data.User.Id;
+        self.state.userName = data.User.Name;
+
+        localStorage.setItem('jf_server_url', url);
+        localStorage.setItem('jf_access_token', self.state.accessToken);
+        localStorage.setItem('jf_user_id', self.state.userId);
+        localStorage.setItem('jf_user_name', self.state.userName);
+
+        self.showView('view-library');
+        self.getMusicLibrary();
+    });
+};
+
+App.handleLogout = function () {
+    localStorage.clear();
+    location.reload();
+};
+
+App.getMusicLibrary = function () {
+    var self = this;
+    var userId = this.state.userId;
+    var server = this.state.serverUrl;
+    var headers = { 'X-Emby-Token': this.state.accessToken };
+
+    this.log('Getting music library...');
+
+    var fetchAlbums = function (viewId) {
+        // FAST PATH: Try cache first
+        var cachedAlbums = self.loadAlbumsCache();
+        if (cachedAlbums && cachedAlbums.length > 0) {
+            self.log('Rendering albums from cache (instant)');
+            self.renderLibrary(cachedAlbums);
+        }
+
+        // Background: Fetch fresh albums from server
+        var albumUrl = server + '/Users/' + userId + '/Items?ParentId=' + viewId + '&Recursive=true&IncludeItemTypes=MusicAlbum&SortBy=SortName';
+        self.request('GET', albumUrl, headers, null, function (err2, data2) {
+            if (err2) {
+                self.logError('Albums error: ' + err2);
+                return;
+            }
+            self.log('Got ' + data2.Items.length + ' albums from server');
+            self.state.albums = data2.Items;
+            self.saveAlbumsCache(data2.Items);
+
+            // Only re-render if we didn't have cache or if count changed
+            if (!cachedAlbums || cachedAlbums.length !== data2.Items.length) {
+                self.renderLibrary(data2.Items);
+            }
+        });
+
+        // Trigger background sync to keep track cache fresh
+        setTimeout(function () {
+            self.syncLibrary();
+        }, 500);
+    };
+
+    // FAST PATH: If we have cached View ID
+    if (this.state.musicViewId) {
+        this.log('Using cached Music View ID: ' + this.state.musicViewId);
+        fetchAlbums(this.state.musicViewId);
+        return;
+    }
+
+    // Step 1: Get Views (SLOW PATH)
+    this.request('GET', server + '/Users/' + userId + '/Views', headers, null, function (err, data) {
+        if (err) {
+            self.logError('Views error: ' + err);
+            alert('Failed to load views: ' + err);
+            return;
+        }
+
+        var musicView = null;
+        for (var i = 0; i < data.Items.length; i++) {
+            if (data.Items[i].CollectionType === 'music') {
+                musicView = data.Items[i];
+                break;
+            }
+        }
+
+        if (!musicView) {
+            self.logError('No music library found');
+            alert('No Music Library found');
+            return;
+        }
+
+        self.log('Found music view: ' + musicView.Id);
+        self.state.musicViewId = musicView.Id; // Store music view ID
+        localStorage.setItem('jf_music_view_id', musicView.Id); // Persist it
+
+        fetchAlbums(musicView.Id);
+    });
+};
+
+App.getPlaylists = function (callback) {
+    var self = this;
+    var userId = this.state.userId;
+    var server = this.state.serverUrl;
+    var headers = { 'X-Emby-Token': this.state.accessToken };
+
+    this.log('Getting playlists...');
+
+    // FAST PATH: Try cache first
+    var cachedPlaylists = this.loadPlaylistsCache();
+    if (cachedPlaylists && cachedPlaylists.length > 0) {
+        this.log('Rendering playlists from cache (instant)');
+        if (callback) callback(cachedPlaylists);
+    }
+
+    // Background: Fetch fresh playlists from server
+    var url = server + '/Users/' + userId + '/Items?Recursive=true&IncludeItemTypes=Playlist&SortBy=SortName';
+    this.request('GET', url, headers, null, function (err, data) {
+        if (err) {
+            self.logError('Playlists error: ' + err);
+            // If we had cache, we already called callback, so don't call again with empty
+            if (!cachedPlaylists && callback) callback([]);
+            return;
+        }
+        self.log('Got ' + data.Items.length + ' playlists from server');
+        self.state.playlists = data.Items;
+        self.savePlaylistsCache(data.Items);
+
+        // Only call callback if we didn't have cache or if count changed
+        if (!cachedPlaylists || cachedPlaylists.length !== data.Items.length) {
+            if (callback) callback(data.Items);
+        }
+    });
+};

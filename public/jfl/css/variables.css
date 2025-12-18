@@ -1,0 +1,16 @@
+:root {
+    /* iOS 10 inspired color palette */
+    --bg-gradient-start: #1a1a2e;
+    --bg-gradient-end: #16213e;
+    --glass-bg: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.18);
+    --glass-shadow: rgba(0, 0, 0, 0.3);
+    --primary-color: #5856d6;
+    /* iOS purple */
+    --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --text-color: #ffffff;
+    --text-muted: rgba(255, 255, 255, 0.6);
+    --success-color: #34c759;
+    --border-radius: 16px;
+    --border-radius-sm: 10px;
+}
