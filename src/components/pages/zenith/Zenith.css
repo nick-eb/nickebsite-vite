@@ -27,7 +27,8 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  line-height: 1.1;
+  line-height: 1.2;
+  padding: 0.1em 0;
 }
 
 .zenith-subtitle {
