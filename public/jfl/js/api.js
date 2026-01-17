@@ -5,8 +5,26 @@
 // --- XMLHttpRequest wrapper ---
 App.request = function (method, url, headers, body, callback) {
     var self = this;
+
+    // Mixed Content Check (HTTPS -> HTTP)
+    if (window.location.protocol === 'https:' && url.indexOf('http:') === 0) {
+        var msg = 'Security Error: Cannot connect to HTTP server from HTTPS site (Mixed Content). Please use HTTPS for your Jellyfin server or load this player over HTTP.';
+        console.error(msg);
+        if (self.logError) self.logError(msg);
+        callback(msg, null);
+        return;
+    }
+
     var xhr = new XMLHttpRequest();
     xhr.open(method, url, true);
+
+    // Ensure callback is called only once
+    var cbCalled = false;
+    var done = function (err, data) {
+        if (cbCalled) return;
+        cbCalled = true;
+        callback(err, data);
+    };
 
     for (var key in headers) {
         if (headers.hasOwnProperty(key)) {
@@ -16,21 +34,30 @@ App.request = function (method, url, headers, body, callback) {
 
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
+            // Debug logging
+            if (self.log) self.log('XHR ' + method + ' ' + url + ' finished. Status: ' + xhr.status);
+
             if (xhr.status >= 200 && xhr.status < 300) {
                 try {
                     var data = JSON.parse(xhr.responseText);
-                    callback(null, data);
+                    done(null, data);
                 } catch (e) {
-                    callback('JSON parse error: ' + e.message, null);
+                    done('JSON parse error: ' + e.message, null);
                 }
+            } else if (xhr.status === 0) {
+                // Expanded error for 0 status
+                var msg = 'Network Error (HTTP 0). Possible causes:\n1. Mixed Content (HTTPS -> HTTP)\n2. CORS (Server blocking request)\n3. Invalid SSL/Self-signed cert\n4. Server offline';
+                if (self.logError) self.logError(msg);
+                done(msg, null);
             } else {
-                callback('HTTP ' + xhr.status + ': ' + xhr.statusText, null);
+                done('HTTP ' + xhr.status + ': ' + xhr.statusText, null);
             }
         }
     };
 
     xhr.onerror = function () {
-        callback('Network error (CORS or offline?)', null);
+        if (self.logError) self.logError('XHR onerror event fired');
+        done('Connection Failed. If using HTTPS, your device might not trust the server certificate (common on iOS 8). Try opening the Server URL in Safari to accept the certificate, or use HTTP.', null);
     };
 
     if (body) {
@@ -72,7 +99,8 @@ App.handleLogin = function () {
     this.request('POST', url + '/Users/AuthenticateByName', headers, body, function (err, data) {
         if (err) {
             self.logError('Login failed: ' + err);
-            alert('Login Failed: ' + err);
+            // Show formatted alert
+            alert('Login Failed:\n' + err);
             btn.textContent = origText;
             btn.disabled = false;
             return;

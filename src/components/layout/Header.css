@@ -32,8 +32,8 @@
   grid-column: 2;
   height: 100%;
   display: flex;
-  gap: 1rem;
-  /* Reduced from 2rem for better spacing */
+  gap: 0.5rem;
+  /* Reduced from 1rem for better spacing */
   align-items: center;
   margin: 0;
   padding: 0;
@@ -147,27 +147,60 @@
   transform: scaleX(1);
 }
 
-/* Jellyfin Button Styles */
-.jellyfin-button {
+/* JFL Small Link */
+.jfl-link {
+  font-size: 0.8rem;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--surface-3);
+  border-radius: 6px;
+  height: auto;
+  line-height: 1;
+  margin-left: 0.5rem;
+  color: var(--text-tertiary);
+}
+
+.jfl-link:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.jfl-link::after {
+  display: none;
+  /* No underline for button-like link */
+}
+
+/* Zenith Button Styles */
+.zenith-button {
   grid-column: 3;
   justify-self: end;
-  background: var(--surface-2);
-  border: 1px solid var(--surface-3);
+  background: linear-gradient(135deg, rgba(88, 28, 135, 0.4) 0%, rgba(49, 46, 129, 0.4) 100%);
+  border: 1px solid rgba(139, 92, 246, 0.3);
   border-radius: 8px;
   padding: 0.35rem 0.85rem;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--text-secondary);
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #e9d5ff;
+  /* purple-100 */
   text-decoration: none;
   transition: all 0.2s ease;
   white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.jellyfin-button:hover {
-  background: var(--surface-3);
-  color: var(--text-primary);
-  border-color: var(--accent);
+.zenith-button:hover {
+  background: linear-gradient(135deg, rgba(88, 28, 135, 0.6) 0%, rgba(49, 46, 129, 0.6) 100%);
+  border-color: #a855f7;
   transform: translateY(-1px);
+  color: white;
+}
+
+.zenith-nav-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  object-fit: cover;
 }
 
 /* Remove ALL blog-nav-button specific styles */
@@ -215,27 +248,18 @@ body[data-route="/blog"] .nav-button:not(.blog-nav-button) {
   }
 
   /* Keep Jellyfin button visible but maybe smaller */
-  .jellyfin-button {
-    font-size: 0.75rem;
+  .zenith-button {
+    font-size: 0.8rem;
     padding: 0.35rem 0.6rem;
     max-width: 140px;
-    /* Limit width */
     overflow: hidden;
-    text-overflow: ellipsis;
-    /* Ellipsize if really tight */
   }
 }
 
 @media (max-width: 600px) {
-
-  /* Hide the full text on very small screens, simpler label */
-  .jellyfin-button span {
+  .jfl-link {
     display: none;
-  }
-
-  .jellyfin-button::after {
-    content: 'Legacy Player';
-    display: inline;
+    /* Hide JFL on very small screens if needed, or keep it */
   }
 }
 
@@ -252,7 +276,7 @@ body[data-route="/blog"] .nav-button:not(.blog-nav-button) {
     font-size: 0.8rem;
   }
 
-  .jellyfin-button {
+  .zenith-button {
     margin-left: auto;
     /* Push to right */
   }

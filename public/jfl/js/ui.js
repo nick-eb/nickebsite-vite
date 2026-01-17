@@ -98,10 +98,16 @@ App.showView = function (viewId) {
     var target = document.getElementById(viewId);
     if (target) target.classList.remove('hidden');
 
-    if (this.state.player.playlist && this.state.player.playlist.length > 0) {
-        this.dom.miniPlayer.classList.remove('hidden');
+    // Force hide on login, otherwise follow playlist state
+    if (viewId === 'view-login') {
+        this.dom.miniPlayer.classList.add('force-hidden');
     } else {
-        this.dom.miniPlayer.classList.add('hidden');
+        this.dom.miniPlayer.classList.remove('force-hidden');
+        if (this.state.player.playlist && this.state.player.playlist.length > 0) {
+            this.dom.miniPlayer.classList.remove('hidden');
+        } else {
+            this.dom.miniPlayer.classList.add('hidden');
+        }
     }
 
     this.state.currentView = viewId;

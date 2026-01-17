@@ -8,7 +8,7 @@ import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
 
 export default defineConfig({
-  base: '/',  // Change from '/nickebsite-vite/' to '/'
+  base: process.env.NODE_ENV === 'production' ? '/nickebsite-vite/' : '/',
   plugins: [
     mdx({
       remarkPlugins: [remarkGfm],

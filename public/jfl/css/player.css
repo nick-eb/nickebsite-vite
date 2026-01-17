@@ -79,7 +79,8 @@
 .player-header-title {
     font-size: 14px;
     font-weight: 500;
-    color: var(--text-muted);
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.6);
 }
 
 /* Original handle styles (for content area if still needed) */
@@ -97,10 +98,10 @@
     min-width: 180px;
     /* Prevent it from disappearing */
     min-height: 180px;
-    background: var(--glass-bg);
+    background: rgba(255, 255, 255, 0.15);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-    border: 1px solid var(--glass-border);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     margin: 10px 0;
     /* Balanced margin */
     border-radius: 16px;
@@ -148,7 +149,7 @@
 }
 
 .track-info h3 {
-    color: var(--text-muted);
+    color: rgba(255, 255, 255, 0.6);
     font-size: 16px;
     font-weight: 400;
     white-space: nowrap;
@@ -174,7 +175,8 @@
 
 .seek-container span {
     font-size: 12px;
-    color: var(--text-muted);
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
     min-width: 35px;
     text-align: center;
 }
@@ -235,7 +237,8 @@
 }
 
 .btn.control.large {
-    background: var(--primary-gradient);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: -webkit-linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border-radius: 50%;
     width: 72px;
     height: 72px;
@@ -255,7 +258,8 @@
 /* Shuffle button active state */
 .btn.control.active {
     color: #ffffff;
-    background: var(--primary-gradient);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: -webkit-linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     border-radius: 50%;
     box-shadow: 0 4px 15px rgba(88, 86, 214, 0.5);
 }
@@ -332,11 +336,13 @@
     left: 0;
     width: 100%;
     height: 60px;
-    background: var(--glass-bg);
+    width: 100%;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.15);
     /* Use same glass effect */
     -webkit-backdrop-filter: blur(20px);
     backdrop-filter: blur(20px);
-    border-top: 1px solid var(--glass-border);
+    border-top: 1px solid rgba(255, 255, 255, 0.18);
     display: flex;
     display: -webkit-flex;
     flex-direction: column;
@@ -356,6 +362,10 @@
     display: -webkit-flex !important;
 }
 
+.mini-player.force-hidden {
+    display: none !important;
+}
+
 .mini-progress-bar {
     width: 100%;
     height: 2px;
@@ -367,7 +377,8 @@
 
 .mini-progress-fill {
     height: 100%;
-    background: var(--accent-color);
+    background: #667eea;
+    /* accent color */
     width: 0%;
     transition: width 0.3s linear;
 }
@@ -386,7 +397,9 @@
     width: 44px;
     height: 44px;
     border-radius: 6px;
-    background-color: var(--card-bg);
+    height: 44px;
+    border-radius: 6px;
+    background-color: rgba(255, 255, 255, 0.08);
     background-size: cover;
     background-position: center;
     flex-shrink: 0;
@@ -412,7 +425,9 @@
 .mini-title {
     font-size: 14px;
     font-weight: 500;
-    color: var(--text-color);
+    font-size: 14px;
+    font-weight: 500;
+    color: #ffffff;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -420,7 +435,8 @@
 
 .mini-artist {
     font-size: 12px;
-    color: var(--text-muted);
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.6);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -440,5 +456,78 @@
     font-size: 20px;
     margin: 0;
     width: auto;
-    color: var(--text-color);
+    width: auto;
+    color: #ffffff;
+}
+
+/* iPhone 4S / 320px Optimizations */
+@media (max-height: 480px) and (max-width: 320px) {
+
+    /* Compress vertical space */
+    .player-content {
+        padding-top: 10px;
+        padding-bottom: 40px;
+        justify-content: flex-start;
+    }
+
+    #view-player .top-bar {
+        padding: 4px 12px;
+        min-height: 32px;
+    }
+
+    .player-header-title {
+        font-size: 13px;
+    }
+
+    /* Smaller Art */
+    .album-art-large {
+        width: 140px;
+        height: 140px;
+        min-width: 140px;
+        min-height: 140px;
+        margin: 4px auto;
+        /* Center horizontally */
+    }
+
+    /* Compact Track Info */
+    .track-info {
+        height: auto;
+        margin-bottom: 4px;
+        padding: 0 10px;
+    }
+
+    .track-info h2 {
+        font-size: 18px;
+        margin-bottom: 2px;
+    }
+
+    .track-info h3 {
+        font-size: 14px;
+    }
+
+    /* Compact Controls */
+    .btn.control {
+        padding: 8px 12px;
+        font-size: 20px;
+        min-width: 40px;
+        min-height: 40px;
+        line-height: 40px;
+    }
+
+    .btn.control.large {
+        width: 56px;
+        height: 56px;
+        line-height: 56px;
+        font-size: 22px;
+    }
+
+    /* Tighter Seek Bar */
+    .seek-container {
+        margin-bottom: 4px;
+        margin-top: 0;
+    }
+
+    .shuffle-row {
+        margin-top: 6px;
+    }
 }

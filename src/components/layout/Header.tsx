@@ -9,6 +9,7 @@ const Header = () => {
   const { activeSection, setActiveSection } = useNav();
   const isBlogPost = location.pathname.startsWith('/blog/');
   const isAllPosts = location.pathname === '/blog';
+  const isZenith = location.pathname.startsWith('/zenith');
 
   useEffect(() => {
     if (location.pathname !== '/') return;
@@ -81,7 +82,7 @@ const Header = () => {
             <li key={id}>
               <button
                 onClick={() => scrollToSection(id)}
-                className={`nav-button ${!isAllPosts && !isBlogPost && activeSection === id ? 'active' : ''
+                className={`nav-button ${!isAllPosts && !isBlogPost && !isZenith && activeSection === id ? 'active' : ''
                   }`}
               >
                 {label}
@@ -97,16 +98,23 @@ const Header = () => {
               All Posts
             </Link>
           </li>
+          <li>
+            <a
+              href="https://nick-eb.dev/jfl"
+              className="nav-button jfl-link"
+              target="_blank"
+              rel="noopener noreferrer"
+              title="Jellyfin Legacy Player"
+            >
+              JFL
+            </a>
+          </li>
         </ul>
 
-        <a
-          href="https://nick-eb.dev/jfl"
-          className="jellyfin-button"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Jellyfin Legacy Player
-        </a>
+        <Link to="/zenith" className={`zenith-button ${isZenith ? 'active' : ''}`}>
+          <img src="/assets/img/Nereus.png" alt="" className="zenith-nav-icon" />
+          <span>Zenith</span>
+        </Link>
       </nav>
     </header>
   );

@@ -10,6 +10,9 @@ import './App.css';
 const Home = lazy(() => import('./components/pages/Home'));
 const Blog = lazy(() => import('./components/pages/blog/Blog'));
 const BlogPost = lazy(() => import('./components/pages/blog/BlogPost'));
+const ZenithHome = lazy(() => import('./components/pages/zenith/ZenithHome'));
+const ZenithPrivacyPolicy = lazy(() => import('./components/pages/zenith/ZenithPrivacyPolicy'));
+const ZenithToS = lazy(() => import('./components/pages/zenith/ZenithToS'));
 
 // Loading fallback component
 const RouteLoading = () => (
@@ -47,6 +50,12 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/blog" element={<Blog />} />
                 <Route path="/blog/:slug" element={<BlogPost />} />
+
+                {/* Zenith App Routes */}
+                <Route path="/zenith" element={<ZenithHome />} />
+                <Route path="/zenith/privacy-policy" element={<ZenithPrivacyPolicy />} />
+                <Route path="/zenith/tos" element={<ZenithToS />} />
+
               </Routes>
             </Suspense>
           </div>
