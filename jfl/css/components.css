@@ -1,18 +1,18 @@
 /* Glass Card Effect */
 .glass {
-    background: var(--glass-bg);
+    background: rgba(255, 255, 255, 0.15);
     -webkit-backdrop-filter: blur(20px);
     backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--border-radius);
-    box-shadow: 0 8px 32px var(--glass-shadow);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 /* ========== BUTTONS ========== */
 .btn {
     padding: 14px 28px;
     border: none;
-    border-radius: var(--border-radius-sm);
+    border-radius: 10px;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
@@ -22,7 +22,8 @@
 }
 
 .btn.primary {
-    background: var(--primary-gradient);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: -webkit-linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     width: 100%;
     box-shadow: 0 4px 15px rgba(88, 86, 214, 0.4);
@@ -39,7 +40,7 @@
 
 .btn.text {
     background: transparent;
-    color: var(--text-muted);
+    color: rgba(255, 255, 255, 0.6);
     padding: 8px 12px;
 }
 
@@ -85,11 +86,11 @@
 .card {
     width: calc(50% - 12px);
     margin: 6px;
-    background: var(--glass-bg);
+    background: rgba(255, 255, 255, 0.15);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--border-radius);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 16px;
     overflow: hidden;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -125,8 +126,22 @@
     overflow: hidden;
     text-overflow: ellipsis;
     text-align: center;
-    color: var(--text-color);
+    color: #ffffff;
 }
+
+/* 320px Screens - Force 2 Column Grid */
+@media (max-width: 340px) {
+    .card {
+        width: 42%;
+        /* Safe fallback from calc() */
+        margin: 3%;
+    }
+
+    .card-img-wrapper {
+        padding-bottom: 100%;
+    }
+}
+
 
 /* ========== NOTIFICATION AREA ========== */
 #notification-area {
@@ -157,10 +172,10 @@
     flex: 1;
     -webkit-flex: 1;
     padding: 10px 16px;
-    background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
-    border-radius: var(--border-radius-sm);
-    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.6);
     font-size: 14px;
     font-weight: 500;
     cursor: pointer;
@@ -168,7 +183,8 @@
 }
 
 .tab-btn.active {
-    background: var(--primary-gradient);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: -webkit-linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border-color: transparent;
 }
@@ -187,9 +203,9 @@
 .tab-btn-inline {
     padding: 6px 12px;
     background: transparent;
-    border: 1px solid var(--glass-border);
-    border-radius: var(--border-radius-sm);
-    color: var(--text-muted);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 10px;
+    color: rgba(255, 255, 255, 0.6);
     font-size: 13px;
     font-weight: 500;
     cursor: pointer;
@@ -197,7 +213,8 @@
 }
 
 .tab-btn-inline.active {
-    background: var(--primary-gradient);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: -webkit-linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border-color: transparent;
 }

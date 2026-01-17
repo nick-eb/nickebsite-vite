@@ -324,10 +324,50 @@ App.loadTrack = function (index) {
     this.prefetchUpcomingArt(index);
 
     // Stream URL with transcoding for legacy device compatibility
-    var streamUrl = this.state.serverUrl + '/Audio/' + track.Id + '/stream?AudioCodec=aac&MaxStreamingBitrate=320000&api_key=' + this.state.accessToken;
+    // Force MP3 container. Removed bitrate limit to prevent transcoding errors.
+    var streamUrl = this.state.serverUrl + '/Audio/' + track.Id + '/stream?Container=mp3&AudioCodec=mp3&api_key=' + this.state.accessToken;
 
     this.log('Stream URL: ' + streamUrl);
     this.dom.audio.src = streamUrl;
+
+    // Legacy WebKit (iOS 8) requires explicit load() after src change
+    this.dom.audio.load();
+
+    // Check for error after load
+    var self = this;
+    if (this.dom.audio.error) {
+        this.logError('Audio error immediately after load: ' + this.dom.audio.error.code);
+    }
+
+    // Add one-time error listener for this track load
+    this.dom.audio.onerror = function (e) {
+        var err = self.dom.audio.error;
+        var code = err ? err.code : 'unknown';
+        var msg = 'Audio Error (Code ' + code + ')';
+
+        switch (code) {
+            case 1: msg += ': Aborted'; break;
+            case 2: msg += ': Network Error'; break;
+            case 3: msg += ': Decode Error'; break;
+            case 4: msg += ': Src Not Supported'; break;
+        }
+
+        var directUrl = self.state.serverUrl + '/Items/' + track.Id + '/Download?api_key=' + self.state.accessToken;
+
+        self.logError(msg);
+        self.logError('Transcode URL: ' + streamUrl);
+        self.logError('Direct URL: ' + directUrl);
+
+        var alertMsg = 'Playback Error: ' + msg + '\n\n';
+        alertMsg += 'TEST 1 (Transcode):\n' + streamUrl + '\n\n';
+        alertMsg += 'TEST 2 (Direct File):\n' + directUrl;
+
+        alert(alertMsg);
+
+        // Reset UI
+        self.state.player.isPlaying = false;
+        self.dom.btnPlayPause.textContent = '▶';
+    };
 
     // Don't auto-play. User taps Play.
     this.state.player.isPlaying = false;
@@ -339,7 +379,6 @@ App.loadTrack = function (index) {
 
     // Try Media Session API if available (iOS 15+, Chrome 57+, but doesn't hurt to try)
     if ('mediaSession' in navigator) {
-        var self = this;
         try {
             var artworkUrl = track.AlbumId ? this.getImageUrl(track.AlbumId, 'hq') : '';
             navigator.mediaSession.metadata = new MediaMetadata({
@@ -404,26 +443,38 @@ App.playTrack = function (index) {
     this.loadTrack(index);
     // Try to play - user already interacted once
     var self = this;
-    var playPromise = this.dom.audio.play();
-    // Handle play() promise rejection (ES5 compatible - check for promise first)
-    if (playPromise !== undefined && typeof playPromise.then === 'function') {
-        playPromise.then(function () {
-            // Playback started successfully - NOW update state
-            self.state.player.isPlaying = true;
-            self.dom.btnPlayPause.textContent = '⏸';
-            if (self.dom.miniBtnPlayPause) self.dom.miniBtnPlayPause.textContent = '⏸';
-        }).catch(function (error) {
-            self.log('Play failed: ' + error.message);
-            // Reset UI state since playback didn't actually start
-            self.state.player.isPlaying = false;
-            self.dom.btnPlayPause.textContent = '▶';
-            if (self.dom.miniBtnPlayPause) self.dom.miniBtnPlayPause.textContent = '▶';
-        });
-    } else {
-        // Legacy browsers without Promise support - update state immediately
-        this.state.player.isPlaying = true;
-        this.dom.btnPlayPause.textContent = '⏸';
-        if (this.dom.miniBtnPlayPause) this.dom.miniBtnPlayPause.textContent = '⏸';
+
+    // Explicitly call load() again just in case (iOS quirk)
+    // this.dom.audio.load(); 
+
+    try {
+        var playPromise = this.dom.audio.play();
+
+        // Handle play() promise rejection (ES5 compatible - check for promise first)
+        if (playPromise !== undefined && typeof playPromise.then === 'function') {
+            playPromise.then(function () {
+                // Playback started successfully - NOW update state
+                self.state.player.isPlaying = true;
+                self.dom.btnPlayPause.textContent = '⏸';
+                if (self.dom.miniBtnPlayPause) self.dom.miniBtnPlayPause.textContent = '⏸';
+            }).catch(function (error) {
+                self.log('Play failed: ' + error.message);
+                // Reset UI state since playback didn't actually start
+                self.state.player.isPlaying = false;
+                self.dom.btnPlayPause.textContent = '▶';
+                if (self.dom.miniBtnPlayPause) self.dom.miniBtnPlayPause.textContent = '▶';
+            });
+        } else {
+            // Legacy browsers without Promise support (iOS 8 returns undefined)
+            // We assume it worked, but listen for errors
+            this.state.player.isPlaying = true;
+            this.dom.btnPlayPause.textContent = '⏸';
+            if (this.dom.miniBtnPlayPause) this.dom.miniBtnPlayPause.textContent = '⏸';
+        }
+    } catch (e) {
+        this.logError('Play Exception: ' + e.message);
+        this.state.player.isPlaying = false;
+        this.dom.btnPlayPause.textContent = '▶';
     }
 };
 

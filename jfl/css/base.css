@@ -13,8 +13,9 @@ body {
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background: linear-gradient(145deg, var(--bg-gradient-start) 0%, var(--bg-gradient-end) 100%);
-    color: var(--text-color);
+    background: linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
+    background: -webkit-linear-gradient(145deg, #1a1a2e 0%, #16213e 100%);
+    color: #ffffff;
     min-height: 100vh;
     -webkit-font-smoothing: antialiased;
 }
