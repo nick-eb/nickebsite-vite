@@ -15,7 +15,7 @@ const ZenithHome = () => {
                     />
 
                     <h1 className="zenith-title">
-                        Zenith
+                        Zenith - Media Player
                     </h1>
                     <p className="zenith-subtitle">
                         Your Media. Everywhere.
