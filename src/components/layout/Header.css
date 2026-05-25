@@ -169,11 +169,51 @@
   /* No underline for button-like link */
 }
 
-/* Zenith Button Styles */
-.zenith-button {
+/* Nav Actions Right Wrapper */
+.nav-actions-right {
   grid-column: 3;
   justify-self: end;
-  background: linear-gradient(135deg, rgba(88, 28, 135, 0.4) 0%, rgba(49, 46, 129, 0.4) 100%);
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* Streamview Button Styles */
+.streamview-button {
+  background: linear-gradient(135deg, rgba(6, 95, 70, 0.4) 0%, rgba(4, 120, 87, 0.4) 100%);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  border-radius: 8px;
+  padding: 0.35rem 0.85rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #d1fae5;
+  /* emerald-100 */
+  text-decoration: none;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.streamview-button:hover,
+.streamview-button.active {
+  background: linear-gradient(135deg, rgba(6, 95, 70, 0.6) 0%, rgba(4, 120, 87, 0.6) 100%);
+  border-color: #34d399;
+  transform: translateY(-1px);
+  color: white;
+}
+
+.streamview-nav-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  object-fit: cover;
+}
+
+/* Zenith Button Styles */
+.zenith-button {
+  background: linear-gradient(135deg, rgba(88, 28, 135, 0.4) 0%, rgba(4, 120, 87, 0.4) 100%);
   border: 1px solid rgba(139, 92, 246, 0.3);
   border-radius: 8px;
   padding: 0.35rem 0.85rem;
@@ -189,8 +229,9 @@
   gap: 0.5rem;
 }
 
-.zenith-button:hover {
-  background: linear-gradient(135deg, rgba(88, 28, 135, 0.6) 0%, rgba(49, 46, 129, 0.6) 100%);
+.zenith-button:hover,
+.zenith-button.active {
+  background: linear-gradient(135deg, rgba(88, 28, 135, 0.6) 0%, rgba(4, 120, 87, 0.6) 100%);
   border-color: #a855f7;
   transform: translateY(-1px);
   color: white;
@@ -247,12 +288,14 @@ body[data-route="/blog"] .nav-button:not(.blog-nav-button) {
     gap: 0.5rem;
   }
 
-  /* Keep Jellyfin button visible but maybe smaller */
-  .zenith-button {
+  /* Keep Action buttons visible but maybe smaller */
+  .zenith-button,
+  .streamview-button {
     font-size: 0.8rem;
     padding: 0.35rem 0.6rem;
-    max-width: 140px;
+    max-width: 110px;
     overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 
@@ -276,7 +319,7 @@ body[data-route="/blog"] .nav-button:not(.blog-nav-button) {
     font-size: 0.8rem;
   }
 
-  .zenith-button {
+  .nav-actions-right {
     margin-left: auto;
     /* Push to right */
   }

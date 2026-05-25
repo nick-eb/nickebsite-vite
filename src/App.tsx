@@ -13,6 +13,7 @@ const BlogPost = lazy(() => import('./components/pages/blog/BlogPost'));
 const ZenithHome = lazy(() => import('./components/pages/zenith/ZenithHome'));
 const ZenithPrivacyPolicy = lazy(() => import('./components/pages/zenith/ZenithPrivacyPolicy'));
 const ZenithToS = lazy(() => import('./components/pages/zenith/ZenithToS'));
+const StreamviewHome = lazy(() => import('./components/pages/streamview/StreamviewHome'));
 
 // Loading fallback component
 const RouteLoading = () => (
@@ -55,6 +56,9 @@ function App() {
                 <Route path="/zenith" element={<ZenithHome />} />
                 <Route path="/zenith/privacy-policy" element={<ZenithPrivacyPolicy />} />
                 <Route path="/zenith/tos" element={<ZenithToS />} />
+
+                {/* Streamview Case Study Routes */}
+                <Route path="/streamview" element={<StreamviewHome />} />
 
               </Routes>
             </Suspense>

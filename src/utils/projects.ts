@@ -9,6 +9,14 @@ export interface ProjectConfig {
 
 export const PROJECTS: ProjectConfig[] = [
   {
+    owner: 'nick-eb',
+    repo: 'nickebsite-vite',
+    customTitle: 'Streamview',
+    customDescription: 'A modern, cross-platform IoT telemetry client and remote diagnostics system for Skystream wind turbines, re-engineered from legacy Windows software.',
+    customUrl: '/streamview',
+    customImage: '/assets/img/streamview_icon.png'
+  },
+  {
     owner: 'hadobedo',
     repo: 'Myrient-Downloader-GUI',
   },

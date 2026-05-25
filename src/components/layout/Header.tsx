@@ -10,6 +10,7 @@ const Header = () => {
   const isBlogPost = location.pathname.startsWith('/blog/');
   const isAllPosts = location.pathname === '/blog';
   const isZenith = location.pathname.startsWith('/zenith');
+  const isStreamview = location.pathname.startsWith('/streamview');
 
   useEffect(() => {
     if (location.pathname !== '/') return;
@@ -82,7 +83,7 @@ const Header = () => {
             <li key={id}>
               <button
                 onClick={() => scrollToSection(id)}
-                className={`nav-button ${!isAllPosts && !isBlogPost && !isZenith && activeSection === id ? 'active' : ''
+                className={`nav-button ${!isAllPosts && !isBlogPost && !isZenith && !isStreamview && activeSection === id ? 'active' : ''
                   }`}
               >
                 {label}
@@ -111,10 +112,16 @@ const Header = () => {
           </li>
         </ul>
 
-        <Link to="/zenith" className={`zenith-button ${isZenith ? 'active' : ''}`}>
-          <img src="/assets/img/Nereus.png" alt="" className="zenith-nav-icon" />
-          <span>Zenith</span>
-        </Link>
+        <div className="nav-actions-right">
+          <Link to="/streamview" className={`streamview-button ${isStreamview ? 'active' : ''}`}>
+            <img src="/assets/img/streamview_icon.png" alt="" className="streamview-nav-icon" />
+            <span>Streamview</span>
+          </Link>
+          <Link to="/zenith" className={`zenith-button ${isZenith ? 'active' : ''}`}>
+            <img src="/assets/img/Nereus.png" alt="" className="zenith-nav-icon" />
+            <span>Zenith</span>
+          </Link>
+        </div>
       </nav>
     </header>
   );
