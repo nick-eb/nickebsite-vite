@@ -1,25 +1,99 @@
 /* App-specific styles that don't belong in the consolidated system */
 
-/* Improved desktop layout */
-@media (min-width: 1200px) {
-  .min-h-screen {
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: 0 2rem;
+/* =================================================================
+   APP WRAPPER — Deep dark background with radial glow
+   ================================================================= */
+
+.app-wrapper {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.035), transparent 34rem),
+    linear-gradient(180deg, #1c1c1e 0%, #161618 36rem, #141416 100%);
+  color: var(--text-primary);
+  position: relative;
+}
+
+/* Radial gradient glow overlay from top */
+.app-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1000px;
+  background:
+    radial-gradient(ellipse 70% 45% at 50% -5%, rgba(255, 255, 255, 0.045) 0%, rgba(142, 142, 147, 0.02) 42%, transparent 70%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.018), transparent 34rem);
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.9;
+}
+
+/* Ensure content is above the glow overlay */
+.app-wrapper > * {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 900px) {
+  .app-content.has-global-header {
+    padding-top: 3.225rem;
+  }
+
+  .app-content.product-route-content {
+    padding-top: 0;
   }
 }
 
-/* Dark Reader specific overrides for the app */
+/* =================================================================
+   ANIMATED BACKGROUND TRACES (subtle sine waves)
+   ================================================================= */
+
+.app-bg-traces {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.15;
+}
+
+.app-bg-traces .trace-path {
+  fill: none;
+  stroke-width: 0.15;
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: app-trace-flow 10s linear infinite;
+}
+
+.app-bg-traces .trace-1 { stroke: #8e8e93; }
+.app-bg-traces .trace-2 { stroke: #d1d1d6; animation-delay: 5s; }
+
+@keyframes app-trace-flow {
+  0% { stroke-dashoffset: 100; }
+  100% { stroke-dashoffset: -100; }
+}
+
+/* =================================================================
+   Dark Reader specific overrides
+   ================================================================= */
+
 [data-darkreader-mode] * {
-  border-color: color-mix(in srgb, var(--background, #242424) 80%, white) !important;
+  border-color: color-mix(in srgb, var(--background, #030712) 80%, white) !important;
 }
 
-[data-darkreader-mode] .glass {
-  background: color-mix(in srgb, var(--background, #242424) 95%, white) !important;
-  backdrop-filter: blur(10px);
+[data-darkreader-mode] .glass,
+[data-darkreader-mode] .glass-panel {
+  background: color-mix(in srgb, var(--background, #030712) 95%, white) !important;
+  backdrop-filter: blur(16px);
 }
 
-/* Error Boundary Styles */
+/* =================================================================
+   Error Boundary Styles
+   ================================================================= */
+
 .error-boundary {
   min-height: 50vh;
   display: flex;

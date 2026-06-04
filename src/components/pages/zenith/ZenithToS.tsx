@@ -74,9 +74,6 @@ const ZenithToS = () => {
                     </div>
                 </section>
 
-                <footer className="zenith-footer">
-                    <p>Questions? Reach us at <a href="mailto:contact@nick-eb.dev" style={{ color: 'var(--accent)' }}>contact@nick-eb.dev</a></p>
-                </footer>
             </div>
         </div>
     );

@@ -45,8 +45,18 @@
   justify-content: center;
   align-items: center;
   padding: 1rem 0;
-  /* Add vertical padding for better section separation */
   margin: 0;
+  position: relative;
+}
+
+.section-container + .section-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: max(2rem, calc((100% - 1100px) / 2));
+  right: max(2rem, calc((100% - 1100px) / 2));
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
 }
 
 .section-container:first-child {
@@ -62,14 +72,12 @@
 /* Home Layout */
 .home-container {
   width: 100%;
-  max-width: 1400px;
-  /* Increased from 1200px */
-  margin: 0 auto;
+  margin: 0;
   padding: 0;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--surface-0);
+  background: transparent;
 }
 
 .blog-section,
@@ -1233,36 +1241,4 @@
 
 .read-the-docs {
   color: var(--text-tertiary);
-}
-
-/* Logo animations */
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-
-.logo:hover {
-  filter: drop-shadow(0 0 2em color-mix(in srgb, var(--accent) 67%, transparent));
-}
-
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
 }

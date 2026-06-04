@@ -1,11 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type CSSProperties } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { loadAllPosts, type BlogPost } from '../../../utils/contentLoader';
 import { Loading } from '../../shared';
+import useScrollReveal from '../../../hooks/useScrollReveal';
 import './Blog.css';
 import '../../homepage/BlogPreview.css';  // Import BlogPreview styles
 
 const Blog = () => {
+  useScrollReveal();
+
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -53,7 +56,7 @@ const Blog = () => {
       <div className="content-wrapper">
         <section className="blog-section">
           <div className="content-container">
-            <div className="blog-header">
+            <div className="blog-header reveal reveal-fade-up">
               <h1 className="section-title">
                 Blog
                 <div className="section-title-bar"></div>
@@ -64,8 +67,12 @@ const Blog = () => {
               <p className="text-center text-gray-400">No blog posts found.</p>
             ) : (
               <div className="blog-grid blog-preview-slider">
-                {posts.map(post => (
-                  <div key={post.slug} className="card">
+                {posts.map((post, index) => (
+                  <div
+                    key={post.slug}
+                    className="card reveal reveal-stagger"
+                    style={{ '--delay': `${index * 0.06}s` } as CSSProperties}
+                  >
                     <Link to={`/blog/${post.slug}`} className="card-link">
                       <div className="card-image">
                         <img 

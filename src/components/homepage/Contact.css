@@ -9,31 +9,31 @@
   /* Remove padding as it's handled by section-container */
 }
 
-.section-title {
-  font-size: 2.5rem;
-  font-weight: bold;
-  margin-bottom: 1rem;  /* Reduced from 2rem to 1rem */
-  color: var(--text-primary);
-  text-align: center;
+.contact-section .section-title {
+  margin-bottom: clamp(1.25rem, 3vw, 2rem);
 }
 
 .contact-card {
-  background: var(--surface-2);
-  border-radius: 16px;
-  padding: 2rem;
+  --contact-panel: rgba(36, 36, 38, 0.94);
+  --contact-control: rgba(50, 50, 52, 0.78);
+  --contact-control-hover: rgba(60, 60, 62, 0.88);
+  --contact-border: rgba(235, 235, 245, 0.11);
+  --contact-border-hover: rgba(235, 235, 245, 0.18);
+  background: var(--contact-panel);
+  border-radius: var(--radius-panel);
+  padding: 1.75rem;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
-  box-shadow: var(--shadow-md);
-  border: 1px solid var(--surface-3);
-  backdrop-filter: blur(10px);
-  max-width: 600px;
+  gap: 1.25rem;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--contact-border);
+  backdrop-filter: var(--glass-blur);
+  max-width: 520px;
   margin: 0 auto;
 }
 
 .contact-card:hover {
-  background: var(--surface-2);
-  box-shadow: var(--shadow-lg);
+  border-color: var(--contact-border-hover);
 }
 
 .contact-content {
@@ -57,17 +57,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 1rem;
-  padding: 1.5rem;
-  background: var(--surface-1);
-  border-radius: 12px;
-  transition: all var(--transition-quick);  /* Match GitHub cards transition */
+  gap: 0.9rem;
+  padding: 1.15rem 1.25rem;
+  background: var(--contact-control);
+  border: 1px solid var(--contact-border);
+  border-radius: var(--radius-btn);
+  transition: border-color var(--transition-quick), background var(--transition-quick), transform var(--transition-quick);
 }
 
 .contact-info:hover {
-  transform: translateY(-2px);
-  background: var(--surface-2);
-  box-shadow: var(--shadow-md);  /* Match GitHub cards shadow */
+  transform: translateY(-1px);
+  background: var(--contact-control-hover);
+  border-color: var(--contact-border-hover);
 }
 
 .contact-email {
@@ -87,23 +88,23 @@
 }
 
 .contact-email a:hover {
-  color: var(--accent);
+  color: #ffffff;
 }
 
 .email-icon {
-  font-size: 1.75rem;  /* Increased from 1.5rem */
-  color: var(--accent);
+  font-size: 1.45rem;
+  color: #d7d7dc;
 }
 
 .email-link {
   color: var(--text-primary);
   text-decoration: none;
-  font-size: 1.4rem;  /* Increased from 1.2rem */
+  font-size: 1.25rem;
 }
 
 .email-link:hover {
-  color: var(--accent);
-  text-decoration: none;  /* Remove underline */
+  color: #ffffff;
+  text-decoration: none;
 }
 
 .social-links {
@@ -117,28 +118,30 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
-  padding: 1rem;
-  background: var(--surface-1);
-  border-radius: 12px;
-  color: var(--text-primary);
+  gap: 0.7rem;
+  padding: 0.9rem 1rem;
+  background: var(--contact-control);
+  border: 1px solid var(--contact-border);
+  border-radius: var(--radius-btn);
+  color: #d7d7dc;
   text-decoration: none;
-  font-size: 1.2rem;  /* Increased from 1rem */
+  font-size: 1.05rem;
   transition: transform var(--transition-quick),
               background var(--transition-quick),
-              box-shadow var(--transition-quick),
+              border-color var(--transition-quick),
               color var(--transition-quick);
 }
 
 .social-link:hover {
-  transform: translateY(-2px);
-  background: var(--surface-2);
-  box-shadow: var(--shadow-md);
-  color: var(--accent);
+  transform: translateY(-1px);
+  background: var(--contact-control-hover);
+  border-color: var(--contact-border-hover);
+  color: #ffffff;
 }
 
 .social-link svg {
-  font-size: 1.4rem;  /* Increased from 1.25rem */
+  font-size: 1.2rem;
+  color: inherit;
 }
 
 @media (max-width: 768px) {
@@ -146,8 +149,8 @@
     /* Remove padding as it's handled by section-container */
   }
 
-  .section-title {
-    font-size: 2rem;
+  .contact-section .section-title {
+    font-size: clamp(2.1rem, 4.5vw, 2.75rem);
   }
 
   .contact-card {
@@ -163,8 +166,8 @@
   }
 
   .social-link {
-    padding: 0.75rem;  /* Slightly reduce padding */
-    font-size: 0.9rem;  /* Increased from 0.9rem */
+    padding: 0.75rem;
+    font-size: 0.9rem;
   }
 
   .social-link svg {
@@ -172,7 +175,7 @@
   }
 
   .email-link {
-    font-size: 1.1rem;  /* Increased from 0.9rem */
+    font-size: 1rem;
   }
 }
 

@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import Card, { CardContent, CardTitle, CardDescription } from '../../shared/Card';
 import './Zenith.css';
 
@@ -135,17 +134,6 @@ const ZenithHome = () => {
                     </p>
                 </section>
 
-                {/* Footer */}
-                <footer className="zenith-footer">
-                    <div className="flex items-center gap-2">
-                        <span>Zenith Media Player</span>
-                    </div>
-                    <div className="zenith-footer-links">
-                        <Link to="/zenith/privacy-policy">Privacy Policy</Link>
-                        <Link to="/zenith/tos">Terms of Service</Link>
-                    </div>
-                    <p>&copy; {new Date().getFullYear()} Zenith</p>
-                </footer>
             </div>
         </div>
     );

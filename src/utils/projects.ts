@@ -5,6 +5,9 @@ export interface ProjectConfig {
   customImage?: string;
   customTitle?: string;
   customUrl?: string;
+  customLanguage?: string;
+  customLanguageColor?: string;
+  hideStars?: boolean;
 }
 
 export const PROJECTS: ProjectConfig[] = [
@@ -14,7 +17,10 @@ export const PROJECTS: ProjectConfig[] = [
     customTitle: 'Streamview',
     customDescription: 'A modern, cross-platform IoT telemetry client and remote diagnostics system for Skystream wind turbines, re-engineered from legacy Windows software.',
     customUrl: '/streamview',
-    customImage: '/assets/img/streamview_icon.png'
+    customImage: '/assets/img/streamview_logo_new.png',
+    customLanguage: 'Flutter · Dart · SQL',
+    customLanguageColor: '#38bdf8',
+    hideStars: true
   },
   {
     owner: 'hadobedo',

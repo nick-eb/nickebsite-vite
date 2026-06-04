@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { MDXProvider } from '@mdx-js/react';
 import { getPostBySlug, type BlogPost } from '../../../utils/contentLoader';
 import { mdxComponents } from '../../mdx/MDXComponents';
 import { Loading } from '../../shared';
+import useScrollReveal from '../../../hooks/useScrollReveal';
 import './BlogPost.css';
 import '../../mdx/MDXComponents.css';
 
 export default function BlogPost() {
+  useScrollReveal();
+
   const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const [post, setPost] = useState<BlogPost | null>(null);
@@ -79,18 +81,9 @@ export default function BlogPost() {
   }
 
   return (
-    <motion.section
-      className="blog-post-section"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.5 }}
-    >
+    <section className="blog-post-section reveal reveal-fade-up">
       <div className="container mx-auto px-4">
-        <motion.article
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-        >
+        <article>
           {/* Header */}
           <div className="blog-post-header">
             <h1>{post.title}</h1>
@@ -149,8 +142,8 @@ export default function BlogPost() {
           <button onClick={handleBack} className="back-button">
             ← Back to Blog
           </button>
-        </motion.article>
+        </article>
       </div>
-    </motion.section>
+    </section>
   );
 }

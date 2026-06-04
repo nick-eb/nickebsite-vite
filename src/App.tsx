@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import { NavProvider } from './utils/NavContext';
 import ScrollToTop from './utils/ScrollToTop';
@@ -14,6 +14,7 @@ const ZenithHome = lazy(() => import('./components/pages/zenith/ZenithHome'));
 const ZenithPrivacyPolicy = lazy(() => import('./components/pages/zenith/ZenithPrivacyPolicy'));
 const ZenithToS = lazy(() => import('./components/pages/zenith/ZenithToS'));
 const StreamviewHome = lazy(() => import('./components/pages/streamview/StreamviewHome'));
+const StreamviewCapabilities = lazy(() => import('./components/pages/streamview/StreamviewCapabilities'));
 
 // Loading fallback component
 const RouteLoading = () => (
@@ -39,13 +40,18 @@ const RouteErrorFallback = (
 );
 
 function App() {
+  const location = useLocation();
+  const isProductRoute =
+    location.pathname.startsWith('/streamview') ||
+    location.pathname.startsWith('/zenith');
+
   return (
     <ErrorBoundary fallback={RouteErrorFallback}>
       <NavProvider>
         <ScrollToTop />
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-slate-900 text-white">
+        <div className="app-wrapper">
           <Header />
-          <div className="pt-16"> {/* Offset for fixed header */}
+          <div className={`app-content has-global-header pt-11 ${isProductRoute ? 'product-route-content' : ''}`}> {/* Offset for fixed header (2.75rem) */}
             <Suspense fallback={<RouteLoading />}>
               <Routes>
                 <Route path="/" element={<Home />} />
@@ -59,6 +65,7 @@ function App() {
 
                 {/* Streamview Case Study Routes */}
                 <Route path="/streamview" element={<StreamviewHome />} />
+                <Route path="/streamview/capabilities" element={<StreamviewCapabilities />} />
 
               </Routes>
             </Suspense>

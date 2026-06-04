@@ -217,6 +217,7 @@ export interface ProjectCardProps {
   language?: string | undefined;
   languageColor?: string | undefined;
   stargazers_count: number;
+  hideStars?: boolean | undefined;
   image?: string | undefined;
   homepage?: string | undefined;
   className?: string;
@@ -232,6 +233,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   language,
   languageColor,
   stargazers_count,
+  hideStars,
   image,
   homepage,
   className = '',
@@ -263,7 +265,7 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
             {language}
           </span>
         )}
-        <span className="stars">⭐ {stargazers_count}</span>
+        {!hideStars && <span className="stars">⭐ {stargazers_count}</span>}
       </CardMeta>
     </CardContent>
     {homepage && (

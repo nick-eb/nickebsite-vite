@@ -80,7 +80,7 @@ export default defineConfig({
           // Vendor chunks
           react: ['react', 'react-dom'],
           router: ['react-router-dom'],
-          vendor: ['framer-motion', '@mdx-js/react'],
+          vendor: ['@mdx-js/react'],
           // Component chunks
           layout: ['./src/components/layout/Header', './src/components/layout/Footer'],
           shared: ['./src/components/shared/index']

@@ -1,13 +1,10 @@
 .footer {
-  background: var(--surface-1);
+  background: rgba(28, 28, 30, 0.72);
   backdrop-filter: var(--backdrop-blur);
   color: var(--text-primary);
   padding: 2rem 0;
   font-size: 1rem;
-  text-align: center;
-  /* Remove margin-top: auto to allow proper spacing from contact section */
-  border-top: 1px solid var(--surface-3);
-  /* Make footer span full width */
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   width: 100vw;
   position: relative;
   left: 50%;
@@ -17,29 +14,53 @@
 }
 
 .footer__container {
-  max-width: 1100px;  /* Match content-container */
-  width: 90%;        /* Match content-container */
+  max-width: 1100px;
+  width: 90%;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 2rem;
   padding: 0 1.5rem;
 }
 
-.footer__link {
-  color: var(--text-primary);
-  text-decoration: none;
-  position: relative;
-  padding: 0.25rem 0;
+.footer__identity {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
 }
 
-.footer__link:hover {
-  color: var(--accent);
+.footer__link,
+.footer__route-links a,
+.footer__top-button {
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.footer__link:hover,
+.footer__route-links a:hover,
+.footer__top-button:hover {
+  color: var(--text-primary);
+}
+
+.footer__copyright {
+  margin: 0;
+  color: var(--text-tertiary);
+  font-size: 0.85rem;
+}
+
+.footer__actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
 .social-list {
   display: flex;
-  gap: 2rem;
+  gap: 1.25rem;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -47,22 +68,47 @@
 
 .social-list__link {
   color: var(--text-secondary);
-  font-size: 1.25rem;  /* Reduced from 1.5rem */
-  transition: color 0.3s ease;
+  font-size: 1.2rem;
+  transition: color 0.2s ease;
 }
 
 .social-list__link:hover {
-  color: var(--accent);
+  color: var(--text-primary);
 }
 
-@media (max-width: 600px) {
+.footer__route-links {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  font-size: 0.9rem;
+}
+
+.footer__top-button {
+  background: none;
+  border: 0;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+}
+
+@media (max-width: 700px) {
   .footer__container {
     flex-direction: column;
-    gap: 1.5rem;
-    padding: 1rem;
+    align-items: center;
+    text-align: center;
+    gap: 1.25rem;
+    padding: 0 1rem;
   }
-  
-  .social-list {
-    gap: 1.5rem;
+
+  .footer__actions {
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .footer__route-links {
+    justify-content: center;
   }
 }

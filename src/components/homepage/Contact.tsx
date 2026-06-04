@@ -1,10 +1,12 @@
-import { motion } from 'framer-motion';
+import useScrollReveal from '../../hooks/useScrollReveal';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import { faGithub, faInstagram, faTwitter, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import './Contact.css';
 
 const Contact = () => {
+  useScrollReveal();
+
   const socialLinks = [
     {
       href: 'https://github.com/hadobedo/',
@@ -31,15 +33,10 @@ const Contact = () => {
   return (
     <section id="contact" className="contact-section">
       <div className="content-container">
-        <motion.div
-          className="contact-content"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
+        <div className="contact-content reveal reveal-fade-up">
           <h2 className="section-title">Contact Me</h2>
 
-          <div className="contact-card">
+          <div className="contact-card glass-panel">
             <div className="contact-info">
               <FontAwesomeIcon icon={faEnvelope} className="email-icon" />
               <a
@@ -65,7 +62,7 @@ const Contact = () => {
               ))}
             </div>
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );

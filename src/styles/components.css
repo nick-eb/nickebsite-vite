@@ -5,20 +5,20 @@
 /* Base Card Styles */
 /* Base Card Styles */
 .card {
-  background: var(--surface-1);
-  border-radius: 12px;
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-radius: var(--radius-card);
   width: 340px;
   min-height: 400px;
-  /* Changed from fixed height to min-height */
   height: 100%;
-  /* Allow card to fill available height */
   display: flex;
   flex-direction: column;
   overflow: hidden;
   margin: 0 auto;
-  border: 1px solid var(--border-color-light);
-  box-shadow: var(--shadow-md);
-  transition: all var(--transition-quick);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  transition: all 0.3s var(--ease-spring);
   position: relative;
   isolation: isolate;
   padding: 0;
@@ -27,16 +27,15 @@
   text-decoration: none;
   color: inherit;
   pointer-events: auto !important;
-  /* Ensure cards are always clickable */
   user-select: none;
   touch-action: manipulation;
 }
 
 .card:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-xl);
-  border-color: var(--accent);
-  background: var(--surface-2);
+  transform: translateY(-5px);
+  box-shadow: 0 24px 55px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-color: rgba(245, 245, 247, 0.22);
+  background: rgba(58, 58, 62, 0.88);
 }
 
 .card:active {
@@ -74,9 +73,9 @@ a.card:hover {
 /* Override hover effects during drag */
 .card--dragging:hover {
   transform: translateY(0) !important;
-  box-shadow: var(--shadow-md) !important;
-  border-color: var(--border-color-light) !important;
-  background: var(--surface-1) !important;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1) !important;
+  border-color: var(--glass-border) !important;
+  background: var(--glass-bg) !important;
 }
 
 /* Enhanced cursor states */
@@ -223,11 +222,14 @@ a.card:hover {
 }
 
 .card--blog .card-title {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  line-clamp: 3;
+  min-height: 0;
+  overflow: hidden;
   font-size: 1.25rem;
-  line-height: 1.2;
-  min-height: 3rem;
-  display: flex;
-  align-items: center;
+  line-height: 1.25;
 }
 
 .card--blog .card-description {
@@ -376,20 +378,13 @@ a.card:hover {
 
 /* Section Utilities */
 .section-title {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  /* Increased from 0.75rem for better spacing */
+  font-size: clamp(2.1rem, 4.5vw, 2.75rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.08;
+  margin-bottom: clamp(1.25rem, 3vw, 2rem);
   text-align: center;
   color: var(--text-primary);
-}
-
-/* Desktop improvements for section titles */
-@media (min-width: 1024px) {
-  .section-title {
-    font-size: 2.25rem;
-    /* Slightly larger on desktop */
-    margin-bottom: 2rem;
-  }
 }
 
 .view-all-link {
@@ -592,8 +587,8 @@ a.card:hover {
 
   .card-title {
     font-size: 0.95rem;
-    line-height: 1.2;
-    min-height: 2.4rem;
+    line-height: 1.28;
+    min-height: 0;
   }
 
   .card-description {
@@ -673,10 +668,10 @@ a.card:hover {
 }
 
 .slick-slide .card:hover {
-  transform: translateY(-6px);
-  box-shadow: var(--shadow-xl);
-  border-color: var(--accent);
-  background: var(--surface-2);
+  transform: translateY(-5px);
+  box-shadow: 0 24px 55px rgba(0, 0, 0, 0.34), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border-color: rgba(245, 245, 247, 0.22);
+  background: rgba(58, 58, 62, 0.88);
 }
 
 /* Prevent text selection during dragging */
@@ -688,4 +683,77 @@ a.card:hover {
 .slick-slider.slick-dragging .card {
   user-select: none;
   pointer-events: auto;
+}
+
+/* =================================================================
+   SCROLL REVEAL SYSTEM
+   ================================================================= */
+
+.reveal {
+  opacity: 0;
+  transition: all 0.6s var(--ease-spring);
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: none;
+}
+
+.reveal-fade-up {
+  transform: translateY(25px);
+}
+
+.reveal-scale-up {
+  transform: scale(0.97);
+}
+
+.reveal-slide-left {
+  transform: translateX(-25px);
+}
+
+.reveal-slide-right {
+  transform: translateX(25px);
+}
+
+.reveal-stagger {
+  transform: translateY(20px);
+  transition-delay: var(--delay, 0s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* =================================================================
+   GLASS PANEL UTILITY
+   ================================================================= */
+
+.glass-panel {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* =================================================================
+   SECTION HEADLINE (StreamView-aligned)
+   ================================================================= */
+
+.section-headline {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  color: var(--text-primary);
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.section-headline span {
+  color: var(--accent-light);
 }

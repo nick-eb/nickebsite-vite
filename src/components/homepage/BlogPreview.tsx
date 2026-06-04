@@ -1,10 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, type CSSProperties } from 'react';
 import { Slider } from '../shared/Slider';
 import { BlogCard } from '../shared/Card';
 import { loadAllPosts, type BlogPost } from '../../utils/contentLoader';
+import useScrollReveal from '../../hooks/useScrollReveal';
 import './BlogPreview.css';
 
 const BlogPreview: React.FC = () => {
+  useScrollReveal();
+
   const [posts, setPosts] = useState<BlogPost[]>([]);
 
   useEffect(() => {
@@ -30,11 +33,15 @@ const BlogPreview: React.FC = () => {
 
   return (
     <section className="blog-preview-section">
-      <h2 className="section-title">Writeups & Guides</h2>
+      <h2 className="section-title reveal reveal-fade-up">Writeups & Guides</h2>
 
       <Slider className="blog-preview-slider">
-        {posts.map((post) => (
-          <div key={post.slug} className="slider-item">
+        {posts.map((post, index) => (
+          <div
+            key={post.slug}
+            className="slider-item reveal reveal-stagger"
+            style={{ '--delay': `${index * 0.06}s` } as CSSProperties}
+          >
             <BlogCard
               to={`/blog/${post.slug}`}
               title={post.title}

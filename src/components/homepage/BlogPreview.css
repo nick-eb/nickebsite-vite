@@ -19,8 +19,8 @@
 }
 
 .blog-preview-slider .card {
-  height: 480px;
-  min-height: 480px;
+  height: 460px;
+  min-height: 460px;
   width: 100%;
   background: var(--surface-1);
   border-radius: 12px;
@@ -57,21 +57,27 @@
   flex-direction: column;
   flex: 1;
   padding: 1.25rem;
-  gap: 0.75rem;
+  gap: 0.7rem;
   overflow: hidden;
+  min-height: 0;
 }
 
-/* Card Title - NO truncation, let it wrap naturally up to 2 lines */
+/* Card Title - clamp by whole lines, never crop glyphs */
 .blog-preview-slider .card-title {
-  font-size: 1.2rem;
-  font-weight: 600;
-  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  line-clamp: 3;
+  min-height: 0;
+  max-height: none;
+  overflow: hidden;
+  align-items: initial;
+  font-size: 1.15rem;
+  font-weight: 650;
+  line-height: 1.28;
+  letter-spacing: -0.015em;
   margin: 0;
   color: var(--text-primary);
-  /* Allow wrapping but limit height */
-  max-height: 3.4em;
-  /* ~2 lines at 1.4 line-height */
-  overflow: hidden;
 }
 
 /* Blog Date */
@@ -84,8 +90,8 @@
 
 /* Card Description - show more lines now */
 .blog-preview-slider .card-description {
-  font-size: 0.95rem;
-  line-height: 1.6;
+  font-size: 0.92rem;
+  line-height: 1.55;
   margin: 0;
   color: var(--text-secondary);
   flex: 1;
@@ -99,10 +105,10 @@
 
 /* Read More Link */
 .blog-preview-slider .read-more {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  width: auto;
+  align-self: stretch;
+  box-sizing: border-box;
+  margin: auto -1.25rem -1.25rem;
   padding: 0.75rem 1rem;
   background: color-mix(in srgb, var(--accent) 12%, var(--surface-1));
   border-top: 1px solid color-mix(in srgb, var(--accent) 25%, transparent);
@@ -111,6 +117,7 @@
   font-weight: 600;
   text-align: center;
   transition: background 0.2s ease, color 0.2s ease;
+  flex-shrink: 0;
 }
 
 .blog-preview-slider .card:hover .read-more {
@@ -129,12 +136,17 @@
   }
 
   .blog-preview-slider .card {
-    height: 440px;
-    min-height: 440px;
+    height: 460px;
+    min-height: 460px;
   }
 
   .blog-preview-slider .card-image {
     height: 150px;
+  }
+
+  .blog-preview-slider .card-title {
+    font-size: 1.08rem;
+    line-height: 1.3;
   }
 
   .blog-preview-slider .card-description {
