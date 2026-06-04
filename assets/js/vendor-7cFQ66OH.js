@@ -1,0 +1,2 @@
+import{R as t}from"./router-CflUyJMR.js";const e={},n=t.createContext(e);function o(e){const o=t.useContext(n);return t.useMemo((function(){return"function"==typeof e?e(o):{...o,...e}}),[o,e])}function r(r){let c;return c=r.disableParentContext?"function"==typeof r.components?r.components(e):r.components||e:o(r.components),t.createElement(n.Provider,{value:c},r.children)}export{r as M,o as u};
+//# sourceMappingURL=vendor-7cFQ66OH.js.map
