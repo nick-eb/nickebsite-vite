@@ -44,6 +44,23 @@
   color: var(--text-primary);
 }
 
+.footer__contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.footer__contact-line {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.footer__contact-label {
+  color: var(--text-tertiary);
+  font-size: 0.9rem;
+}
+
 .footer__copyright {
   margin: 0;
   color: var(--text-tertiary);

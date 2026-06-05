@@ -12,6 +12,9 @@ const Footer = () => {
       ? 'Zenith'
       : 'Nicholas Bonello';
 
+  const personalEmail = 'nicholas.e.bonello@gmail.com';
+  const streamviewEmail = 'nick@btekenergy.com';
+
   const socialLinks = [
     { href: 'https://github.com/hadobedo/', icon: 'github', label: 'GitHub Profile' },
     { href: 'https://www.linkedin.com/in/nicholas-bonello-642a73333/', icon: 'linkedin', label: 'LinkedIn Profile' },
@@ -25,9 +28,26 @@ const Footer = () => {
     <footer className="footer">
       <div className="footer__container">
         <div className="footer__identity">
-          <a href="mailto:nicholas.e.bonello@gmail.com" className="footer__link">
-            nicholas.e.bonello@gmail.com
-          </a>
+          {isStreamview ? (
+            <div className="footer__contact-list" aria-label="Footer contact emails">
+              <p className="footer__contact-line">
+                <span className="footer__contact-label">StreamView support &amp; sales:</span>{' '}
+                <a href={`mailto:${streamviewEmail}`} className="footer__link">
+                  {streamviewEmail}
+                </a>
+              </p>
+              <p className="footer__contact-line">
+                <span className="footer__contact-label">Other inquiries:</span>{' '}
+                <a href={`mailto:${personalEmail}`} className="footer__link">
+                  {personalEmail}
+                </a>
+              </p>
+            </div>
+          ) : (
+            <a href={`mailto:${personalEmail}`} className="footer__link">
+              {personalEmail}
+            </a>
+          )}
           <p className="footer__copyright">
             &copy; {new Date().getFullYear()} {copyrightName}. All rights reserved.
           </p>

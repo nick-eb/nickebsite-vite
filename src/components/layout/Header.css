@@ -1,7 +1,7 @@
 .site-header {
-  background: var(--surface-1);
+  background: rgba(28, 28, 30, 0.76);
   backdrop-filter: var(--backdrop-blur);
-  border-bottom: 1px solid var(--surface-3);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   position: fixed;
   top: 0;
   left: 0;
@@ -276,21 +276,6 @@ body[data-route="/blog"] .nav-button:not(.blog-nav-button) {
   padding: 0.5rem 0.75rem;
 }
 
-@media (prefers-color-scheme: light) {
-  .site-header {
-    background-color: var(--surface-0);
-    border-bottom-color: var(--surface-2);
-  }
-
-  .logo a {
-    color: var(--text-primary);
-  }
-
-  .nav-links a {
-    color: var(--text-secondary);
-  }
-}
-
 /* Mobile Menu Toggle Button */
 .menu-toggle {
   display: none;
@@ -378,8 +363,8 @@ body[data-route="/blog"] .nav-button:not(.blog-nav-button) {
   right: 0;
   width: 220px; /* Reduced from 280px */
   height: 100vh;
-  background: var(--surface-1, #111827);
-  border-left: 1px solid var(--surface-3, #1f2937);
+  background: rgba(28, 28, 30, 0.96);
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
   padding: 3.5rem 1.25rem 2rem 1.25rem; /* Reduced padding to clear close button area */
   box-sizing: border-box;
   display: flex;
