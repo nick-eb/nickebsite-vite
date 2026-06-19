@@ -35,7 +35,7 @@ const BlogPreview: React.FC = () => {
     <section className="blog-preview-section">
       <h2 className="section-title reveal reveal-fade-up">Writeups & Guides</h2>
 
-      <Slider className="blog-preview-slider">
+      <Slider className="blog-preview-slider" label="Writeups and guides carousel">
         {posts.map((post, index) => (
           <div
             key={post.slug}

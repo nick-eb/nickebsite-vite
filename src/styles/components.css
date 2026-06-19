@@ -50,6 +50,19 @@ a.card:hover {
   text-decoration: none;
 }
 
+.card[href]:hover .card-title,
+.card[href]:focus-visible .card-title,
+a.card:hover .card-title,
+a.card:focus-visible .card-title {
+  color: var(--accent-light);
+  text-decoration-color: currentColor;
+}
+
+.card[href]:active .card-title,
+a.card:active .card-title {
+  color: var(--accent);
+}
+
 /* Card interaction states */
 .card--pressed {
   transform: translateY(-2px);
@@ -176,6 +189,10 @@ a.card:hover {
   pointer-events: auto;
   /* Allow clicking on title */
   user-select: none;
+  transition: color 0.18s ease, text-decoration-color 0.18s ease;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 0.18em;
 }
 
 .card-description {

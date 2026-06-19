@@ -5,22 +5,32 @@
 .carousel {
     position: relative;
     width: 100%;
+    max-width: 100%;
 }
 
 .carousel-track {
     display: flex;
     gap: 1.5rem;
     padding: 1.5rem 2rem;
+    max-width: 100%;
     overflow-x: auto;
+    overflow-y: hidden;
 
-    /* Enable smooth scroll for programmatic scrolling */
+    /* Programmatic controls are smooth; user scroll remains native. */
     scroll-behavior: smooth;
-
-    /* Touch scrolling on mobile */
+    scroll-padding-inline: 2rem;
+    overscroll-behavior-x: contain;
+    overscroll-behavior-y: auto;
     -webkit-overflow-scrolling: touch;
 
-    /* Prevent text selection while dragging */
+    /* Desktop drag should not select card text. Touch keeps native panning. */
     user-select: none;
+    touch-action: pan-x pan-y;
+}
+
+.carousel-track:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 4px;
 }
 
 /* Ensure cards don't shrink */
@@ -28,13 +38,64 @@
     flex: 0 0 auto;
 }
 
+.carousel-track .card {
+    cursor: pointer;
+    touch-action: pan-x pan-y;
+}
+
+/* ===========================================
+   CONTROLS
+   =========================================== */
+
+.carousel-controls {
+    position: absolute;
+    top: -0.25rem;
+    right: 2rem;
+    z-index: 2;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.carousel-button {
+    width: 2.25rem;
+    height: 2.25rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--surface-2) 88%, transparent);
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    line-height: 1;
+    box-shadow: var(--shadow-sm);
+}
+
+.carousel-button:hover:not(:disabled) {
+    background: var(--surface-3);
+    border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+}
+
+.carousel-button:disabled {
+    cursor: default;
+    opacity: 0.35;
+}
+
 /* ===========================================
    SCROLLBAR STATES
    =========================================== */
 
-/* When scrolling is possible - show grab cursor and scrollbar */
 .carousel-track.can-scroll {
     cursor: grab;
+}
+
+.carousel-track.can-scroll.is-dragging {
+    cursor: grabbing;
+}
+
+.carousel-track.can-scroll.is-dragging .card {
+    cursor: grabbing;
 }
 
 /* When content fits - center it and hide scrollbar */
@@ -42,7 +103,6 @@
     justify-content: center;
     cursor: default;
     overflow-x: hidden;
-    /* Hide scrollbar when not needed */
 }
 
 /* ===========================================
@@ -91,6 +151,32 @@
     .carousel-track {
         gap: 1rem;
         padding: 1rem;
+        scroll-padding-inline: 1rem;
+    }
+
+    .carousel-controls {
+        position: static;
+        justify-content: flex-end;
+        padding: 0 1rem 0.25rem;
+    }
+
+    .carousel-button {
+        width: 2rem;
+        height: 2rem;
+        font-size: 1.25rem;
+    }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .carousel-track.can-scroll,
+    .carousel-track.can-scroll .card {
+        cursor: default;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .carousel-track {
+        scroll-behavior: auto;
     }
 }
 

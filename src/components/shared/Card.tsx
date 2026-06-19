@@ -237,49 +237,64 @@ export const ProjectCard: React.FC<ProjectCardProps> = ({
   image,
   homepage,
   className = '',
-}) => (
-  <Card
-    variant="external"
-    href={href}
-    className={`${className} card--project`}
-  >
-    <CardImage
-      src={image || '/assets/img/github-placeholder.png'}
-      alt={`${name} preview`}
-      onError={(e) => {
-        const img = e.currentTarget;
-        if (img.src.includes('github-placeholder')) return;
-        img.src = '/assets/img/github-placeholder.png';
-      }}
-    />
-    <CardContent>
-      <CardTitle>{name}</CardTitle>
-      <CardDescription>{description}</CardDescription>
-      <CardMeta>
-        {language && (
-          <span
-            className="language"
-            style={{ '--lang-color': languageColor } as React.CSSProperties}
-          >
-            <span className="lang-dot"></span>
-            {language}
-          </span>
-        )}
-        {!hideStars && <span className="stars">⭐ {stargazers_count}</span>}
-      </CardMeta>
-    </CardContent>
-    {homepage && (
-      <a
-        href={homepage}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="demo-link"
-        onClick={(e) => e.stopPropagation()} // Prevent card click
+}) => {
+  const isInternalLink = href.startsWith('/');
+  const cardContent = (
+    <>
+      <CardImage
+        src={image || '/assets/img/github-placeholder.png'}
+        alt={`${name} preview`}
+        onError={(e) => {
+          const img = e.currentTarget;
+          if (img.src.includes('github-placeholder')) return;
+          img.src = '/assets/img/github-placeholder.png';
+        }}
+      />
+      <CardContent>
+        <CardTitle>{name}</CardTitle>
+        <CardDescription>{description}</CardDescription>
+        <CardMeta>
+          {language && (
+            <span
+              className="language"
+              style={{ '--lang-color': languageColor } as React.CSSProperties}
+            >
+              <span className="lang-dot"></span>
+              {language}
+            </span>
+          )}
+          {!hideStars && <span className="stars">⭐ {stargazers_count}</span>}
+        </CardMeta>
+      </CardContent>
+      {homepage && (
+        <span className="demo-link">
+          View Demo →
+        </span>
+      )}
+    </>
+  );
+
+  if (isInternalLink) {
+    return (
+      <Card
+        variant="link"
+        to={href}
+        className={`${className} card--project`}
       >
-        View Demo →
-      </a>
-    )}
-  </Card>
-);
+        {cardContent}
+      </Card>
+    );
+  }
+
+  return (
+    <Card
+      variant="external"
+      href={href}
+      className={`${className} card--project`}
+    >
+      {cardContent}
+    </Card>
+  );
+};
 
 export default Card;

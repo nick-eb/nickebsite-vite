@@ -56,7 +56,7 @@ const GitHubProjects: React.FC = () => {
     <section className="github-projects">
       <h2 className="section-title reveal reveal-fade-up">Projects</h2>
 
-      <Slider className="projects-slider">
+      <Slider className="projects-slider" label="Projects carousel">
         {validProjects.map(({ config, data }, index) => (
           <div
             key={`${config.repo}-${index}`}
